@@ -1,0 +1,20 @@
+{
+  "name": "E Rooms Room Booking",
+  "short_name": "Room Booking",
+  "start_url": "https://www.erooms.org.uk/book-room",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#004080",
+  "icons": [
+    {
+      "src": "https://static.wixstatic.com/media/aad9be_7458dd1056de4933bea271552154e1f4~mv2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://static.wixstatic.com/media/aad9be_031ffc9726124a0da129de9662cdd30a~mv2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
