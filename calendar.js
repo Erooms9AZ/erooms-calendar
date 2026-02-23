@@ -6,7 +6,8 @@ let mergedBlock = null;
 (async function(){
 
 // ⭐ Your NEW API key
-const apiKey = "AIzaSyAxs0qF-kK2ANuiDGNbZWt2LjEO9R3W9SI";
+const apiKey = window.EROOMS_CONFIG.apiKey;
+
 
 // Google Calendar IDs
 const calendars = {
