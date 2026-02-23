@@ -1,2 +1,3 @@
 //public/calendar.js
-console.log("calendar.js loaded");
+alert("calendar.js loaded");
+
