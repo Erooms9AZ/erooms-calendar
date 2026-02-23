@@ -199,7 +199,7 @@ async function renderCalendar() {
         };
 
         // ⭐ Replace Wix messaging with direct Apps Script call
-        await fetch("YOUR_APPS_SCRIPT_URL_HERE", {
+        await fetch(https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxxxxxxxx/exec, {
           method: "POST",
           body: JSON.stringify(payload)
         });
