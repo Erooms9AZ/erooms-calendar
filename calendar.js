@@ -199,11 +199,13 @@ async function renderCalendar() {
         };
 
         // ⭐ Replace Wix messaging with direct Apps Script call
-        await fetch(https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-
+        await fetch("https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(payload)
+});
         const startTime = String(start.getHours()).padStart(2, "0") + ":00";
         const endTime = String(end.getHours()).padStart(2, "0") + ":00";
 
