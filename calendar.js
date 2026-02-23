@@ -3,27 +3,6 @@
 let selectedDuration = 1;
 let mergedBlock = null;
 
-/* -------------------------------------------------------
-   DURATION BUTTONS — FIXED (now always attach correctly)
--------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('#durationButtons button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      selectedDuration = Number(btn.dataset.hours);
-
-      document.querySelectorAll('#durationButtons button')
-        .forEach(b => b.classList.remove('active'));
-
-      btn.classList.add('active');
-      mergedBlock = null;
-      renderCalendar();
-    });
-  });
-});
-
-/* -------------------------------------------------------
-   MAIN CALENDAR LOGIC
--------------------------------------------------------- */
 (async function(){
 
 // ⭐ Your NEW API key
@@ -111,11 +90,11 @@ if (now.getDay() === 6 && now.getHours() >= 22) {
 let currentWeekStart = new Date(baseWeekStart);
 
 /* -------------------------------------------------------
-   GOOGLE CALENDAR FETCH
+   GOOGLE CALENDAR FETCH — NOW WITH CACHE-BUSTER
 -------------------------------------------------------- */
 async function fetchEvents(calendarId,start,end){
   const res = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}`
+    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}&cb=${Date.now()}`
   );
   const data = await res.json();
   return data.items||[];
@@ -368,12 +347,25 @@ nextWeekBtn.onclick = () => {
 };
 
 /* -------------------------------------------------------
+   ⭐ FIXED — DURATION BUTTONS NOW WORK
+-------------------------------------------------------- */
+document.querySelectorAll('#durationButtons button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedDuration = Number(btn.dataset.hours);
+
+    document.querySelectorAll('#durationButtons button')
+      .forEach(b => b.classList.remove('active'));
+
+    btn.classList.add('active');
+    mergedBlock = null;
+    renderCalendar();
+  });
+});
+
+/* -------------------------------------------------------
    INITIAL RENDER
 -------------------------------------------------------- */
 renderCalendar();
 updateWeekButtons();
 
 })();
-
-
-      
