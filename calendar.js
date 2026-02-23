@@ -1,20 +1,29 @@
 // calendar.js
 
 let selectedDuration = 1;
+let mergedBlock = null;
 
-document.querySelectorAll('#durationButtons button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    selectedDuration = Number(btn.dataset.hours);
+/* -------------------------------------------------------
+   DURATION BUTTONS — FIXED (now always attach correctly)
+-------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('#durationButtons button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedDuration = Number(btn.dataset.hours);
 
-    document.querySelectorAll('#durationButtons button')
-      .forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#durationButtons button')
+        .forEach(b => b.classList.remove('active'));
 
-    btn.classList.add('active');
-    mergedBlock = null;
-    renderCalendar();
+      btn.classList.add('active');
+      mergedBlock = null;
+      renderCalendar();
+    });
   });
 });
 
+/* -------------------------------------------------------
+   MAIN CALENDAR LOGIC
+-------------------------------------------------------- */
 (async function(){
 
 // ⭐ Your NEW API key
@@ -27,7 +36,6 @@ const calendars = {
 };
 
 let activeRoom = "room1";
-let mergedBlock = null;
 
 const calendarEl = document.getElementById("calendar");
 const monthLabel = document.getElementById("monthLabel");
@@ -43,6 +51,9 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/* -------------------------------------------------------
+   BOOKING OVERLAY ELEMENTS
+-------------------------------------------------------- */
 const bookingOverlay = document.getElementById("bookingOverlay");
 const bookingSummary = document.getElementById("bookingSummary");
 const bfName = document.getElementById("bfName");
@@ -69,6 +80,9 @@ function closeBookingForm() {
   bookingOverlay.style.display = "none";
 }
 
+/* -------------------------------------------------------
+   MERGED BLOCK CREATION
+-------------------------------------------------------- */
 function createMergedBlock(room, slotTime) {
   mergedBlock = {
     room: room,
@@ -79,6 +93,9 @@ function createMergedBlock(room, slotTime) {
   renderCalendar();
 }
 
+/* -------------------------------------------------------
+   WEEK CALCULATION
+-------------------------------------------------------- */
 function getStartOfWeek(date){
   const d = new Date(date);
   d.setDate(d.getDate() - d.getDay() + 1);
@@ -93,6 +110,9 @@ if (now.getDay() === 6 && now.getHours() >= 22) {
 }
 let currentWeekStart = new Date(baseWeekStart);
 
+/* -------------------------------------------------------
+   GOOGLE CALENDAR FETCH
+-------------------------------------------------------- */
 async function fetchEvents(calendarId,start,end){
   const res = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}`
@@ -101,6 +121,9 @@ async function fetchEvents(calendarId,start,end){
   return data.items||[];
 }
 
+/* -------------------------------------------------------
+   ROOM AVAILABILITY CHECK
+-------------------------------------------------------- */
 function availableRooms(slotTime, duration, events) {
   const endTime = new Date(slotTime.getTime() + duration * 60 * 60 * 1000);
 
@@ -116,6 +139,9 @@ function availableRooms(slotTime, duration, events) {
   return rooms;
 }
 
+/* -------------------------------------------------------
+   MAIN RENDER FUNCTION
+-------------------------------------------------------- */
 async function renderCalendar() {
   calendarEl.innerHTML = "";
 
@@ -142,6 +168,9 @@ async function renderCalendar() {
     calendarEl.appendChild(h);
   }
 
+  /* -------------------------------------------------------
+     MERGED BLOCK CONFIRMATION PANEL
+  -------------------------------------------------------- */
   if (mergedBlock && mergedBlock.room === activeRoom) {
     const start = mergedBlock.start;
     const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
@@ -228,6 +257,9 @@ async function renderCalendar() {
     return;
   }
 
+  /* -------------------------------------------------------
+     HOURLY GRID
+  -------------------------------------------------------- */
   for (let hour = 10; hour < 22; hour++) {
     const hourLabel = document.createElement("div");
     hourLabel.className = "hour-label";
@@ -306,6 +338,9 @@ async function renderCalendar() {
     `${startOfWeek.getFullYear()}`;
 }
 
+/* -------------------------------------------------------
+   WEEK NAVIGATION
+-------------------------------------------------------- */
 function updateWeekButtons() {
   if (currentWeekStart.getTime() <= baseWeekStart.getTime()) {
     prevWeekBtn.classList.add("disabled");
@@ -332,9 +367,13 @@ nextWeekBtn.onclick = () => {
   updateWeekButtons();
 };
 
+/* -------------------------------------------------------
+   INITIAL RENDER
+-------------------------------------------------------- */
 renderCalendar();
 updateWeekButtons();
 
 })();
 
 
+      
