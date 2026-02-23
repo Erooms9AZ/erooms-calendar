@@ -11,6 +11,7 @@
       padding: 20px;
     }
 
+    /* Top bar */
     #topBar {
       display: flex;
       justify-content: space-between;
@@ -18,11 +19,21 @@
       margin-bottom: 20px;
     }
 
+    /* Duration buttons */
+    #durationButtons button {
+      padding: 8px 14px;
+      margin-right: 6px;
+      border: 1px solid #444;
+      background: #eee;
+      cursor: pointer;
+    }
+
     #durationButtons button.active {
-      background-color: #333;
+      background: #444;
       color: white;
     }
 
+    /* Calendar grid */
     #calendar {
       display: grid;
       grid-template-columns: 80px repeat(6, 1fr);
@@ -54,6 +65,7 @@
       opacity: 0.8;
     }
 
+    /* Floating room selector */
     #floatingSelector {
       position: absolute;
       background: white;
@@ -63,8 +75,21 @@
       flex-direction: column;
       gap: 10px;
       z-index: 1000;
+      top: 100px;
+      left: 100px;
     }
 
+    /* Merged slot panel */
+    .merged-row {
+      grid-column: 1 / span 7;
+      background: #fff3cd;
+      padding: 15px;
+      border: 1px solid #e0c97f;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    /* Booking overlay */
     #bookingOverlay {
       position: fixed;
       top: 0;
@@ -155,4 +180,3 @@
   <script src="calendar.js"></script>
 </body>
 </html>
-
