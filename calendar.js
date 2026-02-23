@@ -16,7 +16,7 @@ document.querySelectorAll('#durationButtons button').forEach(btn => {
 
 (async function(){
 
-const apiKey = "AIzaSyDMS_gI1g_iT61E4Qk9lpz3uErYsUObZsw";
+const apiKey = "REPLACE_ME";
 const calendars = {
   room1: "o6del9prcevigs6q3gnqqc18po@group.calendar.google.com",
   room2: "0vaic8tl54smverq0d9eso5gs8@group.calendar.google.com"
