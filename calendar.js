@@ -1,4 +1,5 @@
 //public/calendar.js
+console.log("calendar.js loaded");
 let selectedDuration = 1;
 
 document.querySelectorAll('#durationButtons button').forEach(btn => {
