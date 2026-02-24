@@ -146,5 +146,18 @@ body {
   padding: 8px 0;
   margin-bottom: 10px;
 }
+.legendItem {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block !important;
+}
 
 
