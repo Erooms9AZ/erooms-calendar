@@ -55,7 +55,20 @@ function renderMobileSlots() {
     }
 
     const div = document.createElement("div");
-    div.className = "slotItem " + (availability.available ? "available" : "unavailable");
+   let cls = "slotItem ";
+
+if (!availability.available) {
+  cls += "unavailable";
+} else if (availability.rooms.length === 2) {
+  cls += "available"; // both rooms → purple
+} else if (availability.rooms.length === 1) {
+  const room = availability.rooms[0];
+  if (room === "room1") cls += "room1";
+  if (room === "room2") cls += "room2";
+}
+
+div.className = cls;
+
     div.textContent = `${hour}:00`;
 
     if (availability.available && availability.rooms.length > 0) {
