@@ -372,5 +372,8 @@ document.querySelectorAll('#durationButtons button').forEach(btn => {
 -------------------------------------------------------- */
 renderCalendar();
 updateWeekButtons();
-
+window.getAvailabilityForSlot = getAvailabilityForSlot;
+window.handleSlotClick = handleSlotClick;
 })();
+
+
