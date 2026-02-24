@@ -83,16 +83,21 @@ const endHour = hour + duration;
 div.textContent = `${hour}:00–${endHour}:00`;
 
 
-    if (availability.available && availability.rooms.length > 0) {
+   if (availability.available && availability.rooms.length > 0) {
   div.onclick = () => {
-    if (availability.rooms.length === 2) {
-      // Both rooms free → show selector
-      window.showRoomChoice(slotTime, availability.rooms);
-    } else {
-      // Only one room free → auto-select
-      window.handleSlotClick(availability.rooms[0], slotTime);
+    const rooms = availability.rooms;
+
+    // BOTH ROOMS AVAILABLE → show selector
+    if (rooms.length === 2) {
+      showMobileRoomSelector(rooms, slotTime);
+      return;
     }
+
+    // ONE ROOM AVAILABLE → auto-select
+    window.handleSlotClick(rooms[0], slotTime);
   };
+}
+
 }
 
 
