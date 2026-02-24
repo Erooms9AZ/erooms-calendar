@@ -90,6 +90,29 @@ div.textContent = `${hour}:00–${endHour}:00`;
     slotList.appendChild(div);
   });
 }
+function insertSlotLegend() {
+  const slotList = document.getElementById("slotList");
+  if (!slotList) return;
+
+  // Avoid duplicates
+  if (document.getElementById("slotLegend")) return;
+
+  const legend = document.createElement("div");
+  legend.id = "slotLegend";
+  legend.innerHTML = `
+    <div class="legendItem">
+      <span class="legendColor both"></span> Both Rooms
+    </div>
+    <div class="legendItem">
+      <span class="legendColor room1"></span> Room 1 Only
+    </div>
+    <div class="legendItem">
+      <span class="legendColor room2"></span> Room 2 Only
+    </div>
+  `;
+
+  slotList.parentNode.insertBefore(legend, slotList);
+}
 
 // -------------------------------------------------------
 // NAVIGATION
