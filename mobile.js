@@ -153,6 +153,8 @@ function waitForEventsAndRefresh() {
 // -------------------------------------------------------
 waitForCalendarExports(() => {
   updateDayLabel();
-  renderMobileSlots();      // initial render (may be all unavailable)
-  waitForEventsAndRefresh(); // re-render once events are actually loaded
+  insertSlotLegend();       // ← ADD THIS
+  renderMobileSlots();
+  waitForEventsAndRefresh();
 });
+
