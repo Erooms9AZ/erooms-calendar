@@ -1,6 +1,5 @@
 window.selectedDuration = 1;
 
-
 // -------------------------------------------------------
 // WAIT FOR CALENDAR EXPORTS
 // -------------------------------------------------------
@@ -21,7 +20,6 @@ function waitForCalendarExports(callback) {
 let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
   ? new Date(currentWeekStart)
   : new Date();
-
 
 // -------------------------------------------------------
 // HEADER LABEL
@@ -58,54 +56,59 @@ function renderMobileSlots() {
     }
 
     const div = document.createElement("div");
-   let cls = "slotItem ";
+    let cls = "slotItem ";
 
-if (!availability.available) {
-  cls += "unavailable";
-} else if (availability.rooms.length === 2) {
-  cls += "available"; // both rooms → purple
-} else if (availability.rooms.length === 1) {
-  const room = availability.rooms[0];
-  if (room === "room1") cls += "room1";
-  if (room === "room2") cls += "room2";
-}
-
-div.className = cls;
-
-   // Determine selected duration (1, 2, or 3 hours)
-const duration = parseInt(
-  document.querySelector("#durationButtons button.active")
-?.dataset.hours || "1",
-  10
-);
-
-// Compute end time
-const endHour = hour + duration;
-
-// Set label: "10:00–11:00", "10:00–12:00", etc.
-div.textContent = `${hour}:00–${endHour}:00`;
-
-
-   if (availability.available && availability.rooms.length > 0) {
-  div.onclick = () => {
-    const rooms = availability.rooms;
-
-    // BOTH ROOMS AVAILABLE → show selector
-    if (rooms.length === 2) {
-      showMobileRoomSelector(rooms, slotTime);
-      return;
+    if (!availability.available) {
+      cls += "unavailable";
+    } else if (availability.rooms.length === 2) {
+      cls += "available"; // both rooms → purple
+    } else if (availability.rooms.length === 1) {
+      const room = availability.rooms[0];
+      if (room === "room1") cls += "room1";
+      if (room === "room2") cls += "room2";
     }
 
-    // ONE ROOM AVAILABLE → auto-select
-    window.handleSlotClick(rooms[0], slotTime);
+    div.className = cls;
+
+    // Determine selected duration
+    const duration = parseInt(
+      document.querySelector("#durationButtons button.active")?.dataset.hours || "1",
+      10
+    );
+
+    // Compute end time
+    const endHour = hour + duration;
+
+    // Set label
+    div.textContent = `${hour}:00–${endHour}:00`;
+
+    // CLICK HANDLER
+    if (availability.available && availability.rooms.length > 0) {
+      div.onclick = () => {
+        const rooms = availability.rooms;
+
+        // BOTH ROOMS AVAILABLE → show selector
+        if (rooms.length === 2) {
+          showMobileRoomSelector(rooms, slotTime);
+          return;
+        }
+
+        // ONE ROOM AVAILABLE → auto-select
+        window.handleSlotClick(rooms[0], slotTime);
+      };
+    }
 
     slotList.appendChild(div);
+  });
 }
+
+// -------------------------------------------------------
+// LEGEND
+// -------------------------------------------------------
 function insertSlotLegend() {
   const slotList = document.getElementById("slotList");
   if (!slotList) return;
 
-  // Avoid duplicates
   if (document.getElementById("slotLegend")) return;
 
   const legend = document.createElement("div");
@@ -124,6 +127,10 @@ function insertSlotLegend() {
 
   slotList.parentNode.insertBefore(legend, slotList);
 }
+
+// -------------------------------------------------------
+// SIMPLE ROOM SELECTOR (TEMPORARY)
+// -------------------------------------------------------
 function showMobileRoomSelector(rooms, slotTime) {
   const choice = window.prompt(
     "Both rooms available.\nEnter 1 for Room 1 or 2 for Room 2:"
@@ -154,19 +161,19 @@ if (nextBtn) {
     renderMobileSlots();
   };
 }
+
 // -------------------------------------------------------
 // DURATION BUTTONS
 // -------------------------------------------------------
 document.querySelectorAll("#durationButtons button").forEach(btn => {
   btn.addEventListener("click", () => {
-    // Remove active from all
     document.querySelectorAll("#durationButtons button")
       .forEach(b => b.classList.remove("active"));
 
-    // Add active to clicked
     btn.classList.add("active");
 
-    // Re-render slots with new duration
+    window.selectedDuration = Number(btn.dataset.hours);
+
     renderMobileSlots();
   });
 });
@@ -176,7 +183,6 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
 // -------------------------------------------------------
 function waitForEventsAndRefresh() {
   if (Array.isArray(window.allEvents) && window.allEvents.length > 0) {
-    // Events are ready: re-render so availability is correct
     renderMobileSlots();
   } else {
     setTimeout(waitForEventsAndRefresh, 200);
@@ -184,13 +190,11 @@ function waitForEventsAndRefresh() {
 }
 
 // -------------------------------------------------------
-// INITIAL LOAD (AFTER CALENDAR EXPORTS ARE READY)
+// INITIAL LOAD
 // -------------------------------------------------------
 waitForCalendarExports(() => {
   updateDayLabel();
-  insertSlotLegend();       // ← ADD THIS
-  window.selectedDuration = Number(btn.dataset.hours);
-renderMobileSlots();
+  insertSlotLegend();
+  renderMobileSlots();
   waitForEventsAndRefresh();
 });
-}
