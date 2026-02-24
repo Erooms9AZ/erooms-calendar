@@ -75,36 +75,6 @@ body {
   text-align: center;
 }
 
-/* Available slots */
-.slotItem.available {
-  background-color: #d9c4ff !important;
-  color: #000 !important;
-}
-
-
-/* Unavailable slots */
-.slotItem.unavailable {
-  background: #ccc;
-  color: #666;
-}
-.slotItem.available {
-  background-color: #d9c4ff; /* richer purple */
-  color: #000;
-}
-
-.slotItem.room1 {
-  background-color: #d0e7ff; /* blue */
-  color: #000;
-}
-
-.slotItem.room2 {
-  background-color: #d8ffd8; /* green */
-  color: #000;
-}
-
-.slotItem.unavailable {
-  background-color: #f0f0f0; /* grey */
-  color: #999;
 }
 #slotLegend {
   display: flex;
@@ -119,13 +89,6 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.legendColor {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  display: inline-block;
 }
 
 /* Match your slot colours */
