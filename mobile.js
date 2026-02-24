@@ -69,7 +69,18 @@ if (!availability.available) {
 
 div.className = cls;
 
-    div.textContent = `${hour}:00`;
+   // Determine selected duration (1, 2, or 3 hours)
+const duration = parseInt(
+  document.querySelector(".durationButton.selected")?.dataset.hours || "1",
+  10
+);
+
+// Compute end time
+const endHour = hour + duration;
+
+// Set label: "10:00–11:00", "10:00–12:00", etc.
+div.textContent = `${hour}:00–${endHour}:00`;
+
 
     if (availability.available && availability.rooms.length > 0) {
       const room = availability.rooms[0];
