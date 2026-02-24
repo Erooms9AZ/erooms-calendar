@@ -1,3 +1,6 @@
+window.selectedDuration = 1;
+
+
 // -------------------------------------------------------
 // WAIT FOR CALENDAR EXPORTS
 // -------------------------------------------------------
@@ -184,7 +187,8 @@ function waitForEventsAndRefresh() {
 waitForCalendarExports(() => {
   updateDayLabel();
   insertSlotLegend();       // ← ADD THIS
-  renderMobileSlots();
+  window.selectedDuration = Number(btn.dataset.hours);
+renderMobileSlots();
   waitForEventsAndRefresh();
 });
 
