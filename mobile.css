@@ -106,4 +106,39 @@ body {
   background-color: #f0f0f0; /* grey */
   color: #999;
 }
+#slotLegend {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 15px;
+  font-size: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Match your slot colours */
+.legendColor.both {
+  background-color: #d9c4ff; /* purple */
+}
+
+.legendColor.room1 {
+  background-color: #d0e7ff; /* blue */
+}
+
+.legendColor.room2 {
+  background-color: #d8ffd8; /* green */
+}
+
 
