@@ -159,5 +159,130 @@ body {
   border-radius: 3px;
   display: inline-block !important;
 }
+/* -------------------------------------------------------
+   SLOT COLOURS (MATCH DESKTOP)
+-------------------------------------------------------- */
 
+.slotItem {
+  padding: 14px;
+  margin: 6px 0;
+  border-radius: 8px;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  color: white;
+}
+
+/* Both rooms available (purple) */
+.slotItem.available {
+  background: #9c27b0;
+}
+
+/* Room 1 only (green) */
+.slotItem.room1 {
+  background: #4caf50;
+}
+
+/* Room 2 only (blue) */
+.slotItem.room2 {
+  background: #2196f3;
+}
+
+/* Unavailable (grey) */
+.slotItem.unavailable {
+  background: #777;
+  color: #eee;
+}
+
+/* -------------------------------------------------------
+   LEGEND COLOURS
+-------------------------------------------------------- */
+
+.legendColor {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.legendColor.both {
+  background: #9c27b0;
+}
+
+.legendColor.room1 {
+  background: #4caf50;
+}
+
+.legendColor.room2 {
+  background: #2196f3;
+}
+
+/* -------------------------------------------------------
+   MOBILE ROOM SELECTOR MODAL
+-------------------------------------------------------- */
+
+.mobile-room-selector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.mobile-room-selector .selector-box {
+  background: #fff;
+  padding: 22px;
+  width: 80%;
+  max-width: 320px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.mobile-room-selector h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Room buttons */
+.room-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+.room-btn.room1 {
+  background: #4caf50;
+}
+
+.room-btn.room2 {
+  background: #2196f3;
+}
+
+/* Cancel button */
+.cancel-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 12px;
+  background: #999;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
 
