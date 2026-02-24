@@ -118,44 +118,46 @@
       opacity: 0.4;
       pointer-events: none;
     }
-   #helpButton.help-inline {
-  background: #673ab7;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  margin-left: 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
 
-#helpButton.help-inline:hover {
-  opacity: 0.85;
-}
-#helpPopup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  z-index: 99999;
-  display: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
+    /* Help button */
+    #helpButton.help-inline {
+      background: #673ab7;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-#helpClose {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  cursor: pointer;
-  font-size: 18px;
-}
+    #helpButton.help-inline:hover {
+      opacity: 0.85;
+    }
 
+    /* Help popup */
+    #helpPopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      z-index: 99999;
+      display: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
 
+    #helpClose {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      cursor: pointer;
+      font-size: 18px;
+    }
   </style>
 </head>
 
@@ -166,34 +168,37 @@
     <div id="monthLabel">Loading…</div>
     <button id="nextWeekBtn">Next Week →</button>
   </div>
-<div id="helpPopup">
-  <div id="helpClose">✖</div>
 
-  <h2>How E Rooms Booking Works</h2>
+  <!-- Help Popup -->
+  <div id="helpPopup">
+    <div id="helpClose">✖</div>
 
-  <p><strong>Colour Guide:</strong></p>
-  <ul>
-    <li><span style="color:#9c27b0;">Purple</span>: Both rooms available</li>
-    <li><span style="color:#4caf50;">Green</span>: Only Room 1 available</li>
-    <li><span style="color:#2196f3;">Blue</span>: Only Room 2 available</li>
-    <li><span style="color:grey;">Grey</span>: Unavailable</li>
-  </ul>
+    <h2>How E Rooms Booking Works</h2>
 
-  <p><strong>How to Book:</strong></p>
-  <ol>
-    <li>Choose your session length — 1 to 4 hours.</li>
-    <li>If both rooms are available, click the time slot then choose Room 1 or Room 2.</li>
-    <li>Click an available time slot.</li>
-    <li>Confirm the time when prompted.</li>
-    <li>Fill in your details and submit.</li>
-  </ol>
-</div>
+    <p><strong>Colour Guide:</strong></p>
+    <ul>
+      <li><span style="color:#9c27b0;">Purple</span>: Both rooms available</li>
+      <li><span style="color:#4caf50;">Green</span>: Only Room 1 available</li>
+      <li><span style="color:#2196f3;">Blue</span>: Only Room 2 available</li>
+      <li><span style="color:grey;">Grey</span>: Unavailable</li>
+    </ul>
 
+    <p><strong>How to Book:</strong></p>
+    <ol>
+      <li>Choose your session length — 1 to 4 hours.</li>
+      <li>If both rooms are available, click the time slot then choose Room 1 or Room 2.</li>
+      <li>Click an available time slot.</li>
+      <li>Confirm the time when prompted.</li>
+      <li>Fill in your details and submit.</li>
+    </ol>
+  </div>
+
+  <!-- Duration Buttons -->
   <div id="durationButtons">
     <button data-hours="1" class="active">1 Hour</button>
     <button data-hours="2">2 Hours</button>
     <button data-hours="3">3 Hours</button>
-<button id="helpButton" class="help-inline">How to use this form</button>
+    <button id="helpButton" class="help-inline">How to use this form</button>
   </div>
 
   <br>
@@ -237,30 +242,18 @@
       </div>
     </div>
   </div>
- <script src="calendar.js"></script>
-<div id="helpButton">How to use this form</div>
 
-<script src="calendar.js"></script>
-<script>
-document.getElementById("helpButton").onclick = () => {
-  document.getElementById("helpPopup").style.display = "block";
-};
+  <script src="calendar.js"></script>
 
-document.getElementById("helpClose").onclick = () => {
-  document.getElementById("helpPopup").style.display = "none";
-};
-</script>
+  <script>
+    document.getElementById("helpButton").onclick = () => {
+      document.getElementById("helpPopup").style.display = "block";
+    };
 
-<script>
-document.getElementById("helpButton").onclick = () => {
-  document.getElementById("helpPopup").style.display = "block";
-};
-
-document.getElementById("helpClose").onclick = () => {
-  document.getElementById("helpPopup").style.display = "none";
-};
-</script>
-
+    document.getElementById("helpClose").onclick = () => {
+      document.getElementById("helpPopup").style.display = "none";
+    };
+  </script>
 
 </body>
 </html>
