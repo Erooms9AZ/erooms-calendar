@@ -1,0 +1,88 @@
+/* -------------------------------------------------------
+   GENERAL LAYOUT
+-------------------------------------------------------- */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+#mobileContainer {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* -------------------------------------------------------
+   HEADER BAR
+-------------------------------------------------------- */
+#dayHeader {
+  background: #9c27b0;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dayHeader button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  padding: 5px 10px;
+}
+
+/* -------------------------------------------------------
+   DURATION BUTTONS
+-------------------------------------------------------- */
+#durationButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+#durationButtons button {
+  padding: 10px 15px;
+  border: none;
+  background: #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+#durationButtons button.active {
+  background: #555;
+  color: white;
+}
+
+/* -------------------------------------------------------
+   SLOT LIST
+-------------------------------------------------------- */
+#slotList {
+  padding: 15px;
+}
+
+.slotItem {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-size: 18px;
+  text-align: center;
+}
+
+/* Available slots */
+.slotItem.available {
+  background: #9c27b0;
+  color: white;
+}
+
+/* Unavailable slots */
+.slotItem.unavailable {
+  background: #ccc;
+  color: #666;
+}
