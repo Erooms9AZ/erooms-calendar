@@ -256,16 +256,35 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
       const slot = document.createElement("div");
       slot.className = "slot";
 
-      const slotTime = new Date(day);
-      slotTime.setHours(hour, 0, 0, 0);
+ for (let hour = 10; hour < 22; hour++) {
+  const hourLabel = document.createElement("div");
+  hourLabel.className = "hour-label";
+  hourLabel.textContent = `${hour}:00`;
+  calendarEl.appendChild(hourLabel);
 
-      const rooms = availableRooms(slotTime, selectedDuration, events);
-      const hasR1 = rooms.includes("room1");
-      const hasR2 = rooms.includes("room2");
+  for (let i = 0; i < 6; i++) {
+    const day = days[i];
+    const slot = document.createElement("div");
+    slot.className = "slot";
 
-      const endTime = new Date(slotTime.getTime() + selectedDuration * 60 * 60 * 1000);
-      const startStr = slotTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-      const endStr = endTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    const slotTime = new Date(day);
+    slotTime.setHours(hour, 0, 0, 0);
+
+    // ⭐ HIDE PAST SLOTS
+    const now = new Date();
+    if (slotTime < now) {
+      continue;
+    }
+
+    const rooms = availableRooms(slotTime, selectedDuration, events);
+    const hasR1 = rooms.includes("room1");
+    const hasR2 = rooms.includes("room2");
+
+    const endTime = new Date(slotTime.getTime() + selectedDuration * 60 * 60 * 1000);
+    const startStr = slotTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    const endStr = endTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
+    // ... rest of your existing logic
 
       if (!hasR1 && !hasR2) {
         slot.style.backgroundColor = "grey";
