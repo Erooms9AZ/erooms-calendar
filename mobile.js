@@ -71,7 +71,8 @@ div.className = cls;
 
    // Determine selected duration (1, 2, or 3 hours)
 const duration = parseInt(
-  document.querySelector(".durationButton.selected")?.dataset.hours || "1",
+  document.querySelector("#durationButtons button.active")
+?.dataset.hours || "1",
   10
 );
 
@@ -135,6 +136,22 @@ if (nextBtn) {
     renderMobileSlots();
   };
 }
+// -------------------------------------------------------
+// DURATION BUTTONS
+// -------------------------------------------------------
+document.querySelectorAll("#durationButtons button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    // Remove active from all
+    document.querySelectorAll("#durationButtons button")
+      .forEach(b => b.classList.remove("active"));
+
+    // Add active to clicked
+    btn.classList.add("active");
+
+    // Re-render slots with new duration
+    renderMobileSlots();
+  });
+});
 
 // -------------------------------------------------------
 // WAIT FOR EVENTS, THEN REFRESH SLOTS ONCE
