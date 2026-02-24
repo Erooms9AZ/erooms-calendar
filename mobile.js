@@ -1,3 +1,4 @@
+// Wait until calendar.js has exported its functions
 function waitForCalendarExports(callback) {
   if (window.getAvailabilityForSlot && window.handleSlotClick) {
     callback();
@@ -27,17 +28,14 @@ function renderMobileSlots() {
     const slotTime = new Date(mobileCurrentDay);
     slotTime.setHours(hour, 0, 0, 0);
 
-    // Use your existing availability logic from calendar.js
     const availability = window.getAvailabilityForSlot(slotTime);
 
     const div = document.createElement("div");
     div.className = "slotItem " + (availability.available ? "available" : "unavailable");
-
     div.textContent = `${hour}:00`;
 
     if (availability.available) {
       div.onclick = () => window.handleSlotClick(availability.rooms[0], slotTime);
-
     }
 
     slotList.appendChild(div);
@@ -57,6 +55,8 @@ document.getElementById("nextDayBtn").onclick = () => {
   renderMobileSlots();
 };
 
-// Initial load
-updateDayLabel();
-renderMobileSlots();
+// Initial load AFTER calendar.js is ready
+waitForCalendarExports(() => {
+  updateDayLabel();
+  renderMobileSlots();
+});
