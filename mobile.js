@@ -84,9 +84,17 @@ div.textContent = `${hour}:00–${endHour}:00`;
 
 
     if (availability.available && availability.rooms.length > 0) {
-      const room = availability.rooms[0];
-      div.onclick = () => window.handleSlotClick(room, slotTime);
+  div.onclick = () => {
+    if (availability.rooms.length === 2) {
+      // Both rooms free → show selector
+      window.showRoomChoice(slotTime, availability.rooms);
+    } else {
+      // Only one room free → auto-select
+      window.handleSlotClick(availability.rooms[0], slotTime);
     }
+  };
+}
+
 
     slotList.appendChild(div);
   });
