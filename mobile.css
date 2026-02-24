@@ -78,58 +78,31 @@ body {
 }
 
 /* -------------------------------------------------------
-   SLOT COLOURS (MATCH WEB VERSION)
+   SLOT COLOURS (YOUR EXACT SPEC)
 -------------------------------------------------------- */
 
-/* Both rooms available (purple) */
-.slotItem.available {
-  background: #9c27b0;   /* adjust if your desktop uses a different purple */
+/* Unavailable */
+.slotItem.unavailable {
+  background: grey;
+  color: white;
 }
 
-/* Room 1 only (dark blue) */
+/* Room 1 (green) */
 .slotItem.room1 {
-  background: #1e3a8a;   /* dark blue */
+  background: #4caf50;
+  color: white;
 }
 
-/* Room 2 only (light blue) */
+/* Room 2 (blue) */
 .slotItem.room2 {
-  background: #60a5fa;   /* light blue */
+  background: #2196f3;
+  color: white;
 }
 
-/* Unavailable (light grey) */
-.slotItem.unavailable {
-  background: #e5e7eb;
-  color: #6b7280;
-}
-
-/* -------------------------------------------------------
-   LEGEND COLOURS (MATCH SLOTS)
--------------------------------------------------------- */
-.legendColor {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  display: inline-block;
-  margin-right: 8px;
-}
-
-.legendColor.both {
+/* Dual Room (purple) */
+.slotItem.available {
   background: #9c27b0;
-}
-
-.legendColor.room1 {
-  background: #1e3a8a;
-}
-
-.legendColor.room2 {
-  background: #60a5fa;
-}
-
-
-/* Unavailable (grey) */
-.slotItem.unavailable {
-  background: #777;
-  color: #eee;
+  color: white;
 }
 
 /* -------------------------------------------------------
@@ -157,6 +130,18 @@ body {
   margin-right: 8px;
 }
 
+/* Legend colours (match slots exactly) */
+.legendColor.both {
+  background: #9c27b0;
+}
+
+.legendColor.room1 {
+  background: #4caf50;
+}
+
+.legendColor.room2 {
+  background: #2196f3;
+}
 
 /* -------------------------------------------------------
    MOBILE ROOM SELECTOR MODAL
