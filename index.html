@@ -247,15 +247,17 @@
   <script src="calendar.js"></script>
 
   <!-- Help popup logic -->
-  <script>
-    document.getElementById("helpButton").onclick = () => {
-      document.getElementById("helpPopup").style.display = "block";
-    };
+ <script>
+document.getElementById("helpButton").addEventListener("click", () => {
+  // Just show the popup — no DOM mutation that affects calendar
+  document.getElementById("helpPopup").style.display = "block";
+});
 
-    document.getElementById("helpClose").onclick = () => {
-      document.getElementById("helpPopup").style.display = "none";
-    };
-  </script>
+document.getElementById("helpClose").addEventListener("click", () => {
+  document.getElementById("helpPopup").style.display = "none";
+});
+</script>
+
 
 </body>
 </html>
