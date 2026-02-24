@@ -100,7 +100,6 @@ div.textContent = `${hour}:00–${endHour}:00`;
     window.handleSlotClick(rooms[0], slotTime);
 
     slotList.appendChild(div);
-  });
 }
 function insertSlotLegend() {
   const slotList = document.getElementById("slotList");
