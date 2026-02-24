@@ -378,17 +378,36 @@ document.querySelectorAll('#durationButtons button').forEach(btn => {
    INITIAL RENDER
 -------------------------------------------------------- */
 
-// Only render the desktop calendar if the element exists
+// Desktop calendar ONLY
 if (calendarEl) {
   renderCalendar();
   updateWeekButtons();
+} else {
+  // Mobile: fetch events but do NOT render desktop UI
+  loadEventsForMobile();
+}
+
+/* -------------------------------------------------------
+   LOAD EVENTS FOR MOBILE (NO DESKTOP UI)
+-------------------------------------------------------- */
+async function loadEventsForMobile() {
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  const events = [
+    ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
+    ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
+  ];
+
+  window.allEvents = events;
 }
 
 /* -------------------------------------------------------
    EXPORT FUNCTIONS FOR MOBILE
 -------------------------------------------------------- */
 
-// Wrapper so mobile.js can check availability for a single slot
+// Always export these — mobile depends on them
 function getAvailabilityForSlot(slotTime) {
   const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
   return {
@@ -397,9 +416,7 @@ function getAvailabilityForSlot(slotTime) {
   };
 }
 
-// Always export these — mobile.html depends on them
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
 
 })();
-
