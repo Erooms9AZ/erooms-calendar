@@ -98,11 +98,6 @@ div.textContent = `${hour}:00–${endHour}:00`;
 
     // ONE ROOM AVAILABLE → auto-select
     window.handleSlotClick(rooms[0], slotTime);
-  };
-}
-
-}
-
 
     slotList.appendChild(div);
   });
@@ -129,6 +124,14 @@ function insertSlotLegend() {
   `;
 
   slotList.parentNode.insertBefore(legend, slotList);
+}
+function showMobileRoomSelector(rooms, slotTime) {
+  const choice = window.prompt(
+    "Both rooms available.\nEnter 1 for Room 1 or 2 for Room 2:"
+  );
+
+  if (choice === "1") window.handleSlotClick("room1", slotTime);
+  if (choice === "2") window.handleSlotClick("room2", slotTime);
 }
 
 // -------------------------------------------------------
