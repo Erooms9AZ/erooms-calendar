@@ -127,18 +127,6 @@ body {
   margin-right: 8px;
 }
 
-/* Legend colours match slot colours */
-.legendColor.both {
-  background: #9c27b0;
-}
-
-.legendColor.room1 {
-  background: #4caf50;
-}
-
-.legendColor.room2 {
-  background: #2196f3;
-}
 
 /* -------------------------------------------------------
    MOBILE ROOM SELECTOR MODAL
