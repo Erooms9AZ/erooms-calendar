@@ -45,8 +45,7 @@ function openMobileBooking(room, slotTime) {
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
 
   // Set mergedBlock (desktop logic)
-  window.handleSlotClick(room, slotTime);
-
+  openMobileBooking(rooms[0], slotTime);
   // Open booking form directly
   window.openBookingForm(summary);
 }
