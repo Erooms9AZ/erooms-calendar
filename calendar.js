@@ -361,7 +361,8 @@ if (nextWeekBtn) {
 /* -------------------------------------------------------
    ⭐ FIXED — DURATION BUTTONS NOW WORK
 -------------------------------------------------------- */
-document.querySelectorAll('#durationButtons button').forEach(btn => {
+if (calendarEl) {
+  document.querySelectorAll('#durationButtons button').forEach(btn => {
   btn.addEventListener('click', () => {
     selectedDuration = Number(btn.dataset.hours);
 
