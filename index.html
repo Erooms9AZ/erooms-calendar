@@ -247,6 +247,10 @@
   <script src="calendar.js"></script>
 
   <!-- Help popup logic -->
+  <script>
+window.currentWeekStart = window.currentWeekStart || null;
+</script>
+
  <script>
 document.getElementById("helpButton").addEventListener("click", () => {
   // Just show the popup — no DOM mutation that affects calendar
