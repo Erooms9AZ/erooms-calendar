@@ -124,7 +124,8 @@ function availableRooms(slotTime, duration, events) {
    MAIN RENDER FUNCTION
 -------------------------------------------------------- */
 async function renderCalendar() {
-  calendarEl.innerHTML = "";
+  if (!calendarEl) return;   // ← prevents desktop calendar from running on mobile
+
 
   const startOfWeek = new Date(currentWeekStart);
   const endOfWeek = new Date(startOfWeek);
@@ -327,7 +328,7 @@ const isPast = slotTime < now;
    WEEK NAVIGATION
 -------------------------------------------------------- */
 function updateWeekButtons() {
-  if (!prevWeekBtn || !nextWeekBtn) return; // ← mobile safety
+  if (!prevWeekBtn || !nextWeekBtn) return;  // ← prevents mobile crash
   if (currentWeekStart.getTime() <= baseWeekStart.getTime()) {
     prevWeekBtn.classList.add("disabled");
   } else {
