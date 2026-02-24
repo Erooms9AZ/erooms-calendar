@@ -158,6 +158,12 @@
       cursor: pointer;
       font-size: 18px;
     }
+    #controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
   </style>
 </head>
 
@@ -193,13 +199,17 @@
     </ol>
   </div>
 
-  <!-- Duration Buttons -->
+ <!-- Duration Buttons + Help -->
+<div id="controlsRow">
   <div id="durationButtons">
     <button data-hours="1" class="active">1 Hour</button>
     <button data-hours="2">2 Hours</button>
     <button data-hours="3">3 Hours</button>
-    <button id="helpButton" class="help-inline">How to use this form</button>
   </div>
+
+  <button id="helpButton" class="help-inline">How to use this form</button>
+</div>
+
 
   <br>
 
