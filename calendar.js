@@ -327,6 +327,7 @@ const isPast = slotTime < now;
    WEEK NAVIGATION
 -------------------------------------------------------- */
 function updateWeekButtons() {
+  if (!prevWeekBtn || !nextWeekBtn) return; // ← mobile safety
   if (currentWeekStart.getTime() <= baseWeekStart.getTime()) {
     prevWeekBtn.classList.add("disabled");
   } else {
@@ -356,7 +357,6 @@ if (nextWeekBtn) {
   };
 }
 
-
 /* -------------------------------------------------------
    ⭐ FIXED — DURATION BUTTONS NOW WORK
 -------------------------------------------------------- */
@@ -383,20 +383,24 @@ updateWeekButtons();
    EXPORT FUNCTIONS FOR MOBILE
 -------------------------------------------------------- */
 
-// Wrapper so mobile.js can check availability for a single slot
-function getAvailabilityForSlot(slotTime) {
-  const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
-  return {
-    available: rooms.length > 0,
-    rooms
-  };
+// Prevent desktop calendar from running on mobile.html
+if (!calendarEl) {
+  // Do NOT export anything if the desktop calendar isn't present
+  // Mobile will wait until exports exist
+} else {
+
+  // Wrapper so mobile.js can check availability for a single slot
+  function getAvailabilityForSlot(slotTime) {
+    const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
+    return {
+      available: rooms.length > 0,
+      rooms
+    };
+  }
+
+  // Expose functions globally for mobile.html
+  window.getAvailabilityForSlot = getAvailabilityForSlot;
+  window.handleSlotClick = createMergedBlock;
 }
 
-// Expose functions globally for mobile.html
-window.getAvailabilityForSlot = getAvailabilityForSlot;
-window.handleSlotClick = createMergedBlock;
-
 })();
-
-
-
