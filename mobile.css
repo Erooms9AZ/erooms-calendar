@@ -77,9 +77,10 @@ body {
 
 /* Available slots */
 .slotItem.available {
-  background: #9c27b0;
-  color: white;
+  background-color: #d9c4ff !important;
+  color: #000 !important;
 }
+
 
 /* Unavailable slots */
 .slotItem.unavailable {
