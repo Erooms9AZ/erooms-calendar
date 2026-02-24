@@ -134,6 +134,7 @@ async function renderCalendar() {
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
     ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
   ];
+window.allEvents = events;
 
   const days = [];
 
@@ -372,8 +373,25 @@ document.querySelectorAll('#durationButtons button').forEach(btn => {
 -------------------------------------------------------- */
 renderCalendar();
 updateWeekButtons();
+
+/* -------------------------------------------------------
+   EXPORT FUNCTIONS FOR MOBILE
+-------------------------------------------------------- */
+
+// Wrapper so mobile.js can check availability for a single slot
+function getAvailabilityForSlot(slotTime) {
+  const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
+  return {
+    available: rooms.length > 0,
+    rooms
+  };
+}
+
+// Expose functions globally for mobile.html
 window.getAvailabilityForSlot = getAvailabilityForSlot;
-window.handleSlotClick = handleSlotClick;
+window.handleSlotClick = createMergedBlock;
+
 })();
+
 
 
