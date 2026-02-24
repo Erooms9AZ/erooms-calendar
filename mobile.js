@@ -1,11 +1,10 @@
 // -------------------------------------------------------
-// WAIT FOR CALENDAR EXPORTS *AND EVENTS*
+// WAIT FOR CALENDAR EXPORTS
 // -------------------------------------------------------
 function waitForCalendarExports(callback) {
   if (
     typeof window.getAvailabilityForSlot === "function" &&
-    typeof window.handleSlotClick === "function" &&
-    Array.isArray(window.allEvents) && window.allEvents.length > 0
+    typeof window.handleSlotClick === "function"
   ) {
     callback();
   } else {
@@ -13,12 +12,10 @@ function waitForCalendarExports(callback) {
   }
 }
 
-
 // -------------------------------------------------------
 // STATE
 // -------------------------------------------------------
 let mobileCurrentDay = new Date(currentWeekStart);
-
 
 // -------------------------------------------------------
 // HEADER LABEL
@@ -90,9 +87,22 @@ if (nextBtn) {
 }
 
 // -------------------------------------------------------
+// WAIT FOR EVENTS, THEN REFRESH SLOTS ONCE
+// -------------------------------------------------------
+function waitForEventsAndRefresh() {
+  if (Array.isArray(window.allEvents) && window.allEvents.length > 0) {
+    // Events are ready: re-render so availability is correct
+    renderMobileSlots();
+  } else {
+    setTimeout(waitForEventsAndRefresh, 200);
+  }
+}
+
+// -------------------------------------------------------
 // INITIAL LOAD (AFTER CALENDAR EXPORTS ARE READY)
 // -------------------------------------------------------
 waitForCalendarExports(() => {
   updateDayLabel();
-  renderMobileSlots();
+  renderMobileSlots();      // initial render (may be all unavailable)
+  waitForEventsAndRefresh(); // re-render once events are actually loaded
 });
