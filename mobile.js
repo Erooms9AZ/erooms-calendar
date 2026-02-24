@@ -1,25 +1,40 @@
-// Wait until calendar.js has exported its functions
+// -------------------------------------------------------
+// WAIT FOR CALENDAR EXPORTS
+// -------------------------------------------------------
 function waitForCalendarExports(callback) {
-  if (window.getAvailabilityForSlot && window.handleSlotClick) {
+  if (
+    typeof window.getAvailabilityForSlot === "function" &&
+    typeof window.handleSlotClick === "function"
+  ) {
     callback();
   } else {
     setTimeout(() => waitForCalendarExports(callback), 50);
   }
 }
 
-// Start on today's date
+// -------------------------------------------------------
+// STATE
+// -------------------------------------------------------
 let mobileCurrentDay = new Date();
 
-// Update the header label
+// -------------------------------------------------------
+// HEADER LABEL
+// -------------------------------------------------------
 function updateDayLabel() {
   const options = { weekday: "long", day: "numeric", month: "long" };
-  document.getElementById("dayLabel").textContent =
-    mobileCurrentDay.toLocaleDateString("en-GB", options);
+  const label = document.getElementById("dayLabel");
+  if (label) {
+    label.textContent = mobileCurrentDay.toLocaleDateString("en-GB", options);
+  }
 }
 
-// Render the slots for the selected day
+// -------------------------------------------------------
+// RENDER SLOTS
+// -------------------------------------------------------
 function renderMobileSlots() {
   const slotList = document.getElementById("slotList");
+  if (!slotList) return;
+
   slotList.innerHTML = "";
 
   const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
@@ -28,34 +43,52 @@ function renderMobileSlots() {
     const slotTime = new Date(mobileCurrentDay);
     slotTime.setHours(hour, 0, 0, 0);
 
-    const availability = window.getAvailabilityForSlot(slotTime);
+    // Safe availability call
+    let availability = { available: false, rooms: [] };
+    try {
+      availability = window.getAvailabilityForSlot(slotTime) || availability;
+    } catch (e) {
+      console.warn("Availability error:", e);
+    }
 
     const div = document.createElement("div");
     div.className = "slotItem " + (availability.available ? "available" : "unavailable");
     div.textContent = `${hour}:00`;
 
-    if (availability.available) {
-      div.onclick = () => window.handleSlotClick(availability.rooms[0], slotTime);
+    if (availability.available && availability.rooms.length > 0) {
+      const room = availability.rooms[0];
+      div.onclick = () => window.handleSlotClick(room, slotTime);
     }
 
     slotList.appendChild(div);
   });
 }
 
-// Navigation
-document.getElementById("prevDayBtn").onclick = () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
-  updateDayLabel();
-  renderMobileSlots();
-};
+// -------------------------------------------------------
+// NAVIGATION
+// -------------------------------------------------------
+const prevBtn = document.getElementById("prevDayBtn");
+const nextBtn = document.getElementById("nextDayBtn");
 
-document.getElementById("nextDayBtn").onclick = () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
-  updateDayLabel();
-  renderMobileSlots();
-};
+if (prevBtn) {
+  prevBtn.onclick = () => {
+    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+    updateDayLabel();
+    renderMobileSlots();
+  };
+}
 
-// Initial load AFTER calendar.js is ready
+if (nextBtn) {
+  nextBtn.onclick = () => {
+    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+    updateDayLabel();
+    renderMobileSlots();
+  };
+}
+
+// -------------------------------------------------------
+// INITIAL LOAD (AFTER CALENDAR EXPORTS ARE READY)
+// -------------------------------------------------------
 waitForCalendarExports(() => {
   updateDayLabel();
   renderMobileSlots();
