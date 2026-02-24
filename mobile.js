@@ -193,4 +193,4 @@ waitForCalendarExports(() => {
 renderMobileSlots();
   waitForEventsAndRefresh();
 });
-
+}
