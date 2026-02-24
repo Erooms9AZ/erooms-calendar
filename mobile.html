@@ -114,6 +114,31 @@
     <span class="legendColor room2"></span> Room 2 Only
   </div>
 </div>
+#slotLegend {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 15px;
+  font-size: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legendColor.both  { background-color: #d9c4ff; }
+.legendColor.room1 { background-color: #d0e7ff; }
+.legendColor.room2 { background-color: #d8ffd8; }
 
 </style>
 </head>
