@@ -15,7 +15,10 @@ function waitForCalendarExports(callback) {
 // -------------------------------------------------------
 // STATE
 // -------------------------------------------------------
-let mobileCurrentDay = new Date(currentWeekStart);
+let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
+  ? new Date(currentWeekStart)
+  : new Date();
+
 
 // -------------------------------------------------------
 // HEADER LABEL
