@@ -118,24 +118,21 @@
       opacity: 0.4;
       pointer-events: none;
     }
-    #helpButton {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+   #helpButton.help-inline {
   background: #673ab7;
   color: white;
-  padding: 12px 18px;
+  padding: 8px 14px;
+  border: none;
   border-radius: 6px;
-  font-size: 14px;
+  margin-left: 10px;
   cursor: pointer;
-  z-index: 9999;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: opacity 0.2s;
+  font-size: 14px;
 }
 
-#helpButton:hover {
+#helpButton.help-inline:hover {
   opacity: 0.85;
 }
+
 
   </style>
 </head>
@@ -152,6 +149,7 @@
     <button data-hours="1" class="active">1 Hour</button>
     <button data-hours="2">2 Hours</button>
     <button data-hours="3">3 Hours</button>
+<button id="helpButton" class="help-inline">How to use this form</button>
   </div>
 
   <br>
