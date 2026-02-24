@@ -213,8 +213,10 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     window.selectedDuration = Number(btn.dataset.hours);
 
     renderMobileSlots();
+    waitForEventsAndRefresh();   // ← ADD THIS
   });
 });
+
 
 // -------------------------------------------------------
 // WAIT FOR EVENTS, THEN REFRESH SLOTS ONCE
