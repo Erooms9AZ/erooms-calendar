@@ -1,3 +1,11 @@
+function waitForCalendarExports(callback) {
+  if (window.getAvailabilityForSlot && window.handleSlotClick) {
+    callback();
+  } else {
+    setTimeout(() => waitForCalendarExports(callback), 50);
+  }
+}
+
 // Start on today's date
 let mobileCurrentDay = new Date();
 
