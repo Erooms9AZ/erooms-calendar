@@ -334,23 +334,28 @@ function updateWeekButtons() {
   }
 }
 
-prevWeekBtn.onclick = () => {
-  floatingSelector.style.display = "none";
-  if (currentWeekStart.getTime() > baseWeekStart.getTime()) {
-    currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+if (prevWeekBtn) {
+  prevWeekBtn.onclick = () => {
+    floatingSelector.style.display = "none";
+    if (currentWeekStart.getTime() > baseWeekStart.getTime()) {
+      currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+      mergedBlock = null;
+      renderCalendar();
+      updateWeekButtons();
+    }
+  };
+}
+
+if (nextWeekBtn) {
+  nextWeekBtn.onclick = () => {
+    floatingSelector.style.display = "none";
+    currentWeekStart.setDate(currentWeekStart.getDate() + 7);
     mergedBlock = null;
     renderCalendar();
     updateWeekButtons();
-  }
-};
+  };
+}
 
-nextWeekBtn.onclick = () => {
-  floatingSelector.style.display = "none";
-  currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-  mergedBlock = null;
-  renderCalendar();
-  updateWeekButtons();
-};
 
 /* -------------------------------------------------------
    ⭐ FIXED — DURATION BUTTONS NOW WORK
