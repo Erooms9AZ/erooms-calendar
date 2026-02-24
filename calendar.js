@@ -377,31 +377,29 @@ document.querySelectorAll('#durationButtons button').forEach(btn => {
 /* -------------------------------------------------------
    INITIAL RENDER
 -------------------------------------------------------- */
-renderCalendar();
-updateWeekButtons();
+
+// Only render the desktop calendar if the element exists
+if (calendarEl) {
+  renderCalendar();
+  updateWeekButtons();
+}
 
 /* -------------------------------------------------------
    EXPORT FUNCTIONS FOR MOBILE
 -------------------------------------------------------- */
 
-// Prevent desktop calendar from running on mobile.html
-if (!calendarEl) {
-  // Do NOT export anything if the desktop calendar isn't present
-  // Mobile will wait until exports exist
-} else {
-
-  // Wrapper so mobile.js can check availability for a single slot
-  function getAvailabilityForSlot(slotTime) {
-    const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
-    return {
-      available: rooms.length > 0,
-      rooms
-    };
-  }
-
-  // Expose functions globally for mobile.html
-  window.getAvailabilityForSlot = getAvailabilityForSlot;
-  window.handleSlotClick = createMergedBlock;
+// Wrapper so mobile.js can check availability for a single slot
+function getAvailabilityForSlot(slotTime) {
+  const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
+  return {
+    available: rooms.length > 0,
+    rooms
+  };
 }
 
+// Always export these — mobile.html depends on them
+window.getAvailabilityForSlot = getAvailabilityForSlot;
+window.handleSlotClick = createMergedBlock;
+
 })();
+
