@@ -1,16 +1,18 @@
 // -------------------------------------------------------
-// WAIT FOR CALENDAR EXPORTS
+// WAIT FOR CALENDAR EXPORTS *AND EVENTS*
 // -------------------------------------------------------
 function waitForCalendarExports(callback) {
   if (
     typeof window.getAvailabilityForSlot === "function" &&
-    typeof window.handleSlotClick === "function"
+    typeof window.handleSlotClick === "function" &&
+    Array.isArray(window.allEvents) && window.allEvents.length > 0
   ) {
     callback();
   } else {
     setTimeout(() => waitForCalendarExports(callback), 50);
   }
 }
+
 
 // -------------------------------------------------------
 // STATE
