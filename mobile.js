@@ -33,6 +33,45 @@ function updateDayLabel() {
 }
 
 // -------------------------------------------------------
+// OPEN BOOKING (MOBILE VERSION)
+// -------------------------------------------------------
+function openMobileBooking(room, slotTime) {
+  const start = new Date(slotTime);
+  const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
+
+  const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
+
+  // Set mergedBlock (desktop logic)
+  window.handleSlotClick(room, slotTime);
+
+  // Open booking form directly
+  window.openBookingForm(summary);
+}
+
+// -------------------------------------------------------
+// ROOM SELECTOR MODAL
+// -------------------------------------------------------
+function showMobileRoomSelector(rooms, slotTime) {
+  const selector = document.getElementById("mobileRoomSelector");
+  selector.style.display = "flex";
+
+  selector.querySelectorAll(".room-btn").forEach(btn => {
+    btn.onclick = () => {
+      const room = btn.dataset.room;
+      selector.style.display = "none";
+      openMobileBooking(room, slotTime);
+    };
+  });
+
+  document.getElementById("mobileRoomCancel").onclick = () => {
+    selector.style.display = "none";
+  };
+}
+
+// -------------------------------------------------------
 // RENDER SLOTS
 // -------------------------------------------------------
 function renderMobileSlots() {
@@ -46,6 +85,31 @@ function renderMobileSlots() {
   hours.forEach(hour => {
     const slotTime = new Date(mobileCurrentDay);
     slotTime.setHours(hour, 0, 0, 0);
+
+    const now = new Date();
+    const duration = parseInt(
+      document.querySelector("#durationButtons button.active")?.dataset.hours || "1",
+      10
+    );
+    const endHour = hour + duration;
+
+    // BLOCK PAST TIMES
+    if (slotTime < now) {
+      const div = document.createElement("div");
+      div.className = "slotItem unavailable";
+      div.textContent = `${hour}:00–${endHour}:00`;
+      slotList.appendChild(div);
+      return;
+    }
+
+    // BLOCK BOOKINGS THAT END AFTER 22:00
+    if (endHour > 22) {
+      const div = document.createElement("div");
+      div.className = "slotItem unavailable";
+      div.textContent = `${hour}:00–${endHour}:00`;
+      slotList.appendChild(div);
+      return;
+    }
 
     // Safe availability call
     let availability = { available: false, rooms: [] };
@@ -61,7 +125,7 @@ function renderMobileSlots() {
     if (!availability.available) {
       cls += "unavailable";
     } else if (availability.rooms.length === 2) {
-      cls += "available"; // both rooms → purple
+      cls += "available"; // purple
     } else if (availability.rooms.length === 1) {
       const room = availability.rooms[0];
       if (room === "room1") cls += "room1";
@@ -69,17 +133,6 @@ function renderMobileSlots() {
     }
 
     div.className = cls;
-
-    // Determine selected duration
-    const duration = parseInt(
-      document.querySelector("#durationButtons button.active")?.dataset.hours || "1",
-      10
-    );
-
-    // Compute end time
-    const endHour = hour + duration;
-
-    // Set label
     div.textContent = `${hour}:00–${endHour}:00`;
 
     // CLICK HANDLER
@@ -87,14 +140,12 @@ function renderMobileSlots() {
       div.onclick = () => {
         const rooms = availability.rooms;
 
-        // BOTH ROOMS AVAILABLE → show selector
         if (rooms.length === 2) {
           showMobileRoomSelector(rooms, slotTime);
           return;
         }
 
-        // ONE ROOM AVAILABLE → auto-select
-        window.handleSlotClick(rooms[0], slotTime);
+        openMobileBooking(rooms[0], slotTime);
       };
     }
 
@@ -126,18 +177,6 @@ function insertSlotLegend() {
   `;
 
   slotList.parentNode.insertBefore(legend, slotList);
-}
-
-// -------------------------------------------------------
-// SIMPLE ROOM SELECTOR (TEMPORARY)
-// -------------------------------------------------------
-function showMobileRoomSelector(rooms, slotTime) {
-  const choice = window.prompt(
-    "Both rooms available.\nEnter 1 for Room 1 or 2 for Room 2:"
-  );
-
-  if (choice === "1") window.handleSlotClick("room1", slotTime);
-  if (choice === "2") window.handleSlotClick("room2", slotTime);
 }
 
 // -------------------------------------------------------
