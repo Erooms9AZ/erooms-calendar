@@ -246,17 +246,6 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
      HOURLY GRID
   -------------------------------------------------------- */
   for (let hour = 10; hour < 22; hour++) {
-    const hourLabel = document.createElement("div");
-    hourLabel.className = "hour-label";
-    hourLabel.textContent = `${hour}:00`;
-    calendarEl.appendChild(hourLabel);
-
-    for (let i = 0; i < 6; i++) {
-      const day = days[i];
-      const slot = document.createElement("div");
-      slot.className = "slot";
-
- for (let hour = 10; hour < 22; hour++) {
   const hourLabel = document.createElement("div");
   hourLabel.className = "hour-label";
   hourLabel.textContent = `${hour}:00`;
