@@ -28,7 +28,8 @@ function renderMobileSlots() {
     div.textContent = `${hour}:00`;
 
     if (availability.available) {
-      div.onclick = () => window.handleSlotClick(slotTime, availability.rooms);
+      div.onclick = () => window.handleSlotClick(availability.rooms[0], slotTime);
+
     }
 
     slotList.appendChild(div);
