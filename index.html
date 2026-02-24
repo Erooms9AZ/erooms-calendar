@@ -242,25 +242,11 @@
       </div>
     </div>
   </div>
-  
-  <script>
-// Start week on Monday
-const baseWeekStart = (() => {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  const day = d.getDay(); // 0=Sun..6=Sat
-  const diff = (day + 6) % 7; // days since Monday
-  d.setDate(d.getDate() - diff);
-  return d;
-})();
 
-let currentWeekStart = new Date(baseWeekStart);
-let selectedDuration = 1; // default 1 hour
-</script>
-
-
+  <!-- Load calendar logic -->
   <script src="calendar.js"></script>
 
+  <!-- Help popup logic -->
   <script>
     document.getElementById("helpButton").onclick = () => {
       document.getElementById("helpPopup").style.display = "block";
