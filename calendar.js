@@ -258,13 +258,8 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
 
     const slotTime = new Date(day);
     slotTime.setHours(hour, 0, 0, 0);
-
-    // ⭐ HIDE PAST SLOTS
-    const now = new Date();
-    if (slotTime < now) {
-      continue;
-    }
-
+const now = new Date();
+const isPast = slotTime < now;
     const rooms = availableRooms(slotTime, selectedDuration, events);
     const hasR1 = rooms.includes("room1");
     const hasR2 = rooms.includes("room2");
@@ -275,11 +270,7 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
 
     // ... rest of your existing logic
 
-      if (!hasR1 && !hasR2) {
-        slot.style.backgroundColor = "grey";
-        slot.style.pointerEvents = "none";
-        slot.innerHTML = `Not<br>Available`;
-      }
+     if (isPast || (!hasR1 && !hasR2)) { slot.style.backgroundColor = "grey"; slot.style.pointerEvents = "none"; slot.innerHTML = `Not<br>Available`; }
 
       else if (hasR1 && hasR2) {
         slot.style.backgroundColor = "#9c27b0";
