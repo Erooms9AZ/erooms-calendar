@@ -20,6 +20,13 @@ function waitForCalendarExports(callback) {
 let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
   ? new Date(currentWeekStart)
   : new Date();
+// -------------------------------------------------------
+// LISTEN FOR UPDATED EVENTS FROM DESKTOP (FIX)
+// -------------------------------------------------------
+document.addEventListener("calendarEventsUpdated", (e) => {
+  window.allEvents = e.detail;
+  renderMobileSlots();
+});
 
 // -------------------------------------------------------
 // HEADER LABEL
