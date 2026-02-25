@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
   <title>E Rooms – Mobile</title>
   <link rel="stylesheet" href="mobile.css">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <style>
 body {
@@ -15,16 +14,22 @@ body {
   background: #fafafa;
 }
 
-/* MOBILE HEADER */
+/* MOBILE HEADER — NOW STICKY */
 #mobileHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px;
   background: #673ab7;
   color: white;
-  border-radius: 8px;
-  margin-bottom: 15px;
+
+  /* full‑width look inside padded body */
+  margin: 0 -10px 15px;
+  border-radius: 0 0 8px 8px;
 }
 
 #mobileHeader button {
@@ -174,6 +179,8 @@ body {
 
 <body>
 
+<div id="mobileContainer"><!-- ⭐ ADDED WRAPPER -->
+
   <!-- Mobile Header -->
   <div id="mobileHeader">
     <button id="prevDayBtn">←</button>
@@ -232,6 +239,8 @@ body {
 
   </div>
 
+</div><!-- END mobileContainer -->
+
   <!-- Shared calendar logic -->
   <script src="calendar.js"></script>
 
@@ -240,5 +249,3 @@ body {
 
 </body>
 </html>
-
-
