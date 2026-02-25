@@ -201,6 +201,7 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
           bookingStatus.textContent = "Please complete all required fields.";
           return;
         }
+}   // ← FIX: closes renderCalendar()
 
         const payload = {
           name,
