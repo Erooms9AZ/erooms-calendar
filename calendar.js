@@ -445,6 +445,26 @@ function getAvailabilityForSlot(slotTime) {
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
 window.openBookingForm = openBookingForm;   // ← NEW
+/* -------------------------------------------------------
+   MOBILE + DESKTOP BOOKING BUTTON LISTENERS
+-------------------------------------------------------- */
+if (bfSubmit) {
+  bfSubmit.addEventListener("click", () => {
+    handleBookingSubmit();
+  });
+}
+
+if (bfCancel) {
+  bfCancel.addEventListener("click", () => {
+    closeBookingForm();
+  });
+}
+
+if (successOk) {
+  successOk.addEventListener("click", () => {
+    closeBookingForm();
+  });
+}
 
 
 })();
