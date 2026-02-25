@@ -414,16 +414,18 @@ if (calendarEl) {
 -------------------------------------------------------- */
 async function loadEventsForMobile() {
   const startOfWeek = new Date(currentWeekStart);
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  const endOfRange = new Date(startOfWeek);
+  // fetch current week + next week for mobile
+  endOfRange.setDate(startOfWeek.getDate() + 13);
 
   const events = [
-    ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
-    ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
+    ...(await fetchEvents(calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
+    ...(await fetchEvents(calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
   ];
 
   window.allEvents = events;
 }
+
 
 /* -------------------------------------------------------
    EXPORT FUNCTIONS FOR MOBILE
