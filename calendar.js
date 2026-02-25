@@ -127,18 +127,27 @@ function availableRooms(slotTime, duration, events) {
    MAIN RENDER FUNCTION
 -------------------------------------------------------- */
 async function renderCalendar() {
-  if (!calendarEl) return;   // ← prevents desktop calendar from running on mobile
+  if (!calendarEl) return;   // ← keeps desktop off mobile
 
+  // ✅ clear previous content before rendering a new week
+  calendarEl.innerHTML = "";
 
   const startOfWeek = new Date(currentWeekStart);
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
+ // ✅ cover current week + next week for mobile
+endOfWeek.setDate(startOfWeek.getDate() + 13);
 
   const events = [
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
     ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
   ];
-window.allEvents = events; document.dispatchEvent( new CustomEvent("calendarEventsUpdated", { detail: window.allEvents }) );
+  window.allEvents = events;
+  document.dispatchEvent(
+    new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
+  );
+
+  // ...rest of renderCalendar as you already have it
+}
 
   const days = [];
 
