@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>E Rooms – Mobile</title>
-  <link rel="stylesheet" href="mobile.css">
 
 <style>
 body {
@@ -24,18 +23,16 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-
   background: #673ab7;
   color: white;
   padding: 12px;
   border-radius: 0 0 12px 12px;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Top bar (arrows + date) */
+/* Top bar */
 #mobileHeader .top-bar {
   display: flex;
   justify-content: space-between;
@@ -71,20 +68,8 @@ body {
   color: white;
 }
 
-/* Legend */
-#legend {
-  display: flex;
-  gap: 12px;
-  font-size: 14px;
-  flex-wrap: wrap;
-}
-
-#legend .both { color: #9c27b0; }
-#legend .r1   { color: #4caf50; }
-#legend .r2   { color: #2196f3; }
-
 /* -------------------------------------------------------
-   SCROLLABLE CONTENT AREA
+   SCROLLABLE CONTENT
 -------------------------------------------------------- */
 #mobileScrollArea {
   flex: 1;
@@ -186,27 +171,20 @@ body {
 <body>
 
 <!-- -------------------------------------------------------
-     STICKY HEADER
+     STICKY HEADER (IDs MATCH JS EXACTLY)
 -------------------------------------------------------- -->
 <div id="mobileHeader">
 
     <div class="top-bar">
-        <button id="prevWeekBtn">‹</button>
-     <span id="dayLabel"></span>
-
-        <button id="nextWeekBtn">›</button>
+        <button id="prevDayBtn">‹</button>
+        <span id="dayLabel"></span>
+        <button id="nextDayBtn">›</button>
     </div>
 
     <div id="durationButtons">
         <button data-hours="1">1 Hour</button>
         <button data-hours="2">2 Hours</button>
         <button data-hours="3">3 Hours</button>
-    </div>
-
-    <div id="legend">
-        <span class="both">Both Rooms</span>
-        <span class="r1">Room 1 Only</span>
-        <span class="r2">Room 2 Only</span>
     </div>
 
 </div>
@@ -263,12 +241,9 @@ body {
     </div>
 
 </div>
-<div id="mobileScrollArea">
-    <div id="calendar"></div>
-    <div id="slotList"></div>
-</div>
 
-
+<script src="calendar.js"></script>
+<script src="mobile.js"></script>
 
 </body>
 </html>
