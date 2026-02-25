@@ -10,23 +10,39 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 10px;
+  padding: 0;
   background: #fafafa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* MOBILE HEADER */
+/* -------------------------------------------------------
+   STICKY HEADER
+-------------------------------------------------------- */
 #mobileHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: #673ab7;
+  color: white;
+  padding: 12px;
+  border-radius: 0 0 12px 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Top bar (arrows + date) */
+#mobileHeader .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  background: #673ab7;
-  color: white;
-  border-radius: 8px;
-  margin-bottom: 15px;
 }
 
-#mobileHeader button {
+#mobileHeader .top-bar button {
   background: white;
   color: #673ab7;
   border: none;
@@ -35,11 +51,10 @@ body {
   font-size: 16px;
 }
 
-/* DURATION BUTTONS */
+/* Duration buttons */
 #durationButtons {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
 }
 
 #durationButtons button {
@@ -56,7 +71,29 @@ body {
   color: white;
 }
 
-/* SLOT LIST */
+/* Legend */
+#legend {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+#legend .both { color: #9c27b0; }
+#legend .r1   { color: #4caf50; }
+#legend .r2   { color: #2196f3; }
+
+/* -------------------------------------------------------
+   SCROLLABLE CONTENT AREA
+-------------------------------------------------------- */
+#mobileScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  padding-bottom: 40px;
+}
+
+/* Slot list */
 #slotList {
   display: flex;
   flex-direction: column;
@@ -84,7 +121,9 @@ body {
   color: #777;
 }
 
-/* BOOKING OVERLAY */
+/* -------------------------------------------------------
+   BOOKING OVERLAY
+-------------------------------------------------------- */
 .overlay {
   position: fixed;
   top: 0;
@@ -106,7 +145,7 @@ body {
   border-radius: 12px;
 }
 
-/* ROOM SELECTOR */
+/* Room selector */
 #mobileRoomSelector {
   position: fixed;
   top: 0;
@@ -141,39 +180,16 @@ body {
   font-size: 16px;
   width: 200px;
 }
-
-/* LEGEND */
-#slotLegend {
-  display: flex;
-  gap: 12px;
-  margin: 10px 0 15px;
-  font-size: 14px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legendColor {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  display: inline-block;
-}
-
-.legendColor.both  { background-color: #9c27b0; }
-.legendColor.room1 { background-color: #4caf50; }
-.legendColor.room2 { background-color: #2196f3; }
 </style>
 </head>
 
 <body>
 
- <div id="mobileHeader">
+<!-- -------------------------------------------------------
+     STICKY HEADER
+-------------------------------------------------------- -->
+<div id="mobileHeader">
+
     <div class="top-bar">
         <button id="prevWeekBtn">‹</button>
         <span id="mobileDateLabel"></span>
@@ -191,31 +207,31 @@ body {
         <span class="r1">Room 1 Only</span>
         <span class="r2">Room 2 Only</span>
     </div>
+
 </div>
 
-<div id="calendar"></div>
+<!-- -------------------------------------------------------
+     SCROLLABLE CONTENT
+-------------------------------------------------------- -->
+<div id="mobileScrollArea">
+    <div id="calendar"></div>
+    <div id="slotList"></div>
+</div>
 
-
-  <!-- Duration Buttons -->
-  <div id="durationButtons">
-    <button data-hours="1" class="active">1 Hour</button>
-    <button data-hours="2">2 Hours</button>
-    <button data-hours="3">3 Hours</button>
-  </div>
-
-  <!-- Room Selector -->
-  <div id="mobileRoomSelector" style="display:none;">
+<!-- -------------------------------------------------------
+     ROOM SELECTOR
+-------------------------------------------------------- -->
+<div id="mobileRoomSelector">
     <button class="room-btn" data-room="room1">Room 1</button>
     <button class="room-btn" data-room="room2">Room 2</button>
     <button id="mobileRoomCancel">Cancel</button>
-  </div>
+</div>
 
-  <!-- Slot List -->
-  <div id="slotList"></div>
+<!-- -------------------------------------------------------
+     BOOKING OVERLAY
+-------------------------------------------------------- -->
+<div id="bookingOverlay" class="overlay">
 
-  <!-- Booking Overlay -->
-  <div id="bookingOverlay" class="overlay" style="display:none;">
-    
     <div id="bookingForm" class="booking-box">
       <h3>Booking Summary</h3>
       <div id="bookingSummary"></div>
@@ -245,13 +261,15 @@ body {
       <button id="successOk">OK</button>
     </div>
 
-  </div>
+</div>
 
-  <!-- Shared calendar logic -->
-  <script src="calendar.js"></script>
-
-  <!-- Mobile-specific logic -->
-  <script src="mobile.js"></script>
+<script src="calendar.js"></script>
+<script src="mobile.js"></script>
 
 </body>
 </html>
+
+ 
+  
+
+   
