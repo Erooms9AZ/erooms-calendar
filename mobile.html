@@ -90,30 +90,42 @@
   color: #777;
 }
 
-/* -------------------------------------------------------
-   BOOKING OVERLAY (FIXED)
--------------------------------------------------------- */
-#bookingOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
+<!-- Booking Overlay -->
+<div id="bookingOverlay" class="overlay" style="display:none;">
 
-/* Booking + Success boxes */
-.booking-box {
-  background: white;
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 12px;
-}
+  <!-- Booking Form -->
+  <div id="bookingForm" class="booking-box">
+    <h3>Booking Summary</h3>
+    <div id="bookingSummary"></div>
+    <br>
+
+    <label>Name*</label><br>
+    <input id="bfName" type="text" style="width:100%"><br><br>
+
+    <label>Email*</label><br>
+    <input id="bfEmail" type="email" style="width:100%"><br><br>
+
+    <label>Phone*</label><br>
+    <input id="bfPhone" type="text" style="width:100%"><br><br>
+
+    <label>Comments</label><br>
+    <textarea id="bfComments" style="width:100%"></textarea><br><br>
+
+    <div id="bookingStatus" style="color:red;"></div><br>
+
+    <button id="bfSubmit">Submit</button>
+    <button id="bfCancel">Cancel</button>
+  </div>
+
+  <!-- Success Box -->
+  <div id="successBox" class="booking-box" style="display:none;">
+    <div id="successMessage"></div>
+    <br>
+    <button id="successOk">OK</button>
+  </div>
+
+</div>
+
 
 /* -------------------------------------------------------
    ROOM SELECTOR (FIXED)
@@ -179,6 +191,26 @@
 .legendColor.both  { background-color: #9c27b0; }
 .legendColor.room1 { background-color: #4caf50; }
 .legendColor.room2 { background-color: #2196f3; }
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.booking-box {
+  background: white;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+}
 
 </style>
 </head>
