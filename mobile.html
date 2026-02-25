@@ -14,6 +14,9 @@
 }
 
 /* Header */
+/* -------------------------------------------------------
+   MOBILE HEADER
+-------------------------------------------------------- */
 #mobileHeader {
   display: flex;
   justify-content: space-between;
@@ -34,7 +37,9 @@
   font-size: 16px;
 }
 
-/* Duration buttons */
+/* -------------------------------------------------------
+   DURATION BUTTONS
+-------------------------------------------------------- */
 #durationButtons {
   display: flex;
   gap: 10px;
@@ -55,7 +60,9 @@
   color: white;
 }
 
-/* Slot list */
+/* -------------------------------------------------------
+   SLOT LIST
+-------------------------------------------------------- */
 #slotList {
   display: flex;
   flex-direction: column;
@@ -83,7 +90,9 @@
   color: #777;
 }
 
-/* Booking modal */
+/* -------------------------------------------------------
+   BOOKING OVERLAY (FIXED)
+-------------------------------------------------------- */
 #bookingOverlay {
   position: fixed;
   top: 0;
@@ -97,23 +106,54 @@
   z-index: 2000;
 }
 
-#bookingBox {
+/* Booking + Success boxes */
+.booking-box {
   background: white;
   padding: 20px;
   width: 90%;
+  max-width: 400px;
   border-radius: 12px;
 }
-  <div id="slotLegend">
-  <div class="legendItem">
-    <span class="legendColor both"></span> Both Rooms
-  </div>
-  <div class="legendItem">
-    <span class="legendColor room1"></span> Room 1 Only
-  </div>
-  <div class="legendItem">
-    <span class="legendColor room2"></span> Room 2 Only
-  </div>
-</div>
+
+/* -------------------------------------------------------
+   ROOM SELECTOR (FIXED)
+-------------------------------------------------------- */
+#mobileRoomSelector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+#mobileRoomSelector .room-btn {
+  background: #673ab7;
+  color: white;
+  padding: 14px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 200px;
+  text-align: center;
+}
+
+#mobileRoomCancel {
+  background: #444;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* -------------------------------------------------------
+   LEGEND
+-------------------------------------------------------- */
 #slotLegend {
   display: flex;
   gap: 12px;
@@ -137,7 +177,7 @@
 }
 
 .legendColor.both  { background-color: #9c27b0; }
-.legendColor.room1 { background-color: 4caf50; }
+.legendColor.room1 { background-color: #4caf50; }
 .legendColor.room2 { background-color: #2196f3; }
 
 </style>
@@ -166,39 +206,42 @@
   <!-- Slot List -->
   <div id="slotList"></div>
 
-  <!-- Booking Overlay -->
-  <div id="bookingOverlay">
-    <div id="bookingBox">
-      <div id="bookingForm">
-        <h3>Booking Summary</h3>
-        <div id="bookingSummary"></div>
-        <br>
+ <!-- Booking Overlay -->
+<div id="bookingOverlay" class="overlay" style="display:none;">
+  
+  <!-- Booking Form -->
+  <div id="bookingForm" class="booking-box">
+    <h3>Booking Summary</h3>
+    <div id="bookingSummary"></div>
+    <br>
 
-        <label>Name*</label><br>
-        <input id="bfName" type="text" style="width:100%"><br><br>
+    <label>Name*</label><br>
+    <input id="bfName" type="text" style="width:100%"><br><br>
 
-        <label>Email*</label><br>
-        <input id="bfEmail" type="email" style="width:100%"><br><br>
+    <label>Email*</label><br>
+    <input id="bfEmail" type="email" style="width:100%"><br><br>
 
-        <label>Phone*</label><br>
-        <input id="bfPhone" type="text" style="width:100%"><br><br>
+    <label>Phone*</label><br>
+    <input id="bfPhone" type="text" style="width:100%"><br><br>
 
-        <label>Comments</label><br>
-        <textarea id="bfComments" style="width:100%"></textarea><br><br>
+    <label>Comments</label><br>
+    <textarea id="bfComments" style="width:100%"></textarea><br><br>
 
-        <div id="bookingStatus" style="color:red;"></div><br>
+    <div id="bookingStatus" style="color:red;"></div><br>
 
-        <button id="bfSubmit">Submit</button>
-        <button id="bfCancel">Cancel</button>
-      </div>
-
-      <div id="successBox">
-        <div id="successMessage"></div>
-        <br>
-        <button id="successOk">OK</button>
-      </div>
-    </div>
+    <button id="bfSubmit">Submit</button>
+    <button id="bfCancel">Cancel</button>
   </div>
+
+  <!-- Success Box -->
+  <div id="successBox" class="booking-box" style="display:none;">
+    <div id="successMessage"></div>
+    <br>
+    <button id="successOk">OK</button>
+  </div>
+
+</div>
+
 
   <!-- Shared calendar logic -->
   <script src="calendar.js"></script>
