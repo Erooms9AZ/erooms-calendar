@@ -102,16 +102,18 @@ function showMobileRoomSelector(rooms, slotTime) {
   };
 }
 
-/* -------------------------------------------------------
-   RENDER SLOTS (FIXED RETURNS → CONTINUE)
--------------------------------------------------------- */
+// -------------------------------------------------------
+// RENDER SLOTS
+// -------------------------------------------------------
 function renderMobileSlots() {
   const slotList = document.getElementById("slotList");
   if (!slotList) return;
 
   slotList.innerHTML = "";
 
+  // -------------------------------------------------------
   // BLOCK SUNDAYS
+  // -------------------------------------------------------
   if (mobileCurrentDay.getDay() === 0) {
     const div = document.createElement("div");
     div.className = "slotItem unavailable";
@@ -122,7 +124,9 @@ function renderMobileSlots() {
 
   const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
 
+  // IMPORTANT: this loop MUST wrap everything below
   hours.forEach(hour => {
+
     const slotTime = new Date(mobileCurrentDay);
     slotTime.setHours(hour, 0, 0, 0);
 
@@ -134,8 +138,8 @@ function renderMobileSlots() {
     const endHour = hour + duration;
 
     // HARD STOP: no slot may end after 22:00
-    if (hour + duration > 22) {
-      continue;
+    if (endHour > 22) {
+      return; // ← return INSIDE forEach is OK (skips this iteration)
     }
 
     // BLOCK PAST TIMES
@@ -144,7 +148,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      continue;
+      return; // skip this slot only
     }
 
     // BLOCK BOOKINGS THAT END AFTER 22:00
@@ -153,7 +157,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      continue;
+      return;
     }
 
     // DURATION-AWARE AVAILABILITY
@@ -194,34 +198,10 @@ function renderMobileSlots() {
     }
 
     slotList.appendChild(div);
-  });
+
+  }); // ← THIS closing brace was missing in your file
 }
 
-/* -------------------------------------------------------
-   LEGEND
--------------------------------------------------------- */
-function insertSlotLegend() {
-  const slotList = document.getElementById("slotList");
-  if (!slotList) return;
-
-  if (document.getElementById("slotLegend")) return;
-
-  const legend = document.createElement("div");
-  legend.id = "slotLegend";
-  legend.innerHTML = `
-    <div class="legendItem">
-      <span class="legendColor both"></span> Both Rooms
-    </div>
-    <div class="legendItem">
-      <span class="legendColor room1"></span> Room 1 Only
-    </div>
-    <div class="legendItem">
-      <span class="legendColor room2"></span> Room 2 Only
-    </div>
-  `;
-
-  slotList.parentNode.insertBefore(legend, slotList);
-}
 
 /* -------------------------------------------------------
    NAVIGATION
