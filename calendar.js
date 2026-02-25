@@ -161,46 +161,6 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
   }
 
   /* -------------------------------------------------------
-   MAIN RENDER FUNCTION
--------------------------------------------------------- */
-async function renderCalendar() {
-  if (!calendarEl) return;   // desktop only
-
-  // clear previous content before rendering a new week
-  calendarEl.innerHTML = "";
-
-  const startOfWeek = new Date(currentWeekStart);
-  const endOfWeek = new Date(startOfWeek);
-  // desktop: just this week
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-  const events = [
-    ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
-    ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
-  ];
-  window.allEvents = events;
-  document.dispatchEvent(
-    new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
-  );
-
-  const days = [];
-
-  // empty top-left cell
-  calendarEl.appendChild(document.createElement("div"));
-
-  // day headers Mon–Sat
-  for (let i = 0; i < 6; i++) {
-    const d = new Date(startOfWeek);
-    d.setDate(startOfWeek.getDate() + i);
-    days.push(d);
-
-    const h = document.createElement("div");
-    h.className = "day-header";
-    h.textContent = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][i] + " " + d.getDate();
-    calendarEl.appendChild(h);
-  }
-
-  /* -------------------------------------------------------
      MERGED BLOCK CONFIRMATION PANEL
   -------------------------------------------------------- */
   if (mergedBlock && mergedBlock.room === activeRoom) {
