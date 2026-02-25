@@ -255,7 +255,7 @@ document.getElementById("mergedNo").onclick = () => {
 
 return;
 }   // ← closes the mergedBlock IF
-}   // ← closes renderCalendar()
+
 
 /* -------------------------------------------------------
    HOURLY GRID
