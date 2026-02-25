@@ -342,8 +342,15 @@ function updateWeekButtons() {
 if (prevWeekBtn) {
   prevWeekBtn.onclick = () => {
     floatingSelector.style.display = "none";
+
     if (currentWeekStart.getTime() > baseWeekStart.getTime()) {
       currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+
+      // 🔥 NEW: notify mobile that the week changed
+      document.dispatchEvent(
+        new CustomEvent("weekChanged", { detail: currentWeekStart })
+      );
+
       mergedBlock = null;
       renderCalendar();
       updateWeekButtons();
@@ -354,12 +361,20 @@ if (prevWeekBtn) {
 if (nextWeekBtn) {
   nextWeekBtn.onclick = () => {
     floatingSelector.style.display = "none";
+
     currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+
+    // 🔥 NEW: notify mobile that the week changed
+    document.dispatchEvent(
+      new CustomEvent("weekChanged", { detail: currentWeekStart })
+    );
+
     mergedBlock = null;
     renderCalendar();
     updateWeekButtons();
   };
 }
+
 
 /* -------------------------------------------------------
    ⭐ FIXED — DURATION BUTTONS NOW WORK
