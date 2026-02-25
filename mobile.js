@@ -33,23 +33,31 @@ function updateDayLabel() {
 }
 
 // -------------------------------------------------------
-// FULL DURATION OVERLAP CHECK (FIX)
+// DURATION-AWARE AVAILABILITY (USES DESKTOP LOGIC)
 // -------------------------------------------------------
-function mobileSlotIsFree(slotTime, duration, events) {
-  const start = new Date(slotTime);
-  const end = new Date(start.getTime() + duration * 60 * 60 * 1000);
+function getDurationAwareAvailability(slotTime, duration) {
+  // Start with availability at the first hour
+  let base = window.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
 
-  for (const ev of events) {
-    const evStart = new Date(ev.start);
-    const evEnd = new Date(ev.end);
-
-    // If ANY part of the slot overlaps → NOT free
-    if (start < evEnd && end > evStart) {
-      return false;
-    }
+  if (!base.available || duration === 1) {
+    return base;
   }
 
-  return true;
+  // Intersect rooms across each subsequent hour in the block
+  let commonRooms = [...base.rooms];
+
+  for (let i = 1; i < duration; i++) {
+    const nextTime = new Date(slotTime.getTime() + i * 60 * 60 * 1000);
+    const next = window.getAvailabilityForSlot(nextTime) || { available: false, rooms: [] };
+
+    commonRooms = commonRooms.filter(r => next.rooms.includes(r));
+    if (commonRooms.length === 0) break;
+  }
+
+  return {
+    available: commonRooms.length > 0,
+    rooms: commonRooms
+  };
 }
 
 // -------------------------------------------------------
@@ -64,9 +72,8 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
 
-  // Corrected: call desktop handler, not recursive call
-  window.handleSlotClick(room, slotTime);
-
+  // Set mergedBlock (desktop logic) – leaving as in your original
+  openMobileBooking(rooms[0], slotTime);
   // Open booking form directly
   window.openBookingForm(summary);
 }
@@ -136,26 +143,13 @@ function renderMobileSlots() {
       return;
     }
 
-    // -------------------------------------------------------
-    // FIXED AVAILABILITY LOGIC (FULL DURATION CHECK)
-    // -------------------------------------------------------
-    const events = window.allEvents || [];
-
-    const room1Events = events.filter(e => e.room === "room1");
-    const room2Events = events.filter(e => e.room === "room2");
-
-    const room1Free = mobileSlotIsFree(slotTime, duration, room1Events);
-    const room2Free = mobileSlotIsFree(slotTime, duration, room2Events);
-
-    const availability = {
-      available: room1Free || room2Free,
-      rooms: [
-        ...(room1Free ? ["room1"] : []),
-        ...(room2Free ? ["room2"] : [])
-      ]
-    };
-
-    // -------------------------------------------------------
+    // DURATION-AWARE AVAILABILITY USING DESKTOP LOGIC
+    let availability = { available: false, rooms: [] };
+    try {
+      availability = getDurationAwareAvailability(slotTime, duration) || availability;
+    } catch (e) {
+      console.warn("Availability error:", e);
+    }
 
     const div = document.createElement("div");
     let cls = "slotItem ";
