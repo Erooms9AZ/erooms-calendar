@@ -444,5 +444,7 @@ function getAvailabilityForSlot(slotTime) {
 
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
+window.openBookingForm = openBookingForm;   // ← NEW
+
 
 })();
