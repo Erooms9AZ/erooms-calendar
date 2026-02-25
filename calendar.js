@@ -146,9 +146,6 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
     new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
   );
 
-  // ...rest of renderCalendar as you already have it
-}
-
   const days = [];
 
   calendarEl.appendChild(document.createElement("div"));
