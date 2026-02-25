@@ -428,12 +428,14 @@ async function loadEventsForMobile() {
 
 // Always export these — mobile depends on them
 function getAvailabilityForSlot(slotTime) {
-  const rooms = availableRooms(slotTime, selectedDuration, window.allEvents || []);
+  const duration = window.selectedDuration || 1;
+  const rooms = availableRooms(slotTime, duration, window.allEvents || []);
   return {
     available: rooms.length > 0,
     rooms
   };
 }
+
 
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
