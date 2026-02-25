@@ -36,14 +36,12 @@ function updateDayLabel() {
 // DURATION-AWARE AVAILABILITY (USES DESKTOP LOGIC)
 // -------------------------------------------------------
 function getDurationAwareAvailability(slotTime, duration) {
-  // Start with availability at the first hour
   let base = window.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
 
   if (!base.available || duration === 1) {
     return base;
   }
 
-  // Intersect rooms across each subsequent hour in the block
   let commonRooms = [...base.rooms];
 
   for (let i = 1; i < duration; i++) {
@@ -72,9 +70,8 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
 
-  // Set mergedBlock (desktop logic) – leaving as in your original
+  // Keep original behaviour
   openMobileBooking(rooms[0], slotTime);
-  // Open booking form directly
   window.openBookingForm(summary);
 }
 
@@ -107,6 +104,17 @@ function renderMobileSlots() {
 
   slotList.innerHTML = "";
 
+  // -------------------------------------------------------
+  // BLOCK SUNDAYS (FIX)
+  // -------------------------------------------------------
+  if (mobileCurrentDay.getDay() === 0) {
+    const div = document.createElement("div");
+    div.className = "slotItem unavailable";
+    div.textContent = "No bookings on Sunday";
+    slotList.appendChild(div);
+    return;
+  }
+
   const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
 
   hours.forEach(hour => {
@@ -122,7 +130,7 @@ function renderMobileSlots() {
 
     // HARD STOP: no slot may end after 22:00
     if (hour + duration > 22) {
-      return; // do not render this slot at all
+      return;
     }
 
     // BLOCK PAST TIMES
@@ -143,7 +151,7 @@ function renderMobileSlots() {
       return;
     }
 
-    // DURATION-AWARE AVAILABILITY USING DESKTOP LOGIC
+    // DURATION-AWARE AVAILABILITY
     let availability = { available: false, rooms: [] };
     try {
       availability = getDurationAwareAvailability(slotTime, duration) || availability;
@@ -167,7 +175,6 @@ function renderMobileSlots() {
     div.className = cls;
     div.textContent = `${hour}:00–${endHour}:00`;
 
-    // CLICK HANDLER
     if (availability.available && availability.rooms.length > 0) {
       div.onclick = () => {
         const rooms = availability.rooms;
@@ -212,7 +219,7 @@ function insertSlotLegend() {
 }
 
 // -------------------------------------------------------
-// NAVIGATION
+// NAVIGATION (FIXED TO REFRESH EVENTS)
 // -------------------------------------------------------
 const prevBtn = document.getElementById("prevDayBtn");
 const nextBtn = document.getElementById("nextDayBtn");
@@ -221,6 +228,7 @@ if (prevBtn) {
   prevBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
     updateDayLabel();
+    waitForEventsAndRefresh();   // FIX
     renderMobileSlots();
   };
 }
@@ -229,6 +237,7 @@ if (nextBtn) {
   nextBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
     updateDayLabel();
+    waitForEventsAndRefresh();   // FIX
     renderMobileSlots();
   };
 }
