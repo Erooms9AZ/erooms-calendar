@@ -122,15 +122,12 @@ function availableRooms(slotTime, duration, events) {
   if (!conflicts.some(ev => ev.room === "room2")) rooms.push("room2");
   return rooms;
 }
-/* -------------------------------------------------------
-     ADD handleBookingSubmit() HERE
-  -------------------------------------------------------- */
-  
-  function handleBookingSubmit() {
+  /* -------------------------------------------------------
+       ADD handleBookingSubmit() HERE
+-------------------------------------------------------- */
+async function handleBookingSubmit() {
   const name = bfName.value.trim();
   const email = bfEmail.value.trim();
-  const phone = bfPhone.value.trim();
-  const comments = bfComments.value.trim();
 
   if (!name || !email) {
     bookingStatus.textContent = "Name and Email are required.";
@@ -139,16 +136,22 @@ function availableRooms(slotTime, duration, events) {
 
   bookingStatus.textContent = "Submitting...";
 
-  createMergedBlock()
-    .then(() => {
-      bookingForm.style.display = "none";
-      successBox.style.display = "block";
-      bookingStatus.textContent = "";
-    })
-    .catch(err => {
+  try {
+    const ok = await submitMobileBooking();
+
+    if (!ok) {
       bookingStatus.textContent = "Error submitting booking.";
-      console.error(err);
-    });
+      return;
+    }
+
+    bookingForm.style.display = "none";
+    successBox.style.display = "block";
+    bookingStatus.textContent = "";
+
+  } catch (err) {
+    bookingStatus.textContent = "Error submitting booking.";
+    console.error(err);
+  }
 }
 
 /* -------------------------------------------------------
