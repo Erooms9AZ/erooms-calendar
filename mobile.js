@@ -21,6 +21,15 @@ let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
   ? new Date(currentWeekStart)
   : new Date();
 // -------------------------------------------------------
+// LISTEN FOR WEEK CHANGES FROM DESKTOP
+// -------------------------------------------------------
+document.addEventListener("weekChanged", (e) => {
+  mobileCurrentDay = new Date(e.detail);
+  updateDayLabel();
+  renderMobileSlots();
+});
+
+// -------------------------------------------------------
 // LISTEN FOR UPDATED EVENTS FROM DESKTOP (FIX)
 // -------------------------------------------------------
 document.addEventListener("calendarEventsUpdated", (e) => {
