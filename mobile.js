@@ -91,6 +91,11 @@ function renderMobileSlots() {
       10
     );
     const endHour = hour + duration;
+    // HARD STOP: no slot may end after 22:00
+if (hour + duration > 22) {
+  return; // do not render this slot at all
+}
+
 
     // BLOCK PAST TIMES
     if (slotTime < now) {
