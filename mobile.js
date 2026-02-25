@@ -224,7 +224,7 @@ function insertSlotLegend() {
 }
 
 /* -------------------------------------------------------
-   NAVIGATION
+   NAVIGATION  (PATCHED)
 -------------------------------------------------------- */
 const prevBtn = document.getElementById("prevDayBtn");
 const nextBtn = document.getElementById("nextDayBtn");
@@ -233,6 +233,12 @@ if (prevBtn) {
   prevBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
     updateDayLabel();
+
+    // ⭐ PATCH: tell desktop to fetch events for the new week
+    document.dispatchEvent(
+      new CustomEvent("weekChanged", { detail: mobileCurrentDay })
+    );
+
     renderMobileSlots();
   };
 }
@@ -241,6 +247,12 @@ if (nextBtn) {
   nextBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
     updateDayLabel();
+
+    // ⭐ PATCH: tell desktop to fetch events for the new week
+    document.dispatchEvent(
+      new CustomEvent("weekChanged", { detail: mobileCurrentDay })
+    );
+
     renderMobileSlots();
   };
 }
@@ -267,5 +279,3 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
 updateDayLabel();
 insertSlotLegend();
 renderMobileSlots();
-
- 
