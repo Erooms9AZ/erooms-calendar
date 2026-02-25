@@ -5,6 +5,7 @@
 const k1 = "AIzaSy";
 const k2 = "DJbfWqdMdgjIW0EAaREvUCKlz9P6yrPCs";
 const apiKey = k1 + k2;
+const isMobilePage = !document.getElementById("monthLabel");
 
 let selectedDuration = 1;
 let mergedBlock = null;
