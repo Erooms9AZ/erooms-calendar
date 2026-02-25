@@ -164,6 +164,46 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
   }
 
   /* -------------------------------------------------------
+   MAIN RENDER FUNCTION
+-------------------------------------------------------- */
+async function renderCalendar() {
+  if (!calendarEl) return;   // desktop only
+
+  // clear previous content before rendering a new week
+  calendarEl.innerHTML = "";
+
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfWeek = new Date(startOfWeek);
+  // desktop: just this week
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  const events = [
+    ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
+    ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
+  ];
+  window.allEvents = events;
+  document.dispatchEvent(
+    new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
+  );
+
+  const days = [];
+
+  // empty top-left cell
+  calendarEl.appendChild(document.createElement("div"));
+
+  // day headers Mon–Sat
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
+    days.push(d);
+
+    const h = document.createElement("div");
+    h.className = "day-header";
+    h.textContent = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][i] + " " + d.getDate();
+    calendarEl.appendChild(h);
+  }
+
+  /* -------------------------------------------------------
      MERGED BLOCK CONFIRMATION PANEL
   -------------------------------------------------------- */
   if (mergedBlock && mergedBlock.room === activeRoom) {
@@ -201,7 +241,6 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
           bookingStatus.textContent = "Please complete all required fields.";
           return;
         }
-}   // ← FIX: closes renderCalendar()
 
         const payload = {
           name,
@@ -213,15 +252,13 @@ endOfWeek.setDate(startOfWeek.getDate() + 13);
           end: end.toISOString()
         };
 
-        // ⭐ Replace Wix messaging with direct Apps Script call
-fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(payload)
-})
-
+        fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
 
         const startTime = String(start.getHours()).padStart(2, "0") + ":00";
         const endTime = String(end.getHours()).padStart(2, "0") + ":00";
@@ -243,51 +280,53 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
       };
 
       document.getElementById("successOk").onclick = () => {
-    closeBookingForm();
-    mergedBlock = null;
-    renderCalendar();
-};   // ← FIXED: only one brace here
+        closeBookingForm();
+        mergedBlock = null;
+        renderCalendar();
+      };
+    };
 
-document.getElementById("mergedNo").onclick = () => {
-  mergedBlock = null;
-  renderCalendar();
-};
+    document.getElementById("mergedNo").onclick = () => {
+      mergedBlock = null;
+      renderCalendar();
+    };
 
-return;
-}   // ← closes the mergedBlock IF
-
+    return;
+  }
 
   /* -------------------------------------------------------
      HOURLY GRID
   -------------------------------------------------------- */
   for (let hour = 10; hour < 22; hour++) {
-  const hourLabel = document.createElement("div");
-  hourLabel.className = "hour-label";
-  hourLabel.textContent = `${hour}:00`;
-  calendarEl.appendChild(hourLabel);
+    const hourLabel = document.createElement("div");
+    hourLabel.className = "hour-label";
+    hourLabel.textContent = `${hour}:00`;
+    calendarEl.appendChild(hourLabel);
 
-  for (let i = 0; i < 6; i++) {
-    const day = days[i];
-    const slot = document.createElement("div");
-    slot.className = "slot";
+    for (let i = 0; i < 6; i++) {
+      const day = days[i];
+      const slot = document.createElement("div");
+      slot.className = "slot";
 
-    const slotTime = new Date(day);
-    slotTime.setHours(hour, 0, 0, 0);
-const now = new Date();
-const isPast = slotTime < now;
-    const rooms = availableRooms(slotTime, selectedDuration, events);
-    const hasR1 = rooms.includes("room1");
-    const hasR2 = rooms.includes("room2");
+      const slotTime = new Date(day);
+      slotTime.setHours(hour, 0, 0, 0);
 
-    const endTime = new Date(slotTime.getTime() + selectedDuration * 60 * 60 * 1000);
-    const startStr = slotTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-    const endStr = endTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      const now = new Date();
+      const isPast = slotTime < now;
 
-    // ... rest of your existing logic
+      const rooms = availableRooms(slotTime, selectedDuration, events);
+      const hasR1 = rooms.includes("room1");
+      const hasR2 = rooms.includes("room2");
 
-     if (isPast || (!hasR1 && !hasR2)) { slot.style.backgroundColor = "grey"; slot.style.pointerEvents = "none"; slot.innerHTML = `Not<br>Available`; }
+      const endTime = new Date(slotTime.getTime() + selectedDuration * 60 * 60 * 1000);
+      const startStr = slotTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      const endStr = endTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
 
-      else if (hasR1 && hasR2) {
+      if (isPast || (!hasR1 && !hasR2)) {
+        slot.style.backgroundColor = "grey";
+        slot.style.pointerEvents = "none";
+        slot.innerHTML = `Not<br>Available`;
+      } else if (hasR1 && hasR2) {
         slot.style.backgroundColor = "#9c27b0";
         slot.innerHTML = `R1 or R2<br>${startStr} - ${endStr}`;
 
@@ -305,9 +344,7 @@ const isPast = slotTime < now;
             }
           };
         };
-      }
-
-      else if (hasR1) {
+      } else if (hasR1) {
         slot.style.backgroundColor = "#4caf50";
         slot.innerHTML = `R1<br>${startStr} - ${endStr}`;
         slot.onclick = (e) => {
@@ -315,9 +352,7 @@ const isPast = slotTime < now;
           floatingSelector.style.display = "none";
           createMergedBlock("room1", new Date(slotTime));
         };
-      }
-
-      else if (hasR2) {
+      } else if (hasR2) {
         slot.style.backgroundColor = "#2196f3";
         slot.innerHTML = `R2<br>${startStr} - ${endStr}`;
         slot.onclick = (e) => {
@@ -336,6 +371,7 @@ const isPast = slotTime < now;
     `${["January","February","March","April","May","June","July","August","September","October","November","December"][startOfWeek.getMonth()]} ` +
     `${startOfWeek.getFullYear()}`;
 }
+
 
 /* -------------------------------------------------------
    WEEK NAVIGATION
