@@ -1,45 +1,32 @@
 window.selectedDuration = 1;
 
-// -------------------------------------------------------
-// WAIT FOR CALENDAR EXPORTS
-// -------------------------------------------------------
-function waitForCalendarExports(callback) {
-  if (
-    typeof window.getAvailabilityForSlot === "function" &&
-    typeof window.handleSlotClick === "function"
-  ) {
-    callback();
-  } else {
-    setTimeout(() => waitForCalendarExports(callback), 50);
-  }
-}
-
-// -------------------------------------------------------
-// STATE
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   STATE
+-------------------------------------------------------- */
 let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
   ? new Date(currentWeekStart)
   : new Date();
-// -------------------------------------------------------
-// LISTEN FOR WEEK CHANGES FROM DESKTOP
-// -------------------------------------------------------
+
+/* -------------------------------------------------------
+   LISTEN FOR WEEK CHANGES FROM DESKTOP
+-------------------------------------------------------- */
 document.addEventListener("weekChanged", (e) => {
   mobileCurrentDay = new Date(e.detail);
   updateDayLabel();
   renderMobileSlots();
 });
 
-// -------------------------------------------------------
-// LISTEN FOR UPDATED EVENTS FROM DESKTOP (FIX)
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   LISTEN FOR UPDATED EVENTS FROM DESKTOP
+-------------------------------------------------------- */
 document.addEventListener("calendarEventsUpdated", (e) => {
   window.allEvents = e.detail;
   renderMobileSlots();
 });
 
-// -------------------------------------------------------
-// HEADER LABEL
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   HEADER LABEL
+-------------------------------------------------------- */
 function updateDayLabel() {
   const options = { weekday: "long", day: "numeric", month: "long" };
   const label = document.getElementById("dayLabel");
@@ -48,9 +35,9 @@ function updateDayLabel() {
   }
 }
 
-// -------------------------------------------------------
-// DURATION-AWARE AVAILABILITY (USES DESKTOP LOGIC)
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   DURATION-AWARE AVAILABILITY
+-------------------------------------------------------- */
 function getDurationAwareAvailability(slotTime, duration) {
   let base = window.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
 
@@ -74,26 +61,30 @@ function getDurationAwareAvailability(slotTime, duration) {
   };
 }
 
-// -------------------------------------------------------
-// OPEN BOOKING (MOBILE VERSION)
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   OPEN BOOKING (FIXED — NO RECURSION)
+-------------------------------------------------------- */
 function openMobileBooking(room, slotTime) {
   const start = new Date(slotTime);
   const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
 
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const dateStr = start.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
 
-  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(
+    end.getHours()
+  ).padStart(2, "0")}:00`;
 
-  // Keep original behaviour
-  openMobileBooking(rooms[0], slotTime);
   window.openBookingForm(summary);
 }
 
-// -------------------------------------------------------
-// ROOM SELECTOR MODAL
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   ROOM SELECTOR MODAL
+-------------------------------------------------------- */
 function showMobileRoomSelector(rooms, slotTime) {
   const selector = document.getElementById("mobileRoomSelector");
   selector.style.display = "flex";
@@ -111,18 +102,16 @@ function showMobileRoomSelector(rooms, slotTime) {
   };
 }
 
-// -------------------------------------------------------
-// RENDER SLOTS
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   RENDER SLOTS (FIXED RETURNS → CONTINUE)
+-------------------------------------------------------- */
 function renderMobileSlots() {
   const slotList = document.getElementById("slotList");
   if (!slotList) return;
 
   slotList.innerHTML = "";
 
-  // -------------------------------------------------------
-  // BLOCK SUNDAYS (FIX)
-  // -------------------------------------------------------
+  // BLOCK SUNDAYS
   if (mobileCurrentDay.getDay() === 0) {
     const div = document.createElement("div");
     div.className = "slotItem unavailable";
@@ -146,7 +135,7 @@ function renderMobileSlots() {
 
     // HARD STOP: no slot may end after 22:00
     if (hour + duration > 22) {
-      continue;   // ← FIXED
+      continue;
     }
 
     // BLOCK PAST TIMES
@@ -155,7 +144,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      continue;   // ← FIXED
+      continue;
     }
 
     // BLOCK BOOKINGS THAT END AFTER 22:00
@@ -164,7 +153,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      continue;   // ← FIXED
+      continue;
     }
 
     // DURATION-AWARE AVAILABILITY
@@ -208,10 +197,9 @@ function renderMobileSlots() {
   });
 }
 
-
-// -------------------------------------------------------
-// LEGEND
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   LEGEND
+-------------------------------------------------------- */
 function insertSlotLegend() {
   const slotList = document.getElementById("slotList");
   if (!slotList) return;
@@ -235,9 +223,9 @@ function insertSlotLegend() {
   slotList.parentNode.insertBefore(legend, slotList);
 }
 
-// -------------------------------------------------------
-// NAVIGATION (FIXED TO REFRESH EVENTS)
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   NAVIGATION
+-------------------------------------------------------- */
 const prevBtn = document.getElementById("prevDayBtn");
 const nextBtn = document.getElementById("nextDayBtn");
 
@@ -245,7 +233,6 @@ if (prevBtn) {
   prevBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
     updateDayLabel();
-    waitForEventsAndRefresh();   // FIX
     renderMobileSlots();
   };
 }
@@ -254,14 +241,13 @@ if (nextBtn) {
   nextBtn.onclick = () => {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
     updateDayLabel();
-    waitForEventsAndRefresh();   // FIX
     renderMobileSlots();
   };
 }
 
-// -------------------------------------------------------
-// DURATION BUTTONS
-// -------------------------------------------------------
+/* -------------------------------------------------------
+   DURATION BUTTONS
+-------------------------------------------------------- */
 document.querySelectorAll("#durationButtons button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("#durationButtons button")
@@ -272,27 +258,14 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     window.selectedDuration = Number(btn.dataset.hours);
 
     renderMobileSlots();
-    waitForEventsAndRefresh();
   });
 });
 
-// -------------------------------------------------------
-// WAIT FOR EVENTS, THEN REFRESH SLOTS ONCE
-// -------------------------------------------------------
-function waitForEventsAndRefresh() {
-  if (Array.isArray(window.allEvents) && window.allEvents.length > 0) {
-    renderMobileSlots();
-  } else {
-    setTimeout(waitForEventsAndRefresh, 200);
-  }
-}
+/* -------------------------------------------------------
+   INITIAL LOAD
+-------------------------------------------------------- */
+updateDayLabel();
+insertSlotLegend();
+renderMobileSlots();
 
-// -------------------------------------------------------
-// INITIAL LOAD
-// -------------------------------------------------------
-waitForCalendarExports(() => {
-  updateDayLabel();
-  insertSlotLegend();
-  renderMobileSlots();
-  waitForEventsAndRefresh();
-});
+  
