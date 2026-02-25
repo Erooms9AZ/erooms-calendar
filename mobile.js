@@ -146,7 +146,7 @@ function renderMobileSlots() {
 
     // HARD STOP: no slot may end after 22:00
     if (hour + duration > 22) {
-      return;
+      continue;   // ← FIXED
     }
 
     // BLOCK PAST TIMES
@@ -155,7 +155,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      return;
+      continue;   // ← FIXED
     }
 
     // BLOCK BOOKINGS THAT END AFTER 22:00
@@ -164,7 +164,7 @@ function renderMobileSlots() {
       div.className = "slotItem unavailable";
       div.textContent = `${hour}:00–${endHour}:00`;
       slotList.appendChild(div);
-      return;
+      continue;   // ← FIXED
     }
 
     // DURATION-AWARE AVAILABILITY
@@ -207,6 +207,7 @@ function renderMobileSlots() {
     slotList.appendChild(div);
   });
 }
+
 
 // -------------------------------------------------------
 // LEGEND
