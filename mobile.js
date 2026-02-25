@@ -67,6 +67,10 @@ function getDurationAwareAvailability(slotTime, duration) {
 function openMobileBooking(room, slotTime) {
   const start = new Date(slotTime);
   const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
+window.selectedRoom = room;
+window.selectedStart = start;
+window.selectedEnd = end;
+window.selectedDate = start; // or start.toISOString().split("T")[0]
 
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
   const dateStr = start.toLocaleDateString("en-GB", {
