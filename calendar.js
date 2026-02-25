@@ -26,6 +26,7 @@ const floatingSelector = document.getElementById("floatingSelector");
 
 document.addEventListener("click", (e) => {
   if (floatingSelector.style.display === "flex") {
+    if (!floatingSelector) return; // ← FIX
     if (!floatingSelector.contains(e.target)) {
       floatingSelector.style.display = "none";
     }
