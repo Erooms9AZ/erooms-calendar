@@ -243,20 +243,24 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
       };
 
       document.getElementById("successOk").onclick = () => {
-        closeBookingForm();
-        mergedBlock = null;
-        renderCalendar();
-      };
-    };
+    closeBookingForm();
+    mergedBlock = null;
+    renderCalendar();
+};   // ← FIXED: only one brace here
 
-    document.getElementById("mergedNo").onclick = () => {
-      mergedBlock = null;
-      renderCalendar();
-    };
+document.getElementById("mergedNo").onclick = () => {
+  mergedBlock = null;
+  renderCalendar();
+};
 
-    return;
-  }
+return;
+}   // ← closes the mergedBlock IF
 }   // ← closes renderCalendar()
+
+/* -------------------------------------------------------
+   HOURLY GRID
+-------------------------------------------------------- */
+for (let hour = 10; hour < 22; hour++) {
 
   /* -------------------------------------------------------
      HOURLY GRID
