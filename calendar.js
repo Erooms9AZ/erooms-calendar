@@ -256,6 +256,7 @@ fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
 
     return;
   }
+}   // ← closes renderCalendar()
 
   /* -------------------------------------------------------
      HOURLY GRID
