@@ -173,12 +173,28 @@ body {
 
 <body>
 
-  <!-- Mobile Header -->
-  <div id="mobileHeader">
-    <button id="prevDayBtn">←</button>
-    <div id="dayLabel">Loading…</div>
-    <button id="nextDayBtn">→</button>
-  </div>
+ <div id="mobileHeader">
+    <div class="top-bar">
+        <button id="prevWeekBtn">‹</button>
+        <span id="mobileDateLabel"></span>
+        <button id="nextWeekBtn">›</button>
+    </div>
+
+    <div id="durationButtons">
+        <button data-hours="1">1 Hour</button>
+        <button data-hours="2">2 Hours</button>
+        <button data-hours="3">3 Hours</button>
+    </div>
+
+    <div id="legend">
+        <span class="both">Both Rooms</span>
+        <span class="r1">Room 1 Only</span>
+        <span class="r2">Room 2 Only</span>
+    </div>
+</div>
+
+<div id="calendar"></div>
+
 
   <!-- Duration Buttons -->
   <div id="durationButtons">
