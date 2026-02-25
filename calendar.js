@@ -433,7 +433,7 @@ if (calendarEl) {
 -------------------------------------------------------- */
 
 // Desktop calendar ONLY
-if (calendarEl) {
+  if (!isMobilePage) {
   renderCalendar();
   updateWeekButtons();
 } else {
