@@ -473,6 +473,94 @@ function getAvailabilityForSlot(slotTime) {
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
 window.openBookingForm = openBookingForm;   // ← NEW
+
+  /* -------------------------------------------------------
+   MOBILE BOOKING SUBMISSION (NEW)
+-------------------------------------------------------- */
+async function submitMobileBooking() {
+  const start = window.selectedStart;
+  const end = window.selectedEnd;
+  const room = window.selectedRoom;
+
+  const payload = {
+    name: bfName.value.trim(),
+    email: bfEmail.value.trim(),
+    phone: bfPhone.value.trim(),
+    notes: bfComments.value.trim(),
+    room,
+    start: start.toISOString(),
+    end: end.toISOString()
+  };
+
+  const res = await fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  return res.ok;
+}
+/* -------------------------------------------------------
+   MOBILE BOOKING SUBMISSION (NEW)
+-------------------------------------------------------- */
+async function submitMobileBooking() {
+  const start = window.selectedStart;
+  const end = window.selectedEnd;
+  const room = window.selectedRoom;
+
+  const payload = {
+    name: bfName.value.trim(),
+    email: bfEmail.value.trim(),
+    phone: bfPhone.value.trim(),
+    notes: bfComments.value.trim(),
+    room,
+    start: start.toISOString(),
+    end: end.toISOString()
+  };
+
+  const res = await fetch("https://green-bread-e7e9.dave-f5d.workers.dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  return res.ok;
+}
+
+
+/* -------------------------------------------------------
+   UPDATED handleBookingSubmit() FOR MOBILE
+-------------------------------------------------------- */
+async function handleBookingSubmit() {
+  const name = bfName.value.trim();
+  const email = bfEmail.value.trim();
+
+  if (!name || !email) {
+    bookingStatus.textContent = "Name and Email are required.";
+    return;
+  }
+
+  bookingStatus.textContent = "Submitting...";
+
+  try {
+    const ok = await submitMobileBooking();
+
+    if (!ok) {
+      bookingStatus.textContent = "Error submitting booking.";
+      return;
+    }
+
+    bookingForm.style.display = "none";
+    successBox.style.display = "block";
+    bookingStatus.textContent = "";
+
+  } catch (err) {
+    bookingStatus.textContent = "Error submitting booking.";
+    console.error(err);
+  }
+}
+
+
 /* -------------------------------------------------------
    MOBILE + DESKTOP BOOKING BUTTON LISTENERS
 -------------------------------------------------------- */
@@ -493,6 +581,5 @@ if (successOk) {
     closeBookingForm();
   });
 }
-
 
 })();
