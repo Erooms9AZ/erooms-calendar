@@ -33,6 +33,26 @@ function updateDayLabel() {
 }
 
 // -------------------------------------------------------
+// FULL DURATION OVERLAP CHECK (FIX)
+// -------------------------------------------------------
+function mobileSlotIsFree(slotTime, duration, events) {
+  const start = new Date(slotTime);
+  const end = new Date(start.getTime() + duration * 60 * 60 * 1000);
+
+  for (const ev of events) {
+    const evStart = new Date(ev.start);
+    const evEnd = new Date(ev.end);
+
+    // If ANY part of the slot overlaps → NOT free
+    if (start < evEnd && end > evStart) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// -------------------------------------------------------
 // OPEN BOOKING (MOBILE VERSION)
 // -------------------------------------------------------
 function openMobileBooking(room, slotTime) {
@@ -44,8 +64,9 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
 
-  // Set mergedBlock (desktop logic)
-  openMobileBooking(rooms[0], slotTime);
+  // Corrected: call desktop handler, not recursive call
+  window.handleSlotClick(room, slotTime);
+
   // Open booking form directly
   window.openBookingForm(summary);
 }
@@ -91,11 +112,11 @@ function renderMobileSlots() {
       10
     );
     const endHour = hour + duration;
-    // HARD STOP: no slot may end after 22:00
-if (hour + duration > 22) {
-  return; // do not render this slot at all
-}
 
+    // HARD STOP: no slot may end after 22:00
+    if (hour + duration > 22) {
+      return; // do not render this slot at all
+    }
 
     // BLOCK PAST TIMES
     if (slotTime < now) {
@@ -115,13 +136,26 @@ if (hour + duration > 22) {
       return;
     }
 
-    // Safe availability call
-    let availability = { available: false, rooms: [] };
-    try {
-      availability = window.getAvailabilityForSlot(slotTime) || availability;
-    } catch (e) {
-      console.warn("Availability error:", e);
-    }
+    // -------------------------------------------------------
+    // FIXED AVAILABILITY LOGIC (FULL DURATION CHECK)
+    // -------------------------------------------------------
+    const events = window.allEvents || [];
+
+    const room1Events = events.filter(e => e.room === "room1");
+    const room2Events = events.filter(e => e.room === "room2");
+
+    const room1Free = mobileSlotIsFree(slotTime, duration, room1Events);
+    const room2Free = mobileSlotIsFree(slotTime, duration, room2Events);
+
+    const availability = {
+      available: room1Free || room2Free,
+      rooms: [
+        ...(room1Free ? ["room1"] : []),
+        ...(room2Free ? ["room2"] : [])
+      ]
+    };
+
+    // -------------------------------------------------------
 
     const div = document.createElement("div");
     let cls = "slotItem ";
@@ -218,10 +252,9 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     window.selectedDuration = Number(btn.dataset.hours);
 
     renderMobileSlots();
-    waitForEventsAndRefresh();   // ← ADD THIS
+    waitForEventsAndRefresh();
   });
 });
-
 
 // -------------------------------------------------------
 // WAIT FOR EVENTS, THEN REFRESH SLOTS ONCE
