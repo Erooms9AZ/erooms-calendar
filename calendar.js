@@ -135,7 +135,7 @@ async function renderCalendar() {
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
     ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
   ];
-window.allEvents = events;
+window.allEvents = events; document.dispatchEvent( new CustomEvent("calendarEventsUpdated", { detail: window.allEvents }) );
 
   const days = [];
 
