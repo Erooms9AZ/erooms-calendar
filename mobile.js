@@ -355,6 +355,13 @@ document.getElementById("bfSubmit").onclick = () => {
 };
 
 /* -------------------------------------------------------
+   REQUEST EVENTS ON LOAD ⭐
+-------------------------------------------------------- */
+document.dispatchEvent(
+  new CustomEvent("weekChanged", { detail: mobileCurrentDay })
+);
+
+/* -------------------------------------------------------
    INITIAL LOAD (FIXED)
 -------------------------------------------------------- */
 updateDayLabel();
