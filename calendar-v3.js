@@ -153,6 +153,12 @@ document.addEventListener("click",e=>{
   }
 });
 
+
+calendarEl.appendChild(headerRow);
+
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfRange = new Date(startOfWeek);
+  endOfRange.setDate(startOfWeek.getDate()+13);
 /* -----------------------------
    RENDER CALENDAR
 ------------------------------- */
@@ -182,12 +188,6 @@ for (let d = 0; d < 6; d++) {
   `;
   headerRow.appendChild(cell);
 }
-
-calendarEl.appendChild(headerRow);
-
-  const startOfWeek = new Date(currentWeekStart);
-  const endOfRange = new Date(startOfWeek);
-  endOfRange.setDate(startOfWeek.getDate()+13);
 
   const events=[
     ...(await fetchEvents(calendars.room1,startOfWeek,endOfRange)).map(e=>({...e,room:"room1"})),
