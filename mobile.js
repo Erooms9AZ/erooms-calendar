@@ -330,6 +330,22 @@ window.submitMobileBooking = function(payload) {
         "Error submitting booking. Please try again.";
     });
 };
+/* -------------------------------------------------------
+   MOBILE SUBMIT BUTTON HANDLER
+-------------------------------------------------------- */
+document.getElementById("bfSubmit").onclick = () => {
+  const payload = {
+    name: document.getElementById("bfName").value.trim(),
+    email: document.getElementById("bfEmail").value.trim(),
+    phone: document.getElementById("bfPhone").value.trim(),
+    comments: document.getElementById("bfComments").value.trim(),
+    room: window.selectedRoom,
+    start: window.selectedStart.toISOString(),
+    end: window.selectedEnd.toISOString()
+  };
+
+  submitMobileBooking(payload);
+};
 
 /* -------------------------------------------------------
    INITIAL LOAD
