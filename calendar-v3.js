@@ -172,7 +172,7 @@ async function renderCalendar() {
   endOfRange.setDate(startOfWeek.getDate() + 13);
 
   // ----------------------------
-  // DAY / DATE HEADER ROW  (SAFE POSITION)
+  // DAY / DATE HEADER ROW
   // ----------------------------
   const headerRow = document.createElement("div");
   headerRow.className = "header-row";
