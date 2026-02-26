@@ -1,4 +1,4 @@
-console.log("📦 calendar.js LOADED");
+console.log("📦 calendar-v3.js LOADED");
 
 // --- Safe obfuscated API key (GitHub will NOT detect this) ---
 const k1 = "AIzaSy";
@@ -339,24 +339,24 @@ async function loadEventsForMobile() {
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const end = new Date(start);
-  end.setDate(end.getDate() + 21); // 3 weeks
-
-  console.log("📆 Mobile fetch range:", start.toISOString(), "→", end.toISOString());
+  end.setDate(start.getDate() + 21);
 
   try {
     const events1 = await fetchEvents(calendars.room1, start, end);
     const events2 = await fetchEvents(calendars.room2, start, end);
 
-    const events = [...events1, ...events2];
-    console.log("📊 Events fetched:", events.length);
+    const events = [
+      ...events1.map(e => ({ ...e, room: "room1" })),
+      ...events2.map(e => ({ ...e, room: "room2" }))
+    ];
 
     window.allEvents = events;
-
-    console.log("📱 Mobile availability updated (events cached in window.allEvents)");
+    console.log("📱 Mobile availability updated:", events.length, "events");
   } catch (err) {
     console.error("❌ Error in loadEventsForMobile:", err);
   }
 }
+
 
 /* -----------------------------
    EXPORT FOR MOBILE
