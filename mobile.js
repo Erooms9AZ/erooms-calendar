@@ -66,7 +66,6 @@ function renderMobileSlots() {
 
   slotList.innerHTML = "";
 
-  // Sunday closed
   if (mobileCurrentDay.getDay() === 0) {
     const div = document.createElement("div");
     div.className = "slotItem unavailable";
@@ -84,21 +83,19 @@ function renderMobileSlots() {
 
     if (hour + duration > 22) return;
 
-    // Use desktop availability engine
-    const { available, rooms } = window.getAvailabilityForSlot(slotTime);
+    const { available, rooms } = window.getAvailabilityForSlot(slotTime, duration);
 
     const div = document.createElement("div");
     div.className = "slotItem";
 
-    // Desktop colour matching
     if (!available) {
       div.classList.add("unavailable");
     } else if (rooms.length === 2) {
-      div.classList.add("available"); // purple
+      div.classList.add("available");
     } else if (rooms.includes("room1")) {
-      div.classList.add("room1"); // green
+      div.classList.add("room1");
     } else if (rooms.includes("room2")) {
-      div.classList.add("room2"); // blue
+      div.classList.add("room2");
     }
 
     div.textContent = `${hour}:00–${hour + duration}:00`;
