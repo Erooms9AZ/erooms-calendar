@@ -284,5 +284,7 @@ if(!isMobilePage){renderCalendar();updateWeekButtons();}
 window.getAvailabilityForSlot=slotTime=>{const rooms=availableRooms(slotTime,selectedDuration,window.allEvents||[]);return {available:rooms.length>0,rooms};};
 window.handleSlotClick=createMergedBlock;
 window.openBookingForm=openBookingForm;
+window.loadEventsForMobile = loadEventsForMobile;
+
 
 })();
