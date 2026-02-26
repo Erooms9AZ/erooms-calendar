@@ -43,6 +43,17 @@ const calendars = {
 let activeRoom = "room1";
 
 /* -----------------------------
+   FETCH EVENTS
+------------------------------- */
+async function fetchEvents(calendarId, start, end){
+  const res = await fetch(
+    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}&cb=${Date.now()}`
+  );
+  const data = await res.json();
+  return data.items || [];
+}
+
+/* -----------------------------
    WEEK CALCULATION
 ------------------------------- */
 function getStartOfWeek(date){
@@ -56,48 +67,6 @@ const now = new Date();
 let baseWeekStart = getStartOfWeek(now);
 if(now.getDay()===6 && now.getHours()>=22) baseWeekStart.setDate(baseWeekStart.getDate()+7);
 let currentWeekStart = new Date(baseWeekStart);
-
-async function loadEventsForMobile() {
-  console.log("📱 loadEventsForMobile() called");
-
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const end = new Date(start);
-  end.setDate(end.getDate() + 21);
-
-  console.log("📆 Mobile fetch range:", start.toISOString(), "→", end.toISOString());
-
-  try {
-    const room1 = "o6del9prcevigs6q3gnqqc18po@group.calendar.google.com";
-    const room2 = "0vaic8tl54smverq0d9eso5gs8@group.calendar.google.com";
-
-    const events1 = await fetchEvents(room1, start, end);
-    const events2 = await fetchEvents(room2, start, end);
-
-    const events = [...events1, ...events2];
-    console.log("📊 Events fetched:", events.length);
-
-    window.allEvents = events;
-
-    const slots = document.querySelectorAll(".time-slot");
-    slots.forEach(slot => {
-      const slotTime = new Date(slot.dataset.time);
-      const rooms = availableRooms(slotTime, selectedDuration, events);
-
-      if (rooms.length > 0) {
-        slot.classList.remove("unavailable");
-        slot.classList.add("available");
-      } else {
-        slot.classList.remove("available");
-        slot.classList.add("unavailable");
-      }
-    });
-
-    console.log("📱 Mobile availability updated");
-  } catch (err) {
-    console.error("❌ Error in loadEventsForMobile:", err);
-  }
-}
 
 /* -----------------------------
    ROOM AVAILABILITY
@@ -305,11 +274,17 @@ document.querySelectorAll("#durationButtons button").forEach(btn=>{
 });
 
 /* -----------------------------
-   INITIAL RENDER
+   INITIAL RENDER (DESKTOP ONLY)
 ------------------------------- */
-if(!isMobilePage){renderCalendar();updateWeekButtons();}
+if(!isMobilePage){
+  renderCalendar();
+  updateWeekButtons();
+}
 
-   async function loadEventsForMobile() {
+/* -----------------------------
+   MOBILE: PRELOAD EVENTS
+------------------------------- */
+async function loadEventsForMobile() {
   console.log("📱 loadEventsForMobile() called");
 
   const now = new Date();
@@ -320,26 +295,15 @@ if(!isMobilePage){renderCalendar();updateWeekButtons();}
   console.log("📆 Mobile fetch range:", start.toISOString(), "→", end.toISOString());
 
   try {
-    const events = await fetchEvents(start, end);
+    const events1 = await fetchEvents(calendars.room1, start, end);
+    const events2 = await fetchEvents(calendars.room2, start, end);
+
+    const events = [...events1, ...events2];
     console.log("📊 Events fetched:", events.length);
 
     window.allEvents = events;
 
-    const slots = document.querySelectorAll(".time-slot");
-    slots.forEach(slot => {
-      const slotTime = new Date(slot.dataset.time);
-      const rooms = availableRooms(slotTime, selectedDuration, events);
-
-      if (rooms.length > 0) {
-        slot.classList.remove("unavailable");
-        slot.classList.add("available");
-      } else {
-        slot.classList.remove("available");
-        slot.classList.add("unavailable");
-      }
-    });
-
-    console.log("📱 Mobile availability updated");
+    console.log("📱 Mobile availability updated (events cached in window.allEvents)");
   } catch (err) {
     console.error("❌ Error in loadEventsForMobile:", err);
   }
@@ -348,10 +312,12 @@ if(!isMobilePage){renderCalendar();updateWeekButtons();}
 /* -----------------------------
    EXPORT FOR MOBILE
 ------------------------------- */
-window.getAvailabilityForSlot=slotTime=>{const rooms=availableRooms(slotTime,selectedDuration,window.allEvents||[]);return {available:rooms.length>0,rooms};};
-window.handleSlotClick=createMergedBlock;
-window.openBookingForm=openBookingForm;
+window.getAvailabilityForSlot = slotTime => {
+  const rooms = availableRooms(slotTime,selectedDuration,window.allEvents||[]);
+  return {available:rooms.length>0,rooms};
+};
+window.handleSlotClick = createMergedBlock;
+window.openBookingForm = openBookingForm;
 window.loadEventsForMobile = loadEventsForMobile;
-
 
 })();
