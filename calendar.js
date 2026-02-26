@@ -443,8 +443,7 @@ if (calendarEl) {
    LOAD EVENTS FOR MOBILE (NO DESKTOP UI)
 -------------------------------------------------------- */
 async function loadEventsForMobile() {
-  const startOfWeek = new Date(currentWeekStart);
-  const endOfRange = new Date(startOfWeek.getTime() + 13 * 24 * 60 * 60 * 1000);
+    const endOfRange = new Date(startOfWeek.getTime() + 13 * 24 * 60 * 60 * 1000);
 
 
   const events = [
