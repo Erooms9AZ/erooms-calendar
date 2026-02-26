@@ -201,7 +201,6 @@ async function renderCalendar() {
     ...(await fetchEvents(calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
   ];
   window.allEvents = events;
-document.dispatchEvent(new Event("calendarEventsUpdated"));
 
   // ----------------------------
   // MERGED BLOCK CONFIRMATION PANEL
@@ -351,13 +350,14 @@ async function loadEventsForMobile() {
       ...events2.map(e => ({ ...e, room: "room2" }))
     ];
 
-    window.allEvents = events;
-document.dispatchEvent(new Event("calendarEventsUpdated"));
- availability updatedconsole.log("📱 Mobile:", events.length.error("❌ Error in, "events");
+   window.all"));
+console.log("📱 Mobile availability updated:", eventsdocument.dispatchEvent(new Event("calendarEventsUpdated.length, "events");
 } catch (err) {
-  console loadEventsForMobile:", err);
+  console.error("❌ Error in loadEventsForMobile:",That is the **exact.  
+Nothing else err);
 }
 }
+
 
 
 /* -----------------------------
