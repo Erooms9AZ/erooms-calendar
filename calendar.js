@@ -1,3 +1,5 @@
+console.log("📦 calendar.js LOADED");
+
 // calendar.js
 
 // --- Safe obfuscated API key (GitHub will NOT detect this) ---
