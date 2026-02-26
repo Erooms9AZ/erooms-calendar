@@ -13,8 +13,15 @@ let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
 document.addEventListener("weekChanged", (e) => {
   mobileCurrentDay = new Date(e.detail);
   updateDayLabel();
+
+  // ⭐ NEW: fetch fresh events for the new week
+  if (window.loadEventsForMobile) {
+    window.loadEventsForMobile();
+  }
+
   renderMobileSlots();
 });
+
 
 /* -------------------------------------------------------
    LISTEN FOR UPDATED EVENTS FROM DESKTOP
