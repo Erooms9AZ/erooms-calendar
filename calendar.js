@@ -160,8 +160,6 @@ async function handleBookingSubmit() {
 -------------------------------------------------------- */
 async function renderCalendar() {
   document.dispatchEvent(
-  new CustomEvent("weekChanged", { detail: currentWeekStart })
-);
   if (!calendarEl) return;   // ← keeps desktop off mobile
 
   // ✅ clear previous content before rendering a new week
