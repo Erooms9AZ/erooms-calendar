@@ -1,5 +1,3 @@
-
-
 // calendar.js
 
 // --- Safe obfuscated API key (GitHub will NOT detect this) ---
@@ -479,10 +477,11 @@ function getAvailabilityForSlot(slotTime) {
   };
 }
 
-
 window.getAvailabilityForSlot = getAvailabilityForSlot;
 window.handleSlotClick = createMergedBlock;
-window.openBookingForm = openBookingForm;   // ← NEW
+window.openBookingForm = openBookingForm;
+window.loadEventsForMobile = loadEventsForMobile;   // ⭐ ADD THIS
+
 
   /* -------------------------------------------------------
    MOBILE BOOKING SUBMISSION (NEW)
