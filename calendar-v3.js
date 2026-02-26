@@ -162,38 +162,51 @@ calendarEl.appendChild(headerRow);
 /* -----------------------------
    RENDER CALENDAR
 ------------------------------- */
-async function renderCalendar(){
-  if(!calendarEl) return;
-  calendarEl.innerHTML="";
-// ----------------------------
-// DAY / DATE HEADER ROW
-// ----------------------------
-const headerRow = document.createElement("div");
-headerRow.className = "header-row";
+async function renderCalendar() {
+  if (!calendarEl) return;
+  calendarEl.innerHTML = "";
 
-const emptyCell = document.createElement("div");
-emptyCell.className = "hour-label";
-headerRow.appendChild(emptyCell);
+  // Week boundaries
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfRange = new Date(startOfWeek);
+  endOfRange.setDate(startOfWeek.getDate() + 13);
 
-const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-for (let d = 0; d < 6; d++) {
-  const dayDate = new Date(startOfWeek);
-  dayDate.setDate(startOfWeek.getDate() + d);
+  // ----------------------------
+  // DAY / DATE HEADER ROW  (SAFE POSITION)
+  // ----------------------------
+  const headerRow = document.createElement("div");
+  headerRow.className = "header-row";
 
-  const cell = document.createElement("div");
-  cell.className = "day-header";
-  cell.innerHTML = `
-    <div class="day-name">${dayNames[d]}</div>
-    <div class="day-date">${dayDate.getDate()}</div>
-  `;
-  headerRow.appendChild(cell);
-}
+  // Empty cell above hour labels
+  const emptyCell = document.createElement("div");
+  emptyCell.className = "hour-label";
+  headerRow.appendChild(emptyCell);
 
-  const events=[
-    ...(await fetchEvents(calendars.room1,startOfWeek,endOfRange)).map(e=>({...e,room:"room1"})),
-    ...(await fetchEvents(calendars.room2,startOfWeek,endOfRange)).map(e=>({...e,room:"room2"}))
+  const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  for (let d = 0; d < 6; d++) {
+    const dayDate = new Date(startOfWeek);
+    dayDate.setDate(startOfWeek.getDate() + d);
+
+    const cell = document.createElement("div");
+    cell.className = "day-header";
+    cell.innerHTML = `
+      <div class="day-name">${dayNames[d]}</div>
+      <div class="day-date">${dayDate.getDate()}</div>
+    `;
+    headerRow.appendChild(cell);
+  }
+
+  calendarEl.appendChild(headerRow);
+
+  // ----------------------------
+  // FETCH EVENTS FOR BOTH ROOMS
+  // ----------------------------
+  const events = [
+    ...(await fetchEvents(calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
+    ...(await fetchEvents(calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
   ];
-  window.allEvents=events;
+  window.allEvents = events;
 
   // ----------------------------
   // MERGED BLOCK CONFIRMATION PANEL
@@ -232,46 +245,63 @@ for (let d = 0; d < 6; d++) {
   // ----------------------------
   // HOUR LABELS + SLOTS
   // ----------------------------
-  for(let h=10;h<22;h++){
+  for (let h = 10; h < 22; h++) {
     // Hour label
-    const hourDiv=document.createElement("div");
-    hourDiv.className="hour-label";
-    hourDiv.textContent=`${h}:00`;
+    const hourDiv = document.createElement("div");
+    hourDiv.className = "hour-label";
+    hourDiv.textContent = `${h}:00`;
     calendarEl.appendChild(hourDiv);
 
-    for(let d=0;d<6;d++){
-      const dayDate=new Date(startOfWeek);
-      dayDate.setDate(startOfWeek.getDate()+d);
-      const slotTime=new Date(dayDate); slotTime.setHours(h,0,0,0);
+    for (let d = 0; d < 6; d++) {
+      const dayDate = new Date(startOfWeek);
+      dayDate.setDate(startOfWeek.getDate() + d);
+      const slotTime = new Date(dayDate);
+      slotTime.setHours(h, 0, 0, 0);
 
-      const rooms=availableRooms(slotTime,selectedDuration,events);
-      const slotDiv=document.createElement("div");
-      slotDiv.className="slot";
+      const rooms = availableRooms(slotTime, selectedDuration, events);
+      const slotDiv = document.createElement("div");
+      slotDiv.className = "slot";
 
-      const isPast=slotTime<new Date();
-      if(isPast||rooms.length===0){slotDiv.style.backgroundColor="grey";slotDiv.style.pointerEvents="none";slotDiv.innerHTML="Not<br>Available";}
-      else if(rooms.length===2){
-        slotDiv.style.backgroundColor="#9c27b0";
-        slotDiv.innerHTML=`R1 or R2<br>${h}:00-${h+selectedDuration}:00`;
-        slotDiv.onclick=e=>{
+      const isPast = slotTime < new Date();
+      if (isPast || rooms.length === 0) {
+        slotDiv.style.backgroundColor = "grey";
+        slotDiv.style.pointerEvents = "none";
+        slotDiv.innerHTML = "Not<br>Available";
+      } else if (rooms.length === 2) {
+        slotDiv.style.backgroundColor = "#9c27b0";
+        slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
+        slotDiv.onclick = e => {
           e.stopPropagation();
-          if(!floatingSelector) return;
-          floatingSelector.style.display="flex";
-          floatingSelector.querySelectorAll("[data-room]").forEach(btn=>btn.onclick=()=>{createMergedBlock(btn.dataset.room,slotTime);floatingSelector.style.display="none";});
+          if (!floatingSelector) return;
+          floatingSelector.style.display = "flex";
+          floatingSelector.querySelectorAll("[data-room]").forEach(btn =>
+            btn.onclick = () => {
+              createMergedBlock(btn.dataset.room, slotTime);
+              floatingSelector.style.display = "none";
+            }
+          );
         };
-      } else if(rooms.includes("room1")){slotDiv.style.backgroundColor="#4caf50";slotDiv.innerHTML=`R1<br>${h}:00-${h+selectedDuration}:00`; slotDiv.onclick=()=>createMergedBlock("room1",slotTime);}
-      else if(rooms.includes("room2")){slotDiv.style.backgroundColor="#2196f3";slotDiv.innerHTML=`R2<br>${h}:00-${h+selectedDuration}:00`; slotDiv.onclick=()=>createMergedBlock("room2",slotTime);}
+      } else if (rooms.includes("room1")) {
+        slotDiv.style.backgroundColor = "#4caf50";
+        slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
+        slotDiv.onclick = () => createMergedBlock("room1", slotTime);
+      } else if (rooms.includes("room2")) {
+        slotDiv.style.backgroundColor = "#2196f3";
+        slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
+        slotDiv.onclick = () => createMergedBlock("room2", slotTime);
+      }
 
       calendarEl.appendChild(slotDiv);
     }
   }
 
   // Month label
-  if(monthLabel){
-    const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
-    monthLabel.textContent=`E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
+  if (monthLabel) {
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    monthLabel.textContent = `E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
   }
 }
+
 
 /* -----------------------------
    WEEK NAVIGATION
