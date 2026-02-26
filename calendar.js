@@ -158,16 +158,15 @@ async function handleBookingSubmit() {
 /* -------------------------------------------------------
    MAIN RENDER FUNCTION
 -------------------------------------------------------- */
-async function renderCalendar() {
-  if (!calendarEl) return;   // ← keeps desktop off mobile
-
-  // ✅ clear previous content before rendering a new week
-  calendarEl.innerHTML = "";
+async function loadEventsForMobile() {
+  console.log("📱 loadEventsForMobile() called", currentWeekStart);
 
   const startOfWeek = new Date(currentWeekStart);
-  const endOfWeek = new Date(startOfWeek);
- // ✅ cover current week + next week for mobile
-endOfWeek.setDate(startOfWeek.getDate() + 13);
+  const endOfRange = new Date(startOfWeek);
+  endOfRange.setDate(startOfWeek.getDate() + 13);
+
+  console.log("📆 Mobile fetch range:", startOfWeek, endOfRange);
+
 
   const events = [
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
