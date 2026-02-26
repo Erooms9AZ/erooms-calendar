@@ -67,10 +67,11 @@ function getDurationAwareAvailability(slotTime, duration) {
 function openMobileBooking(room, slotTime) {
   const start = new Date(slotTime);
   const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
-window.selectedRoom = room;
-window.selectedStart = start;
-window.selectedEnd = end;
-window.selectedDate = start; // or start.toISOString().split("T")[0]
+
+  window.selectedRoom = room;
+  window.selectedStart = start;
+  window.selectedEnd = end;
+  window.selectedDate = start;
 
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
   const dateStr = start.toLocaleDateString("en-GB", {
@@ -238,7 +239,6 @@ if (prevBtn) {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
     updateDayLabel();
 
-    // ⭐ PATCH: tell desktop to fetch events for the new week
     document.dispatchEvent(
       new CustomEvent("weekChanged", { detail: mobileCurrentDay })
     );
@@ -252,7 +252,6 @@ if (nextBtn) {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
     updateDayLabel();
 
-    // ⭐ PATCH: tell desktop to fetch events for the new week
     document.dispatchEvent(
       new CustomEvent("weekChanged", { detail: mobileCurrentDay })
     );
@@ -276,6 +275,61 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     renderMobileSlots();
   });
 });
+
+/* -------------------------------------------------------
+   BOOKING SUBMISSION (PATCHED)
+-------------------------------------------------------- */
+window.submitMobileBooking = function(payload) {
+  fetch("https://script.google.com/macros/s/AKfycbz.../exec", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+
+        /* ⭐ SUCCESS MESSAGE PATCH ⭐ */
+        const name = document.getElementById("bfName").value.trim();
+
+        const start = window.selectedStart;
+        const end = window.selectedEnd;
+
+        const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+        const dateStr = start.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        });
+
+        const startTime = start.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        const endTime = end.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        document.getElementById("successMessage").innerHTML = `
+          <strong>${name}</strong><br><br>
+          Your booking for <strong>${dayName} ${dateStr}</strong><br>
+          From <strong>${startTime}</strong> to <strong>${endTime}</strong><br><br>
+          Has been confirmed.<br>
+          You will receive an email shortly.<br><br>
+          <strong>E Rooms</strong>
+        `;
+
+        document.getElementById("bookingForm").style.display = "none";
+        document.getElementById("successBox").style.display = "block";
+      }
+    })
+    .catch(err => {
+      console.error("Booking error:", err);
+      document.getElementById("bookingStatus").textContent =
+        "Error submitting booking. Please try again.";
+    });
+};
 
 /* -------------------------------------------------------
    INITIAL LOAD
