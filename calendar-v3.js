@@ -278,6 +278,42 @@ document.querySelectorAll("#durationButtons button").forEach(btn=>{
 ------------------------------- */
 if(!isMobilePage){renderCalendar();updateWeekButtons();}
 
+   async function loadEventsForMobile() {
+  console.log("📱 loadEventsForMobile() called");
+
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 21); // 3 weeks
+
+  console.log("📆 Mobile fetch range:", start.toISOString(), "→", end.toISOString());
+
+  try {
+    const events = await fetchEvents(start, end);
+    console.log("📊 Events fetched:", events.length);
+
+    window.allEvents = events;
+
+    const slots = document.querySelectorAll(".time-slot");
+    slots.forEach(slot => {
+      const slotTime = new Date(slot.dataset.time);
+      const rooms = availableRooms(slotTime, selectedDuration, events);
+
+      if (rooms.length > 0) {
+        slot.classList.remove("unavailable");
+        slot.classList.add("available");
+      } else {
+        slot.classList.remove("available");
+        slot.classList.add("unavailable");
+      }
+    });
+
+    console.log("📱 Mobile availability updated");
+  } catch (err) {
+    console.error("❌ Error in loadEventsForMobile:", err);
+  }
+}
+
 /* -----------------------------
    EXPORT FOR MOBILE
 ------------------------------- */
