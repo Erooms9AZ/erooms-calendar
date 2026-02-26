@@ -167,9 +167,6 @@ async function renderCalendar() {
 
   let endOfWeek = new Date(startOfWeek.getTime() + 13 * 24 * 60 * 60 * 1000);
 
- // ✅ cover current week + next week for mobile
-endOfWeek.setDate(startOfWeek.getDate() + 13);
-
   const events = [
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
     ...(await fetchEvents(calendars.room2, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room2" }))
