@@ -140,6 +140,22 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   updateDayLabel();
   renderMobileSlots();
 });
+/* -------------------------------------------------------
+   MOBILE EVENT SYNC WITH DESKTOP
+-------------------------------------------------------- */
+
+// Render only after desktop has loaded events
+document.addEventListener("calendarEventsUpdated", () => {
+  updateDayLabel();
+  renderMobileSlots();
+});
+
+// If mobile loads after desktop (rare but possible), render immediately
+if (window.allEvents && window.allEvents.length > 0) {
+  updateDayLabel();
+  renderMobileSlots();
+}
+
 
 /* -------------------------------------------------------
    INITIAL LOAD (fetch events first)
