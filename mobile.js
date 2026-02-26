@@ -363,3 +363,5 @@ if (defaultBtn) defaultBtn.classList.add("active");
 updateDayLabel();
 insertSlotLegend();
 renderMobileSlots();
+
+})();
