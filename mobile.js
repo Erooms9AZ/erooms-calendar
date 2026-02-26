@@ -352,6 +352,12 @@ document.getElementById("bfSubmit").onclick = () => {
 };
 
 /* -------------------------------------------------------
+   ⭐ SET DEFAULT DURATION BUTTON
+-------------------------------------------------------- */
+const defaultBtn = document.querySelector('#durationButtons button[data-hours="1"]');
+if (defaultBtn) defaultBtn.classList.add("active");
+
+/* -------------------------------------------------------
    INITIAL LOAD
 -------------------------------------------------------- */
 updateDayLabel();
