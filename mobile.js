@@ -14,14 +14,7 @@ document.addEventListener("weekChanged", (e) => {
   mobileCurrentDay = new Date(e.detail);
   updateDayLabel();
 
-  // ⭐ NEW: fetch fresh events for the new week
-  if (window.loadEventsForMobile) {
-    window.loadEventsForMobile();
-  }
-
-  renderMobileSlots();
-});
-
+  // ⭐ NEW: fetch fresh events for the new week if (window.loadEventsForMobile) { console.log("📥 Calling loadEventsForMobile()"); window.loadEventsForMobile(); } else { console.log("❌ loadEventsForMobile is NOT defined"); }
 
 /* -------------------------------------------------------
    LISTEN FOR UPDATED EVENTS FROM DESKTOP
