@@ -4,167 +4,202 @@
   <meta charset="UTF-8" />
   <title>E Rooms Calendar</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
+ <style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
 
-    /* Top bar */
-    #topBar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+/* Top bar */
+#topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-    /* Duration buttons */
-    #durationButtons button {
-      padding: 8px 14px;
-      margin-right: 6px;
-      border: 1px solid #444;
-      background: #eee;
-      cursor: pointer;
-    }
+/* Duration buttons */
+#durationButtons button {
+  padding: 8px 14px;
+  margin-right: 6px;
+  border: 1px solid #444;
+  background: #eee;
+  cursor: pointer;
+}
 
-    #durationButtons button.active {
-      background: #444;
-      color: white;
-    }
+#durationButtons button.active {
+  background: #444;
+  color: white;
+}
 
-    /* Calendar grid */
-    #calendar {
-      display: grid;
-      grid-template-columns: 80px repeat(6, 1fr);
-      gap: 4px;
-    }
+/* Calendar grid */
+#calendar {
+  display: grid;
+  grid-template-columns: 80px repeat(6, 1fr);
+  gap: 4px;
+  position: relative;
+}
 
-    .day-header {
-      background: #eee;
-      padding: 6px;
-      text-align: center;
-      font-weight: bold;
-    }
+.day-header {
+  background: #eee;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+}
 
-    .hour-label {
-      background: #ddd;
-      padding: 6px;
-      text-align: center;
-    }
+.hour-label {
+  background: #ddd;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+}
 
-    .slot {
-      background: #f5f5f5;
-      padding: 6px;
-      text-align: center;
-      cursor: pointer;
-      min-height: 40px;
-    }
+.slot {
+  background: #f5f5f5;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .slot:hover {
-      opacity: 0.8;
-    }
+.slot:hover {
+  opacity: 0.8;
+}
 
-    /* Floating room selector */
-    #floatingSelector {
-      position: absolute;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-      top: 100px;
-      left: 100px;
-    }
+/* Floating room selector */
+#floatingSelector {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+  min-width: 100px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
 
-    /* Merged slot panel */
-    .merged-row {
-      grid-column: 1 / span 7;
-      background: #fff3cd;
-      padding: 15px;
-      border: 1px solid #e0c97f;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+/* Merged slot panel */
+.merged-row {
+  grid-column: 1 / span 7;
+  background: #fff3cd;
+  padding: 15px;
+  border: 1px solid #e0c97f;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
 
-    /* Booking overlay */
-    #bookingOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
+/* Booking overlay */
+#bookingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
 
-    #bookingBox {
-      background: white;
-      padding: 20px;
-      width: 300px;
-      border-radius: 6px;
-    }
+#bookingBox {
+  background: white;
+  padding: 20px;
+  width: 300px;
+  border-radius: 6px;
+}
 
-    #successBox {
-      display: none;
-    }
+#successBox {
+  display: none;
+}
 
-    .disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 
-    /* Help button */
-    #helpButton.help-inline {
-      background: #673ab7;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      margin-left: 10px;
-      cursor: pointer;
-      font-size: 14px;
-    }
+/* Help button */
+#helpButton.help-inline {
+  background: #673ab7;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    #helpButton.help-inline:hover {
-      opacity: 0.85;
-    }
+#helpButton.help-inline:hover {
+  opacity: 0.85;
+}
 
-    /* Help popup */
-    #helpPopup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      z-index: 99999;
-      display: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
+/* Help popup */
+#helpPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  z-index: 99999;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
 
-    #helpClose {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    #controlsRow {
+#helpClose {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#controlsRow {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-  </style>
+/* Align floating selector above clicked slot */
+.slot {
+  position: relative;
+}
+
+#floatingSelector {
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+}
+
+/* Optional: make merged-row text break nicely */
+.merged-row {
+  word-wrap: break-word;
+}
+
+/* Slot colors */
+.slot.available { background-color: #9c27b0; color: white; }
+.slot.room1 { background-color: #4caf50; color: white; }
+.slot.room2 { background-color: #2196f3; color: white; }
+.slot.unavailable { background-color: grey; color: white; }
+
+/* Booking form input spacing */
+#bookingBox input, #bookingBox textarea {
+  margin-bottom: 10px;
+  padding: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>
 </head>
 
 <body>
