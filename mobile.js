@@ -48,27 +48,22 @@ function updateDayLabel() {
    DURATION-AWARE AVAILABILITY
 -------------------------------------------------------- */
 function getDurationAwareAvailability(slotTime, duration) {
-  const events = window.allEvents || [];
-  if (!events.length) return { available: false, rooms: [] };
+  let base = window.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
 
-  const rooms = ["room1", "room2"];
-  const availableRooms = rooms.filter(room => {
-    for (let i = 0; i < duration; i++) {
-      const checkTime = new Date(slotTime.getTime() + i * 60 * 60 * 1000);
-      const conflicts = events.some(ev => {
-        if (ev.room !== room) return false;
-        const evStart = new Date(ev.start.dateTime || ev.start.date);
-        const evEnd = new Date(ev.end.dateTime || ev.end.date);
-        return checkTime >= evStart && checkTime < evEnd;
-      });
-      if (conflicts) return false;
-    }
-    return true;
-  });
+  if (!base.available || duration === 1) return base;
+
+  let commonRooms = [...base.rooms];
+
+  for (let i = 1; i < duration; i++) {
+    const nextTime = new Date(slotTime.getTime() + i * 60 * 60 * 1000);
+    const next = window.getAvailabilityForSlot(nextTime) || { available: false, rooms: [] };
+    commonRooms = commonRooms.filter(r => next.rooms.includes(r));
+    if (commonRooms.length === 0) break;
+  }
 
   return {
-    available: availableRooms.length > 0,
-    rooms: availableRooms
+    available: commonRooms.length > 0,
+    rooms: commonRooms
   };
 }
 
