@@ -21,6 +21,8 @@ document.addEventListener("weekChanged", (e) => {
 -------------------------------------------------------- */
 document.addEventListener("calendarEventsUpdated", (e) => {
   window.allEvents = e.detail;
+
+  // ⭐ Events have arrived — now render accurately
   renderMobileSlots();
 });
 
@@ -290,7 +292,7 @@ window.submitMobileBooking = function(payload) {
       if (data.status !== "success") {
         document.getElementById("bookingStatus").textContent =
           "Error submitting booking. Please try again.";
-        return; // ⭐ STOP — do NOT show success box
+        return;
       }
 
       /* ⭐ SUCCESS MESSAGE PATCH ⭐ */
@@ -353,8 +355,12 @@ document.getElementById("bfSubmit").onclick = () => {
 };
 
 /* -------------------------------------------------------
-   INITIAL LOAD
+   INITIAL LOAD (FIXED)
 -------------------------------------------------------- */
 updateDayLabel();
 insertSlotLegend();
-renderMobileSlots();
+
+// ⭐ Avoid rendering before events are loaded
+if (window.allEvents && window.allEvents.length > 0) {
+  renderMobileSlots();
+}
