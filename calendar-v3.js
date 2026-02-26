@@ -58,15 +58,33 @@ if(now.getDay()===6 && now.getHours()>=22) baseWeekStart.setDate(baseWeekStart.g
 let currentWeekStart = new Date(baseWeekStart);
 
 /* -----------------------------
-   FETCH EVENTS
+   FETCH EVENTS (supports desktop + mobile)
 ------------------------------- */
-async function fetchEvents(calendarId,start,end){
+async function fetchEvents(a, b, c) {
+  let calendarId, start, end;
+
+  // Desktop call: fetchEvents(calendarId, start, end)
+  if (typeof a === "string") {
+    calendarId = a;
+    start = b;
+    end = c;
+  }
+
+  // Mobile call: fetchEvents(start, end)
+  else if (a instanceof Date && b instanceof Date) {
+    calendarId = "erooms9az@gmail.com"; // your real calendar ID
+    start = a;
+    end = b;
+  }
+
   const res = await fetch(
     `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}&cb=${Date.now()}`
   );
+
   const data = await res.json();
-  return data.items||[];
+  return data.items || [];
 }
+
 
 /* -----------------------------
    ROOM AVAILABILITY
