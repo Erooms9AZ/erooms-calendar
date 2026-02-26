@@ -1,24 +1,56 @@
-// mobile.js — UPDATED AND FIXED
 window.selectedDuration = 1;
 
 /* -------------------------------------------------------
    STATE
 -------------------------------------------------------- */
-let mobileCurrentDay = (typeof currentWeekStart !== "undefined" && currentWeekStart)
+let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
   ? new Date(currentWeekStart)
   : new Date();
 
 /* -------------------------------------------------------
-   LOAD EVENTS FOR MOBILE (SYNC WITH DESKTOP)
+   HELPER — MOBILE AVAILABILITY MAP
 -------------------------------------------------------- */
-window.loadEventsForMobile = function() {
-  if (!window.allEvents) return;
+function buildMobileAvailabilityMap() {
+  const map = {}; // key = "YYYY-MM-DD-HH", value = booked rooms array
+  const events = window.allEvents || [];
 
-  document.dispatchEvent(
-    new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
-  );
-  console.log("📥 Mobile events loaded");
-};
+  events.forEach(ev => {
+    const evStart = new Date(ev.start.dateTime || ev.start.date);
+    const evEnd = new Date(ev.end.dateTime || ev.end.date);
+    let current = new Date(evStart);
+
+    while (current < evEnd) {
+      const key = `${current.getFullYear()}-${current.getMonth()}-${current.getDate()}-${current.getHours()}`;
+      if (!map[key]) map[key] = [];
+      map[key].push(ev.room);
+      current.setHours(current.getHours() + 1);
+    }
+  });
+
+  return map;
+}
+
+/* -------------------------------------------------------
+   GET AVAILABILITY FOR MOBILE SLOTS
+-------------------------------------------------------- */
+function getMobileAvailability(slotTime, duration) {
+  const map = buildMobileAvailabilityMap();
+  let rooms = ["room1", "room2"];
+
+  for (let i = 0; i < duration; i++) {
+    const t = new Date(slotTime);
+    t.setHours(t.getHours() + i);
+    const key = `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}-${t.getHours()}`;
+    const booked = map[key] || [];
+    rooms = rooms.filter(r => !booked.includes(r));
+    if (rooms.length === 0) break;
+  }
+
+  return {
+    available: rooms.length > 0,
+    rooms
+  };
+}
 
 /* -------------------------------------------------------
    LISTEN FOR WEEK CHANGES FROM DESKTOP
@@ -26,14 +58,11 @@ window.loadEventsForMobile = function() {
 document.addEventListener("weekChanged", (e) => {
   mobileCurrentDay = new Date(e.detail);
   updateDayLabel();
-
-  if (window.loadEventsForMobile) {
-    window.loadEventsForMobile();
-  }
+  renderMobileSlots();
 });
 
 /* -------------------------------------------------------
-   LISTEN FOR UPDATED EVENTS
+   LISTEN FOR UPDATED EVENTS FROM DESKTOP
 -------------------------------------------------------- */
 document.addEventListener("calendarEventsUpdated", (e) => {
   window.allEvents = e.detail;
@@ -52,26 +81,6 @@ function updateDayLabel() {
 }
 
 /* -------------------------------------------------------
-   DURATION-AWARE AVAILABILITY
--------------------------------------------------------- */
-function getDurationAwareAvailability(slotTime, duration) {
-  let base = window.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
-
-  if (!base.available || duration === 1) return base;
-
-  let commonRooms = [...base.rooms];
-
-  for (let i = 1; i < duration; i++) {
-    const nextTime = new Date(slotTime.getTime() + i * 60 * 60 * 1000);
-    const next = window.getAvailabilityForSlot(nextTime) || { available: false, rooms: [] };
-    commonRooms = commonRooms.filter(r => next.rooms.includes(r));
-    if (commonRooms.length === 0) break;
-  }
-
-  return { available: commonRooms.length > 0, rooms: commonRooms };
-}
-
-/* -------------------------------------------------------
    OPEN BOOKING
 -------------------------------------------------------- */
 function openMobileBooking(room, slotTime) {
@@ -85,14 +94,14 @@ function openMobileBooking(room, slotTime) {
 
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
   const dateStr = start.toLocaleDateString("en-GB", {
-    day: "numeric", month: "long", year: "numeric"
+    day: "numeric",
+    month: "long",
+    year: "numeric"
   });
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  if (window.openBookingForm) {
-    window.openBookingForm(summary);
-  }
+  window.openBookingForm(summary);
 }
 
 /* -------------------------------------------------------
@@ -140,6 +149,7 @@ function renderMobileSlots() {
 
   const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
   const now = new Date();
+
   const duration = window.selectedDuration || 1;
 
   hours.forEach(hour => {
@@ -147,24 +157,15 @@ function renderMobileSlots() {
     slotTime.setHours(hour, 0, 0, 0);
 
     const endHour = hour + duration;
-    if (endHour > 22) return; // Hard stop
+    if (endHour > 22) return; // Hard stop at 22:00
 
-    // Block past times
-    let availability = { available: false, rooms: [] };
-    if (slotTime >= now) {
-      try {
-        availability = getDurationAwareAvailability(slotTime, duration) || availability;
-      } catch (e) {
-        console.warn("Availability error:", e);
-      }
-    }
+    let availability = getMobileAvailability(slotTime, duration);
 
     const div = document.createElement("div");
-    div.className = "slotItem " + (
-      !availability.available ? "unavailable" :
-      availability.rooms.length === 2 ? "available" :
-      availability.rooms[0] === "room1" ? "room1" : "room2"
-    );
+    div.className = "slotItem";
+    if (!availability.available) div.classList.add("unavailable");
+    else if (availability.rooms.length === 2) div.classList.add("available");
+    else if (availability.rooms.length === 1) div.classList.add(availability.rooms[0]);
 
     div.textContent = `${hour}:00–${endHour}:00`;
 
@@ -207,27 +208,19 @@ function insertSlotLegend() {
 }
 
 /* -------------------------------------------------------
-   NAVIGATION BUTTONS
+   NAVIGATION
 -------------------------------------------------------- */
-const prevBtn = document.getElementById("prevDayBtn");
-const nextBtn = document.getElementById("nextDayBtn");
+document.getElementById("prevDayBtn")?.addEventListener("click", () => {
+  mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+  updateDayLabel();
+  renderMobileSlots();
+});
 
-if (prevBtn) {
-  prevBtn.onclick = () => {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
-    updateDayLabel();
-    document.dispatchEvent(new CustomEvent("weekChanged", { detail: mobileCurrentDay }));
-    renderMobileSlots();
-  };
-}
-if (nextBtn) {
-  nextBtn.onclick = () => {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
-    updateDayLabel();
-    document.dispatchEvent(new CustomEvent("weekChanged", { detail: mobileCurrentDay }));
-    renderMobileSlots();
-  };
-}
+document.getElementById("nextDayBtn")?.addEventListener("click", () => {
+  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+  updateDayLabel();
+  renderMobileSlots();
+});
 
 /* -------------------------------------------------------
    DURATION BUTTONS
