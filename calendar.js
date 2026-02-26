@@ -457,6 +457,11 @@ async function loadEventsForMobile() {
   ];
 
   window.allEvents = events;
+
+  // ⭐ NEW: tell mobile.js that events are ready
+  document.dispatchEvent(
+    new CustomEvent("calendarEventsUpdated", { detail: window.allEvents })
+  );
 }
 
 
