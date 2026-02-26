@@ -155,8 +155,6 @@ document.addEventListener("click",e=>{
 });
 
 
-calendarEl.appendChild(headerRow);
-
   const startOfWeek = new Date(currentWeekStart);
   const endOfRange = new Date(startOfWeek);
   endOfRange.setDate(startOfWeek.getDate()+13);
