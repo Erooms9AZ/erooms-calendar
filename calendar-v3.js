@@ -159,6 +159,31 @@ document.addEventListener("click",e=>{
 async function renderCalendar(){
   if(!calendarEl) return;
   calendarEl.innerHTML="";
+// ----------------------------
+// DAY / DATE HEADER ROW
+// ----------------------------
+const headerRow = document.createElement("div");
+headerRow.className = "header-row";
+
+const emptyCell = document.createElement("div");
+emptyCell.className = "hour-label";
+headerRow.appendChild(emptyCell);
+
+const dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+for (let d = 0; d < 6; d++) {
+  const dayDate = new Date(startOfWeek);
+  dayDate.setDate(startOfWeek.getDate() + d);
+
+  const cell = document.createElement("div");
+  cell.className = "day-header";
+  cell.innerHTML = `
+    <div class="day-name">${dayNames[d]}</div>
+    <div class="day-date">${dayDate.getDate()}</div>
+  `;
+  headerRow.appendChild(cell);
+}
+
+calendarEl.appendChild(headerRow);
 
   const startOfWeek = new Date(currentWeekStart);
   const endOfRange = new Date(startOfWeek);
