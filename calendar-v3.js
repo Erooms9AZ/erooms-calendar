@@ -198,8 +198,7 @@ async function renderCalendar() {
     headerRow.appendChild(cell);
   }
 
-  calendarEl.appendChild(headerRow);
-
+  
   // ----------------------------
   // FETCH EVENTS FOR BOTH ROOMS
   // ----------------------------
