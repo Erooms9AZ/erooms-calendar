@@ -57,32 +57,46 @@ let baseWeekStart = getStartOfWeek(now);
 if(now.getDay()===6 && now.getHours()>=22) baseWeekStart.setDate(baseWeekStart.getDate()+7);
 let currentWeekStart = new Date(baseWeekStart);
 
-/* -----------------------------
-   FETCH EVENTS (supports desktop + mobile)
-------------------------------- */
-async function fetchEvents(a, b, c) {
-  let calendarId, start, end;
+async function loadEventsForMobile() {
+  console.log("📱 loadEventsForMobile() called");
 
-  // Desktop call: fetchEvents(calendarId, start, end)
-  if (typeof a === "string") {
-    calendarId = a;
-    start = b;
-    end = c;
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 21);
+
+  console.log("📆 Mobile fetch range:", start.toISOString(), "→", end.toISOString());
+
+  try {
+    const room1 = "o6del9prcevigs6q3gnqqc18po@group.calendar.google.com";
+    const room2 = "0vaic8tl54smverq0d9eso5gs8@group.calendar.google.com";
+
+    const events1 = await fetchEvents(room1, start, end);
+    const events2 = await fetchEvents(room2, start, end);
+
+    const events = [...events1, ...events2];
+    console.log("📊 Events fetched:", events.length);
+
+    window.allEvents = events;
+
+    const slots = document.querySelectorAll(".time-slot");
+    slots.forEach(slot => {
+      const slotTime = new Date(slot.dataset.time);
+      const rooms = availableRooms(slotTime, selectedDuration, events);
+
+      if (rooms.length > 0) {
+        slot.classList.remove("unavailable");
+        slot.classList.add("available");
+      } else {
+        slot.classList.remove("available");
+        slot.classList.add("unavailable");
+      }
+    });
+
+    console.log("📱 Mobile availability updated");
+  } catch (err) {
+    console.error("❌ Error in loadEventsForMobile:", err);
   }
-
-  // Mobile call: fetchEvents(start, end)
-  else if (a instanceof Date && b instanceof Date) {
-    calendarId = "erooms9az@gmail.com"; // your real calendar ID
-    start = a;
-    end = b;
-  }
-
-  const res = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}&singleEvents=true&orderBy=startTime&key=${apiKey}&cb=${Date.now()}`
-  );
-
-  const data = await res.json();
-  return data.items || [];
 }
 
 /* -----------------------------
