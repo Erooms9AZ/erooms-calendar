@@ -286,43 +286,47 @@ window.submitMobileBooking = function(payload) {
   })
     .then(res => res.json())
     .then(data => {
-      if (data.status === "success") {
 
-        /* ⭐ SUCCESS MESSAGE PATCH ⭐ */
-        const name = document.getElementById("bfName").value.trim();
-
-        const start = window.selectedStart;
-        const end = window.selectedEnd;
-
-        const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-        const dateStr = start.toLocaleDateString("en-GB", {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        });
-
-        const startTime = start.toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-
-        const endTime = end.toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-
-        document.getElementById("successMessage").innerHTML = `
-          <strong>${name}</strong><br><br>
-          Your booking for <strong>${dayName} ${dateStr}</strong><br>
-          From <strong>${startTime}</strong> to <strong>${endTime}</strong><br><br>
-          Has been confirmed.<br>
-          You will receive an email shortly.<br><br>
-          <strong>E Rooms</strong>
-        `;
-
-        document.getElementById("bookingForm").style.display = "none";
-        document.getElementById("successBox").style.display = "block";
+      if (data.status !== "success") {
+        document.getElementById("bookingStatus").textContent =
+          "Error submitting booking. Please try again.";
+        return; // ⭐ STOP — do NOT show success box
       }
+
+      /* ⭐ SUCCESS MESSAGE PATCH ⭐ */
+      const name = document.getElementById("bfName").value.trim();
+
+      const start = window.selectedStart;
+      const end = window.selectedEnd;
+
+      const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+      const dateStr = start.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      const startTime = start.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      const endTime = end.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      document.getElementById("successMessage").innerHTML = `
+        <strong>${name}</strong><br><br>
+        Your booking for <strong>${dayName} ${dateStr}</strong><br>
+        From <strong>${startTime}</strong> to <strong>${endTime}</strong><br><br>
+        Has been confirmed.<br>
+        You will receive an email shortly.<br><br>
+        <strong>E Rooms</strong>
+      `;
+
+      document.getElementById("bookingForm").style.display = "none";
+      document.getElementById("successBox").style.display = "block";
     })
     .catch(err => {
       console.error("Booking error:", err);
@@ -330,6 +334,7 @@ window.submitMobileBooking = function(payload) {
         "Error submitting booking. Please try again.";
     });
 };
+
 /* -------------------------------------------------------
    MOBILE SUBMIT BUTTON HANDLER
 -------------------------------------------------------- */
