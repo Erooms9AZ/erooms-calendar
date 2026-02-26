@@ -144,8 +144,8 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
 /* -------------------------------------------------------
    INITIAL LOAD (fetch events first)
 -------------------------------------------------------- */
-(async () => {
-  await window.loadEventsForMobile(); // fetch 3 weeks of events
+// Wait for desktop to finish loading events
+document.addEventListener("calendarEventsUpdated", () => {
   updateDayLabel();
   renderMobileSlots();
-})();
+});
