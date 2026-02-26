@@ -170,7 +170,43 @@ async function renderCalendar(){
   ];
   window.allEvents=events;
 
-  // Grid: first column hours, next 6 days
+  // ----------------------------
+  // MERGED BLOCK CONFIRMATION PANEL
+  // ----------------------------
+  if (mergedBlock && mergedBlock.room === activeRoom) {
+    const start = mergedBlock.start;
+    const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
+    const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+    const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+    const mergedRow = document.createElement("div");
+    mergedRow.className = "merged-row";
+    mergedRow.innerHTML = `
+      You have selected a ${mergedBlock.duration} hour session in 
+      ${mergedBlock.room === "room1" ? "Room 1" : "Room 2"} — 
+      ${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00
+      <br><br>
+      <button id="mergedYes" style="margin-right:10px;">Yes</button>
+      <button id="mergedNo">No</button>
+    `;
+    calendarEl.appendChild(mergedRow);
+
+    document.getElementById("mergedYes").onclick = () => {
+      const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
+      openBookingForm(summary);
+    };
+
+    document.getElementById("mergedNo").onclick = () => {
+      mergedBlock = null;
+      renderCalendar();
+    };
+
+    return; // Stop rendering hourly slots while mergedBlock is active
+  }
+
+  // ----------------------------
+  // HOUR LABELS + SLOTS
+  // ----------------------------
   for(let h=10;h<22;h++){
     // Hour label
     const hourDiv=document.createElement("div");
