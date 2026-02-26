@@ -1,4 +1,5 @@
 
+
 // calendar.js
 
 // --- Safe obfuscated API key (GitHub will NOT detect this) ---
@@ -165,7 +166,10 @@ async function renderCalendar() {
   // ✅ clear previous content before rendering a new week
   calendarEl.innerHTML = "";
 
-  let endOfWeek = new Date(startOfWeek.getTime() + 13 * 24 * 60 * 60 * 1000);
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfWeek = new Date(startOfWeek);
+ // ✅ cover current week + next week for mobile
+endOfWeek.setDate(startOfWeek.getDate() + 13);
 
   const events = [
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfWeek)).map(e => ({ ...e, room: "room1" })),
@@ -443,8 +447,10 @@ if (calendarEl) {
    LOAD EVENTS FOR MOBILE (NO DESKTOP UI)
 -------------------------------------------------------- */
 async function loadEventsForMobile() {
-    const endOfRange = new Date(startOfWeek.getTime() + 13 * 24 * 60 * 60 * 1000);
-
+  const startOfWeek = new Date(currentWeekStart);
+  const endOfRange = new Date(startOfWeek);
+  // fetch current week + next week for mobile
+  endOfRange.setDate(startOfWeek.getDate() + 13);
 
   const events = [
     ...(await fetchEvents(calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
