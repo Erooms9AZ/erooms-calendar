@@ -21,7 +21,6 @@ document.addEventListener("weekChanged", (e) => {
 -------------------------------------------------------- */
 document.addEventListener("calendarEventsUpdated", (e) => {
   window.allEvents = e.detail;
-  // when real events arrive, re-render with correct availability
   renderMobileSlots();
 });
 
