@@ -85,7 +85,6 @@ async function fetchEvents(a, b, c) {
   return data.items || [];
 }
 
-
 /* -----------------------------
    ROOM AVAILABILITY
 ------------------------------- */
