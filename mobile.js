@@ -1,67 +1,44 @@
-window.selectedDuration = 1;
+// ----------------------------
+// MOBILE.JS - SAFE, RACE-CONDITION FREE
+// ----------------------------
 
-/* -------------------------------------------------------
-   STATE
--------------------------------------------------------- */
-let mobileCurrentDay = (typeof currentWeekStart !== "undefined")
-  ? new Date(currentWeekStart)
+// Default selected duration
+CalendarApp.selectedDuration = 1;
+
+// ----------------------------
+// STATE
+// ----------------------------
+let mobileCurrentDay = CalendarApp.currentWeekStart
+  ? new Date(CalendarApp.currentWeekStart)
   : new Date();
 
-/* -------------------------------------------------------
-   LISTEN FOR WEEK CHANGES FROM DESKTOP
--------------------------------------------------------- */
-document.addEventListener("weekChanged", (e) => {
-  mobileCurrentDay = new Date(e.detail);
-  updateDayLabel();
+let eventsReady = false;
+let bookingInProgress = false;
 
-  // Fetch fresh events for the new week
-  if (window.loadEventsForMobile) {
-    console.log("📥 Calling loadEventsForMobile()");
-    window.loadEventsForMobile();
-  } else {
-    console.log("❌ loadEventsForMobile is NOT defined");
-  }
-});
-
-/* -------------------------------------------------------
-   LISTEN FOR UPDATED EVENTS FROM DESKTOP
--------------------------------------------------------- */
-document.addEventListener("calendarEventsUpdated", (e) => {
-  window.allEvents = e.detail;
-  renderMobileSlots();
-});
-
-/* -------------------------------------------------------
-   HEADER LABEL
--------------------------------------------------------- */
+// ----------------------------
+// HEADER LABEL
+// ----------------------------
 function updateDayLabel() {
-  const options = { weekday: "long", day: "numeric", month: "long" };
   const label = document.getElementById("dayLabel");
-  if (label) {
-    label.textContent = mobileCurrentDay.toLocaleDateString("en-GB", options);
-  }
+  if (!label) return;
+  const options = { weekday: "long", day: "numeric", month: "long" };
+  label.textContent = mobileCurrentDay.toLocaleDateString("en-GB", options);
 }
 
-/* -------------------------------------------------------
-   DURATION-AWARE AVAILABILITY
--------------------------------------------------------- */
+// ----------------------------
+// DURATION-AWARE AVAILABILITY
+// ----------------------------
 function getDurationAwareAvailability(slotTime, duration) {
-  let base = window.getAvailabilityForSlot(slotTime) || {
-    available: false,
-    rooms: []
-  };
+  if (!eventsReady) return { available: false, rooms: [] };
 
+  let base = CalendarApp.getAvailabilityForSlot(slotTime) || { available: false, rooms: [] };
   if (!base.available || duration === 1) return base;
 
   let commonRooms = [...base.rooms];
 
   for (let i = 1; i < duration; i++) {
     const nextTime = new Date(slotTime.getTime() + i * 60 * 60 * 1000);
-    const next = window.getAvailabilityForSlot(nextTime) || {
-      available: false,
-      rooms: []
-    };
-
+    const next = CalendarApp.getAvailabilityForSlot(nextTime) || { available: false, rooms: [] };
     commonRooms = commonRooms.filter(r => next.rooms.includes(r));
     if (commonRooms.length === 0) break;
   }
@@ -72,35 +49,29 @@ function getDurationAwareAvailability(slotTime, duration) {
   };
 }
 
-/* -------------------------------------------------------
-   OPEN BOOKING
--------------------------------------------------------- */
+// ----------------------------
+// OPEN BOOKING
+// ----------------------------
 function openMobileBooking(room, slotTime) {
-  const start = new Date(slotTime);
-  const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
+  if (!CalendarApp.openBookingForm) return;
 
-  window.selectedRoom = room;
-  window.selectedStart = start;
-  window.selectedEnd = end;
-  window.selectedDate = start;
+  const start = new Date(slotTime);
+  const end = new Date(start.getTime() + CalendarApp.selectedDuration * 60 * 60 * 1000);
+
+  CalendarApp.selectedRoom = room;
+  CalendarApp.selectedStart = start;
+  CalendarApp.selectedEnd = end;
 
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-  const dateStr = start.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
+  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2, "0")}:00 to ${String(
-    end.getHours()
-  ).padStart(2, "0")}:00`;
-
-  window.openBookingForm(summary);
+  CalendarApp.openBookingForm(summary);
 }
 
-/* -------------------------------------------------------
-   ROOM SELECTOR MODAL
--------------------------------------------------------- */
+// ----------------------------
+// MOBILE ROOM SELECTOR
+// ----------------------------
 function showMobileRoomSelector(rooms, slotTime) {
   const selector = document.getElementById("mobileRoomSelector");
   if (!selector) return;
@@ -116,19 +87,15 @@ function showMobileRoomSelector(rooms, slotTime) {
   });
 
   const cancelBtn = document.getElementById("mobileRoomCancel");
-  if (cancelBtn) {
-    cancelBtn.onclick = () => {
-      selector.style.display = "none";
-    };
-  }
+  if (cancelBtn) cancelBtn.onclick = () => { selector.style.display = "none"; };
 }
 
-/* -------------------------------------------------------
-   RENDER SLOTS
--------------------------------------------------------- */
+// ----------------------------
+// RENDER MOBILE SLOTS
+// ----------------------------
 function renderMobileSlots() {
   const slotList = document.getElementById("slotList");
-  if (!slotList) return;
+  if (!slotList || !eventsReady) return;
 
   slotList.innerHTML = "";
 
@@ -141,65 +108,33 @@ function renderMobileSlots() {
     return;
   }
 
-  const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
+  const hours = [...Array(12).keys()].map(i => i + 10); // 10–21
   const now = new Date();
-
-  const duration = parseInt(
-    document.querySelector("#durationButtons button.active")?.dataset.hours || "1",
-    10
-  );
 
   hours.forEach(hour => {
     const slotTime = new Date(mobileCurrentDay);
     slotTime.setHours(hour, 0, 0, 0);
 
-    const endHour = hour + duration;
+    const endHour = hour + CalendarApp.selectedDuration;
+    if (endHour > 22) return; // Hard stop at 22:00
+    if (slotTime < now) return; // Block past times
 
-    // Hard stop at 22:00
-    if (endHour > 22) return;
-
-    // Block past times
-    if (slotTime < now) {
-      const div = document.createElement("div");
-      div.className = "slotItem unavailable";
-      div.textContent = `${hour}:00–${endHour}:00`;
-      slotList.appendChild(div);
-      return;
-    }
-
-    let availability = { available: false, rooms: [] };
-
-    try {
-      availability = getDurationAwareAvailability(slotTime, duration) || availability;
-    } catch (e) {
-      console.warn("Availability error:", e);
-    }
+    const availability = getDurationAwareAvailability(slotTime, CalendarApp.selectedDuration);
 
     const div = document.createElement("div");
     let cls = "slotItem ";
-
-    if (!availability.available) {
-      cls += "unavailable";
-    } else if (availability.rooms.length === 2) {
-      cls += "available";
-    } else if (availability.rooms.length === 1) {
-      const room = availability.rooms[0];
-      if (room === "room1") cls += "room1";
-      if (room === "room2") cls += "room2";
-    }
+    if (!availability.available) cls += "unavailable";
+    else if (availability.rooms.length === 2) cls += "available";
+    else if (availability.rooms.length === 1) cls += availability.rooms[0];
 
     div.className = cls;
     div.textContent = `${hour}:00–${endHour}:00`;
 
-    if (availability.available && availability.rooms.length > 0) {
+    if (availability.available && availability.rooms.length) {
       div.onclick = () => {
-        const rooms = availability.rooms;
-
-        if (rooms.length === 2) {
-          showMobileRoomSelector(rooms, slotTime);
-        } else {
-          openMobileBooking(rooms[0], slotTime);
-        }
+        if (bookingInProgress) return; // prevent double click
+        if (availability.rooms.length === 2) showMobileRoomSelector(availability.rooms, slotTime);
+        else openMobileBooking(availability.rooms[0], slotTime);
       };
     }
 
@@ -207,163 +142,119 @@ function renderMobileSlots() {
   });
 }
 
-/* -------------------------------------------------------
-   LEGEND
--------------------------------------------------------- */
+// ----------------------------
+// SLOT LEGEND
+// ----------------------------
 function insertSlotLegend() {
   const slotList = document.getElementById("slotList");
-  if (!slotList) return;
-  if (document.getElementById("slotLegend")) return;
+  if (!slotList || document.getElementById("slotLegend")) return;
 
   const legend = document.createElement("div");
   legend.id = "slotLegend";
   legend.innerHTML = `
-    <div class="legendItem">
-      <span class="legendColor both"></span> Both Rooms
-    </div>
-    <div class="legendItem">
-      <span class="legendColor room1"></span> Room 1 Only
-    </div>
-    <div class="legendItem">
-      <span class="legendColor room2"></span> Room 2 Only
-    </div>
+    <div class="legendItem"><span class="legendColor both"></span> Both Rooms</div>
+    <div class="legendItem"><span class="legendColor room1"></span> Room 1 Only</div>
+    <div class="legendItem"><span class="legendColor room2"></span> Room 2 Only</div>
   `;
-
   slotList.parentNode.insertBefore(legend, slotList);
 }
 
-/* -------------------------------------------------------
-   NAVIGATION
--------------------------------------------------------- */
+// ----------------------------
+// WEEK NAVIGATION (prev/next day)
+// ----------------------------
 const prevBtn = document.getElementById("prevDayBtn");
 const nextBtn = document.getElementById("nextDayBtn");
 
-if (prevBtn) {
-  prevBtn.onclick = () => {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
-    updateDayLabel();
+if (prevBtn) prevBtn.onclick = () => { mobileCurrentDay.setDate(mobileCurrentDay.getDate()-1); updateDayLabel(); CalendarApp.loadEventsForMobile?.(); renderMobileSlots(); };
+if (nextBtn) nextBtn.onclick = () => { mobileCurrentDay.setDate(mobileCurrentDay.getDate()+1); updateDayLabel(); CalendarApp.loadEventsForMobile?.(); renderMobileSlots(); };
 
-    document.dispatchEvent(
-      new CustomEvent("weekChanged", { detail: mobileCurrentDay })
-    );
-
-    renderMobileSlots();
-  };
-}
-
-if (nextBtn) {
-  nextBtn.onclick = () => {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
-    updateDayLabel();
-
-    document.dispatchEvent(
-      new CustomEvent("weekChanged", { detail: mobileCurrentDay })
-    );
-
-    renderMobileSlots();
-  };
-}
-
-/* -------------------------------------------------------
-   DURATION BUTTONS
--------------------------------------------------------- */
+// ----------------------------
+// DURATION BUTTONS
+// ----------------------------
 document.querySelectorAll("#durationButtons button").forEach(btn => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll("#durationButtons button")
-      .forEach(b => b.classList.remove("active"));
-
+    document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    window.selectedDuration = Number(btn.dataset.hours);
-
+    CalendarApp.selectedDuration = Number(btn.dataset.hours);
     renderMobileSlots();
   });
 });
 
-/* -------------------------------------------------------
-   BOOKING SUBMISSION
--------------------------------------------------------- */
-window.submitMobileBooking = function(payload) {
-  fetch("https://script.google.com/macros/s/AKfycbz.../exec", {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status !== "success") {
-        document.getElementById("bookingStatus").textContent =
-          "Error submitting booking. Please try again.";
-        return;
-      }
+// ----------------------------
+// BOOKING SUBMISSION
+// ----------------------------
+async function submitMobileBooking(payload) {
+  if (!payload || bookingInProgress) return;
+  bookingInProgress = true;
 
-      const name = document.getElementById("bfName").value.trim();
-      const start = window.selectedStart;
-      const end = window.selectedEnd;
+  try {
+    const ok = await CalendarApp.submitBooking(payload);
+    if (!ok) throw new Error("Booking failed");
 
-      const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-      const dateStr = start.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
+    // Show success UI
+    const name = document.getElementById("bfName")?.value?.trim() || "Guest";
+    const start = CalendarApp.selectedStart;
+    const end = CalendarApp.selectedEnd;
 
-      const startTime = start.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
+    const dayName = start.toLocaleDateString("en-GB", { weekday:"long" });
+    const dateStr = start.toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" });
+    const startTime = start.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+    const endTime = end.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
 
-      const endTime = end.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
+    document.getElementById("successMessage").innerHTML = `
+      <strong>${name}</strong><br><br>
+      Your booking for <strong>${dayName} ${dateStr}</strong><br>
+      From <strong>${startTime}</strong> to <strong>${endTime}</strong><br><br>
+      Has been confirmed.<br>
+      You will receive an email shortly.<br><br>
+      <strong>E Rooms</strong>
+    `;
 
-      document.getElementById("successMessage").innerHTML = `
-        <strong>${name}</strong><br><br>
-        Your booking for <strong>${dayName} ${dateStr}</strong><br>
-        From <strong>${startTime}</strong> to <strong>${endTime}</strong><br><br>
-        Has been confirmed.<br>
-        You will receive an email shortly.<br><br>
-        <strong>E Rooms</strong>
-      `;
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
 
-      document.getElementById("bookingForm").style.display = "none";
-      document.getElementById("successBox").style.display = "block";
-    })
-    .catch(err => {
-      console.error("Booking error:", err);
-      document.getElementById("bookingStatus").textContent =
-        "Error submitting booking. Please try again.";
-    });
-};
-
-/* -------------------------------------------------------
-   MOBILE SUBMIT BUTTON
--------------------------------------------------------- */
-const submitBtn = document.getElementById("bfSubmit");
-if (submitBtn) {
-  submitBtn.onclick = () => {
-    const payload = {
-      name: document.getElementById("bfName").value.trim(),
-      email: document.getElementById("bfEmail").value.trim(),
-      phone: document.getElementById("bfPhone").value.trim(),
-      comments: document.getElementById("bfComments").value.trim(),
-      room: window.selectedRoom,
-      start: window.selectedStart.toISOString(),
-      end: window.selectedEnd.toISOString()
-    };
-
-    submitMobileBooking(payload);
-  };
+  } catch(e) {
+    console.error("Booking error:", e);
+    document.getElementById("bookingStatus").textContent = "Error submitting booking. Please try again.";
+  } finally {
+    bookingInProgress = false;
+  }
 }
 
-/* -------------------------------------------------------
-   DEFAULT DURATION
--------------------------------------------------------- */
-const defaultBtn = document.querySelector('#durationButtons button[data-hours="1"]');
-if (defaultBtn) defaultBtn.classList.add("active");
+// Mobile submit button
+const submitBtn = document.getElementById("bfSubmit");
+if (submitBtn) submitBtn.onclick = () => {
+  const payload = {
+    name: document.getElementById("bfName")?.value.trim(),
+    email: document.getElementById("bfEmail")?.value.trim(),
+    phone: document.getElementById("bfPhone")?.value.trim(),
+    notes: document.getElementById("bfComments")?.value.trim(),
+    room: CalendarApp.selectedRoom,
+    start: CalendarApp.selectedStart?.toISOString(),
+    end: CalendarApp.selectedEnd?.toISOString()
+  };
+  submitMobileBooking(payload);
+};
 
-/* -------------------------------------------------------
-   INITIAL LOAD
--------------------------------------------------------- */
+// ----------------------------
+// EVENT LISTENERS FROM DESKTOP
+// ----------------------------
+document.addEventListener("weekChanged", e => {
+  mobileCurrentDay = new Date(e.detail);
+  updateDayLabel();
+  CalendarApp.loadEventsForMobile?.();
+  renderMobileSlots();
+});
+
+document.addEventListener("calendarEventsUpdated", e => {
+  CalendarApp.allEvents = e.detail || [];
+  eventsReady = true;
+  renderMobileSlots();
+});
+
+// ----------------------------
+// INITIAL LOAD
+// ----------------------------
 updateDayLabel();
 insertSlotLegend();
 renderMobileSlots();
