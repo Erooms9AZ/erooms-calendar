@@ -159,7 +159,6 @@ async function handleBookingSubmit() {
    MAIN RENDER FUNCTION
 -------------------------------------------------------- */
 async function renderCalendar() {
-  document.dispatchEvent(
   if (!calendarEl) return;   // ← keeps desktop off mobile
 
   // ✅ clear previous content before rendering a new week
