@@ -137,6 +137,18 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   updateDayLabel();
   renderMobileSlots();
 });
+/* -------------------------------------------------------
+   INITIALISE MOBILE CALENDAR (wait for desktop)
+-------------------------------------------------------- */
+setTimeout(async () => {
+  try {
+    await window.loadEventsForMobile();
+    updateDayLabel();
+    renderMobileSlots();
+  } catch (err) {
+    console.error("❌ Mobile init failed:", err);
+  }
+}, 150);
 
 /* -------------------------------------------------------
    INITIALISE MOBILE CALENDAR
