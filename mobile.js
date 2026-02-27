@@ -1,6 +1,9 @@
-// Mobile-safe booking form wrapper
+console.log("📱 mobile.js LOADED");
+
+// -------------------------------------------------------
+// MOBILE-SAFE BOOKING WRAPPER
+// -------------------------------------------------------
 window.mobileOpenBookingForm = function(summaryText) {
-  // Only call desktop booking if it exists
   if (typeof window.openBookingForm === "function") {
     try {
       window.openBookingForm(summaryText);
@@ -10,179 +13,168 @@ window.mobileOpenBookingForm = function(summaryText) {
   }
 };
 
-/* -------------------------------------------------------
-   STATE
--------------------------------------------------------- */
-window.selectedDuration = 1;
-let mobileCurrentDay = new Date();
+// -------------------------------------------------------
+// GLOBAL STATE
+// -------------------------------------------------------
+window.allEvents = [];
+let selectedDuration = 1;
+let currentDate = new Date();
 
-/* -------------------------------------------------------
-   UPDATE HEADER LABEL
--------------------------------------------------------- */
-function updateDayLabel() {
-  const label = document.getElementById("dayLabel");
-  if (label) {
-    const options = { weekday: "long", day: "numeric", month: "long" };
-    label.textContent = mobileCurrentDay.toLocaleDateString("en-GB", options);
+// -------------------------------------------------------
+// FORMAT HELPERS
+// -------------------------------------------------------
+function formatDateLabel(date) {
+  return date.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "short"
+  });
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+// -------------------------------------------------------
+// LOAD EVENTS FOR MOBILE
+// -------------------------------------------------------
+window.loadEventsForMobile = async function() {
+  try {
+    const start = new Date(currentDate);
+    start.setHours(0,0,0,0);
+
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    const room1 = await window.fetchEvents(window.calendars.room1, start, end);
+    const room2 = await window.fetchEvents(window.calendars.room2, start, end);
+
+    const merged = [
+      ...room1.map(ev => ({...ev, room:"room1"})),
+      ...room2.map(ev => ({...ev, room:"room2"}))
+    ];
+
+    window.allEvents = merged;
+
+    // ⭐ FIX 1 — auto-render after events load
+    renderMobileSlots();
+
+  } catch (err) {
+    console.error("❌ Mobile init failed:", err);
   }
-}
+};
 
-/* -------------------------------------------------------
-   OPEN BOOKING OVERLAY (uses desktop booking)
--------------------------------------------------------- */
-function openMobileBooking(room, slotTime) {
-  const start = new Date(slotTime);
-  const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
+// -------------------------------------------------------
+// CHECK AVAILABILITY
+// -------------------------------------------------------
+function getAvailabilityForSlot(slotTime, duration) {
+  const endTime = new Date(slotTime.getTime() + duration * 60 * 60 * 1000);
 
-  window.selectedRoom = room;
-  window.selectedStart = start;
-  window.selectedEnd = end;
-
-  const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-
-  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
-
-  window.mobileOpenBookingForm(summary);
-
-}
-
-/* -------------------------------------------------------
-   ROOM SELECTOR
--------------------------------------------------------- */
-function showMobileRoomSelector(rooms, slotTime) {
-  const selector = document.getElementById("mobileRoomSelector");
-  if (!selector) return;
-
-  selector.style.display = "flex";
-
-  selector.querySelectorAll(".room-btn").forEach(btn => {
-    btn.onclick = () => {
-      const room = btn.dataset.room;
-      selector.style.display = "none";
-      openMobileBooking(room, slotTime);
-    };
+  const conflicts = window.allEvents.filter(ev => {
+    const evStart = new Date(ev.start.dateTime || ev.start.date);
+    const evEnd = new Date(ev.end.dateTime || ev.end.date);
+    return evStart < endTime && evEnd > slotTime;
   });
 
-  const cancelBtn = document.getElementById("mobileRoomCancel");
-  if (cancelBtn) cancelBtn.onclick = () => (selector.style.display = "none");
+  const rooms = [];
+  if (!conflicts.some(ev => ev.room === "room1")) rooms.push("room1");
+  if (!conflicts.some(ev => ev.room === "room2")) rooms.push("room2");
+
+  return rooms;
 }
 
-/* -------------------------------------------------------
-   RENDER SLOTS (uses desktop availability engine)
--------------------------------------------------------- */
+// -------------------------------------------------------
+// RENDER SLOTS
+// -------------------------------------------------------
 function renderMobileSlots() {
-  const slotList = document.getElementById("slotList");
-  if (!slotList) return;
+  const list = document.getElementById("slotList");
+  list.innerHTML = "";
 
-  slotList.innerHTML = "";
+  const base = new Date(currentDate);
+  base.setHours(8,0,0,0);
 
-  if (mobileCurrentDay.getDay() === 0) {
-    const div = document.createElement("div");
-    div.className = "slotItem unavailable";
-    div.textContent = "No bookings on Sunday";
-    slotList.appendChild(div);
-    return;
-  }
-
-  const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
-  const duration = window.selectedDuration;
-
-  hours.forEach(hour => {
-    const slotTime = new Date(mobileCurrentDay);
-    slotTime.setHours(hour, 0, 0, 0);
-
-    if (hour + duration > 22) return;
-
-    const { available, rooms } = window.getAvailabilityForSlot(slotTime, duration);
+  for (let i = 0; i < 20; i++) {
+    const slot = new Date(base.getTime() + i * 30 * 60 * 1000);
+    const rooms = getAvailabilityForSlot(slot, selectedDuration);
 
     const div = document.createElement("div");
     div.className = "slotItem";
 
-    if (!available) {
+    if (rooms.length === 0) {
       div.classList.add("unavailable");
     } else if (rooms.length === 2) {
       div.classList.add("available");
-    } else if (rooms.includes("room1")) {
-      div.classList.add("room1");
-    } else if (rooms.includes("room2")) {
-      div.classList.add("room2");
+      div.style.background = "#e8ddff"; // both rooms
+    } else if (rooms[0] === "room1") {
+      div.classList.add("available");
+      div.style.background = "#d7f5d7"; // room1
+    } else if (rooms[0] === "room2") {
+      div.classList.add("available");
+      div.style.background = "#d7e8ff"; // room2
     }
 
-    div.textContent = `${hour}:00–${hour + duration}:00`;
+    const end = new Date(slot.getTime() + selectedDuration * 60 * 60 * 1000);
 
-    if (available) {
-      div.onclick = () => {
-        if (rooms.length === 2) showMobileRoomSelector(rooms, slotTime);
-        else openMobileBooking(rooms[0], slotTime);
-      };
-    }
+    div.innerHTML = `
+      <span>${formatTime(slot)} – ${formatTime(end)}</span>
+      <span>${rooms.length === 0 ? "Unavailable" : rooms.join(", ")}</span>
+    `;
 
-    slotList.appendChild(div);
+    div.dataset.summary = `${formatDateLabel(currentDate)} ${formatTime(slot)} for ${selectedDuration} hour(s)`;
+
+    list.appendChild(div);
+  }
+
+  // ⭐ FIX 2 — attach click handlers after rendering
+  attachSlotClickHandlers();
+}
+
+// -------------------------------------------------------
+// CLICK HANDLERS FOR SLOTS
+// -------------------------------------------------------
+function attachSlotClickHandlers() {
+  document.querySelectorAll(".slotItem.available").forEach(slot => {
+    slot.addEventListener("click", () => {
+      const summary = slot.dataset.summary;
+      window.mobileOpenBookingForm(summary);
+    });
   });
 }
 
-/* -------------------------------------------------------
-   DURATION BUTTONS
--------------------------------------------------------- */
+// -------------------------------------------------------
+// NAVIGATION
+// -------------------------------------------------------
+document.getElementById("prevDayBtn").addEventListener("click", () => {
+  currentDate.setDate(currentDate.getDate() - 1);
+  document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
+  window.loadEventsForMobile();
+});
+
+document.getElementById("nextDayBtn").addEventListener("click", () => {
+  currentDate.setDate(currentDate.getDate() + 1);
+  document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
+  window.loadEventsForMobile();
+});
+
+// -------------------------------------------------------
+// DURATION BUTTONS
+// -------------------------------------------------------
 document.querySelectorAll("#durationButtons button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    window.selectedDuration = Number(btn.dataset.hours);
+
+    selectedDuration = parseInt(btn.dataset.hours);
+
     renderMobileSlots();
   });
 });
 
-/* -------------------------------------------------------
-   NAVIGATION
--------------------------------------------------------- */
-document.getElementById("prevDayBtn")?.addEventListener("click", () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
-  updateDayLabel();
-  renderMobileSlots();
-});
-
-document.getElementById("nextDayBtn")?.addEventListener("click", () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
-  updateDayLabel();
-  renderMobileSlots();
-});
-/* -------------------------------------------------------
-   SYNC CALENDAR IDS FROM DESKTOP
--------------------------------------------------------- */
-if (!window.calendars) {
-  window.calendars = {
-    room1: "room1",
-    room2: "room2"
-  };
-}
-
-/* -------------------------------------------------------
-   EVENT LOADER (matches desktop)
--------------------------------------------------------- */
-window.loadEventsForMobile = async function () {
-  const startOfWeek = new Date(window.currentWeekStart);
-  const endOfRange = new Date(startOfWeek);
-  endOfRange.setDate(startOfWeek.getDate() + 13);
-
-  const events = [
-    ...(await window.fetchEvents(window.calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
-    ...(await window.fetchEvents(window.calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
-  ];
-
-  window.allEvents = events;
-};
-
-/* -------------------------------------------------------
-   INITIALISE MOBILE CALENDAR
--------------------------------------------------------- */
-(async () => {
-  try {
-    await window.loadEventsForMobile();
-    renderMobileSlots();
-    updateDayLabel();
-  } catch (err) {
-    console.error("❌ Mobile init failed:", err);
-  }
-})();
+// -------------------------------------------------------
+// INITIAL LOAD
+// -------------------------------------------------------
+document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
+window.loadEventsForMobile();
