@@ -147,12 +147,16 @@ if (!available) {
     div.textContent = `${hour}:00–${hour + duration}:00`;
 
     // CLICK HANDLER (corrected)
-    if (available && rooms.length > 0) {
-      div.onclick = () => {
-        if (rooms.length === 2) showMobileRoomSelector(rooms, slotTime);
-        else openMobileBooking(rooms[0], slotTime);
-      };
+    if (available && freeRooms.length > 0) {
+  div.onclick = () => {
+    if (freeRooms.length === 2) {
+      showMobileRoomSelector(freeRooms, slotTime);
+    } else {
+      openMobileBooking(freeRooms[0], slotTime);
     }
+  };
+}
+
 
     slotList.appendChild(div);
   });
