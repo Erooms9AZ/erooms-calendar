@@ -142,7 +142,11 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
 -------------------------------------------------------- */
 
 // Render only after desktop has loaded events
-document.addEventListener("calendarEventsUpdated", () => {
+(async () => {
+  await window.loadEventsForMobile();
+  // mobile render logic
+})();
+
   updateDayLabel();
   renderMobileSlots();
 });
@@ -155,10 +159,15 @@ if (window.allEvents && window.allEvents.length > 0) {
 
 
 /* -------------------------------------------------------
-   INITIAL LOAD (fetch events first)
+   INITIALISE MOBILE CALENDAR
 -------------------------------------------------------- */
-// Wait for desktop to finish loading events
-document.addEventListener("calendarEventsUpdated", () => {
-  updateDayLabel();
-  renderMobileSlots();
-});
+(async () => {
+  try {
+    await window.loadEventsForMobile();
+    renderMobileSlots();
+    updateDayLabel();
+  } catch (err) {
+    console.error("❌ Mobile init failed:", err);
+  }
+})();
+
