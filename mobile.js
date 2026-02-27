@@ -93,67 +93,27 @@ function showMobileRoomSelector(rooms, slotTime) {
    RENDER SLOTS (uses desktop availability engine)
 -------------------------------------------------------- */
 function renderMobileSlots() {
+  console.log("renderMobileSlots() running");
+
   const slotList = document.getElementById("slotList");
-  if (!slotList) return;
-
-  slotList.innerHTML = "";
-
-  if (mobileCurrentDay.getDay() === 0) {
-    const div = document.createElement("div");
-    div.className = "slotItem unavailable";
-    div.textContent = "No bookings on Sunday";
-    slotList.appendChild(div);
+  if (!slotList) {
+    console.log("slotList not found");
     return;
   }
 
-  const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
-  const duration = window.selectedDuration;
+  slotList.innerHTML = "";
 
-  for (let i = 0; i < hours.length; i++) {
-    const hour = hours[i];
+  const hours = [...Array(12).keys()].map(i => i + 10); // 10–21
+  const duration = window.selectedDuration || 1;
 
-    const slotTime = new Date(Date.UTC(
-      mobileCurrentDay.getUTCFullYear(),
-      mobileCurrentDay.getUTCMonth(),
-      mobileCurrentDay.getUTCDate(),
-      hour,
-      0,
-      0,
-      0
-    ));
-
-    // FIXED: skip invalid hours, do NOT exit the whole function
-    if (hour + duration > 22) continue;
-
-    const { available, freeRooms } = getRoomAvailabilityFromEvents(slotTime, duration);
-
+  for (let hour of hours) {
     const div = document.createElement("div");
-    div.className = "slotItem";
-
-    if (!available) {
-      div.classList.add("unavailable");
-    } else if (freeRooms.length === 2) {
-      div.classList.add("both");
-    } else if (freeRooms.includes("room1")) {
-      div.classList.add("room1");
-    } else if (freeRooms.includes("room2")) {
-      div.classList.add("room2");
-    }
-
+    div.className = "slotItem testSlot";
     div.textContent = `${hour}:00–${hour + duration}:00`;
-
-    if (available && freeRooms.length > 0) {
-      div.onclick = () => {
-        if (freeRooms.length === 2) {
-          showMobileRoomSelector(["room1", "room2"], slotTime);
-        } else {
-          openMobileBooking(freeRooms[0], slotTime);
-        }
-      };
-    }
-
     slotList.appendChild(div);
   }
+
+  console.log("Slots rendered:", slotList.children.length);
 }
 
 /* -------------------------------------------------------
@@ -215,4 +175,10 @@ function waitForDesktopReady() {
   } catch (err) {
     console.error("❌ Mobile init failed:", err);
   }
+  
 })();
+window.addEventListener("DOMContentLoaded", () => {
+  console.log("mobile.js loaded");
+  renderMobileSlots();
+});
+
