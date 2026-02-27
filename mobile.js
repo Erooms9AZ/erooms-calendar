@@ -88,7 +88,7 @@ function renderMobileSlots() {
     const div = document.createElement("div");
     div.className = "slotItem";
 
-    if (!available) {
+    if (available && rooms && rooms.length > 0) {
       div.classList.add("unavailable");
     } else if (rooms.length === 2) {
       div.classList.add("available");
