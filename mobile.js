@@ -1,180 +1,89 @@
-console.log("📱 mobile.js LOADED");
+<body>
 
-// -------------------------------------------------------
-// MOBILE-SAFE BOOKING WRAPPER
-// -------------------------------------------------------
-window.mobileOpenBookingForm = function(summaryText) {
-  if (typeof window.openBookingForm === "function") {
-    try {
-      window.openBookingForm(summaryText);
-    } catch (e) {
-      console.warn("Desktop booking form not available on mobile:", e);
-    }
-  }
-};
+<!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
+<div id="calendar" style="display:none"></div>
+<div id="monthLabel" style="display:none"></div>
+<button id="prevWeekBtn" style="display:none"></button>
+<button id="nextWeekBtn" style="display:none"></button>
+<div id="floatingSelector" style="display:none"></div>
 
-// -------------------------------------------------------
-// GLOBAL STATE
-// -------------------------------------------------------
-window.allEvents = [];
-let selectedDuration = 1;
-let currentDate = new Date();
+<div id="bookingOverlay" style="display:none"></div>
+<div id="bookingSummary" style="display:none"></div>
+<input id="bfName" style="display:none">
+<input id="bfEmail" style="display:none">
+<input id="bfPhone" style="display:none">
+<textarea id="bfComments" style="display:none"></textarea>
+<button id="bfSubmit" style="display:none"></button>
+<button id="bfCancel" style="display:none"></button>
+<div id="bookingStatus" style="display:none"></div>
+<form id="bookingForm" style="display:none"></form>
+<div id="successBox" style="display:none"></div>
+<button id="successOk" style="display:none"></button>
 
-// -------------------------------------------------------
-// FORMAT HELPERS
-// -------------------------------------------------------
-function formatDateLabel(date) {
-  return date.toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "short"
-  });
-}
+<div id="mobileContainer">
 
-function formatTime(date) {
-  return date.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
+  <!-- Mobile Header -->
+  <div id="mobileHeader">
+    <button id="prevDayBtn">←</button>
+    <div id="dayLabel">Loading…</div>
+    <button id="nextDayBtn">→</button>
+  </div>
 
-// -------------------------------------------------------
-// LOAD EVENTS FOR MOBILE
-// -------------------------------------------------------
-window.loadEventsForMobile = async function() {
-  try {
-    const start = new Date(currentDate);
-    start.setHours(0,0,0,0);
+  <!-- Duration Buttons -->
+  <div id="durationButtons">
+    <button data-hours="1" class="active">1 Hour</button>
+    <button data-hours="2">2 Hours</button>
+    <button data-hours="3">3 Hours</button>
+  </div>
 
-    const end = new Date(start);
-    end.setDate(end.getDate() + 1);
+  <!-- Room Selector -->
+  <div id="mobileRoomSelector" style="display:none;">
+    <button class="room-btn" data-room="room1">Room 1</button>
+    <button class="room-btn" data-room="room2">Room 2</button>
+    <button id="mobileRoomCancel">Cancel</button>
+  </div>
 
-    const room1 = await window.fetchEvents(window.calendars.room1, start, end);
-    const room2 = await window.fetchEvents(window.calendars.room2, start, end);
+  <!-- Slot List -->
+  <div id="slotList"></div>
 
-    const merged = [
-      ...room1.map(ev => ({...ev, room:"room1"})),
-      ...room2.map(ev => ({...ev, room:"room2"}))
-    ];
+  <!-- Booking Overlay -->
+  <div id="bookingOverlay" class="overlay" style="display:none;">
+    
+    <div id="bookingForm" class="booking-box">
+      <h3>Booking Summary</h3>
+      <div id="bookingSummary"></div>
+      <br>
 
-    window.allEvents = merged;
+      <label>Name*</label><br>
+      <input id="bfName" type="text" style="width:100%"><br><br>
 
-    // ⭐ FIX 1 — auto-render after events load
-    renderMobileSlots();
+      <label>Email*</label><br>
+      <input id="bfEmail" type="email" style="width:100%"><br><br>
 
-  } catch (err) {
-    console.error("❌ Mobile init failed:", err);
-  }
-};
+      <label>Phone*</label><br>
+      <input id="bfPhone" type="text" style="width:100%"><br><br>
 
-// -------------------------------------------------------
-// CHECK AVAILABILITY
-// -------------------------------------------------------
-function getAvailabilityForSlot(slotTime, duration) {
-  const endTime = new Date(slotTime.getTime() + duration * 60 * 60 * 1000);
+      <label>Comments</label><br>
+      <textarea id="bfComments" style="width:100%"></textarea><br><br>
 
-  const conflicts = window.allEvents.filter(ev => {
-    const evStart = new Date(ev.start.dateTime || ev.start.date);
-    const evEnd = new Date(ev.end.dateTime || ev.end.date);
-    return evStart < endTime && evEnd > slotTime;
-  });
+      <div id="bookingStatus" style="color:red;"></div><br>
 
-  const rooms = [];
-  if (!conflicts.some(ev => ev.room === "room1")) rooms.push("room1");
-  if (!conflicts.some(ev => ev.room === "room2")) rooms.push("room2");
+      <button id="bfSubmit">Submit</button>
+      <button id="bfCancel">Cancel</button>
+    </div>
 
-  return rooms;
-}
+    <div id="successBox" class="booking-box" style="display:none;">
+      <div id="successMessage"></div>
+      <br>
+      <button id="successOk">OK</button>
+    </div>
 
-// -------------------------------------------------------
-// RENDER SLOTS
-// -------------------------------------------------------
-function renderMobileSlots() {
-  const list = document.getElementById("slotList");
-  list.innerHTML = "";
+  </div>
 
-  const base = new Date(currentDate);
-  base.setHours(8,0,0,0);
+</div><!-- END mobileContainer -->
 
-  for (let i = 0; i < 20; i++) {
-    const slot = new Date(base.getTime() + i * 30 * 60 * 1000);
-    const rooms = getAvailabilityForSlot(slot, selectedDuration);
+<!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
+<script src="mobile.js"></script>
+<script src="calendar-v3.js"></script>
 
-    const div = document.createElement("div");
-    div.className = "slotItem";
-
-    if (rooms.length === 0) {
-      div.classList.add("unavailable");
-    } else if (rooms.length === 2) {
-      div.classList.add("available");
-      div.style.background = "#e8ddff"; // both rooms
-    } else if (rooms[0] === "room1") {
-      div.classList.add("available");
-      div.style.background = "#d7f5d7"; // room1
-    } else if (rooms[0] === "room2") {
-      div.classList.add("available");
-      div.style.background = "#d7e8ff"; // room2
-    }
-
-    const end = new Date(slot.getTime() + selectedDuration * 60 * 60 * 1000);
-
-    div.innerHTML = `
-      <span>${formatTime(slot)} – ${formatTime(end)}</span>
-      <span>${rooms.length === 0 ? "Unavailable" : rooms.join(", ")}</span>
-    `;
-
-    div.dataset.summary = `${formatDateLabel(currentDate)} ${formatTime(slot)} for ${selectedDuration} hour(s)`;
-
-    list.appendChild(div);
-  }
-
-  // ⭐ FIX 2 — attach click handlers after rendering
-  attachSlotClickHandlers();
-}
-
-// -------------------------------------------------------
-// CLICK HANDLERS FOR SLOTS
-// -------------------------------------------------------
-function attachSlotClickHandlers() {
-  document.querySelectorAll(".slotItem.available").forEach(slot => {
-    slot.addEventListener("click", () => {
-      const summary = slot.dataset.summary;
-      window.mobileOpenBookingForm(summary);
-    });
-  });
-}
-
-// -------------------------------------------------------
-// NAVIGATION
-// -------------------------------------------------------
-document.getElementById("prevDayBtn").addEventListener("click", () => {
-  currentDate.setDate(currentDate.getDate() - 1);
-  document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
-  window.loadEventsForMobile();
-});
-
-document.getElementById("nextDayBtn").addEventListener("click", () => {
-  currentDate.setDate(currentDate.getDate() + 1);
-  document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
-  window.loadEventsForMobile();
-});
-
-// -------------------------------------------------------
-// DURATION BUTTONS
-// -------------------------------------------------------
-document.querySelectorAll("#durationButtons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    selectedDuration = parseInt(btn.dataset.hours);
-
-    renderMobileSlots();
-  });
-});
-
-// -------------------------------------------------------
-// INITIAL LOAD
-// -------------------------------------------------------
-document.getElementById("dayLabel").textContent = formatDateLabel(currentDate);
-window.loadEventsForMobile();
+</body>
