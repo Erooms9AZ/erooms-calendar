@@ -139,30 +139,31 @@ document.getElementById("nextDayBtn")?.addEventListener("click", async () => {
   await window.loadEventsForMobile();
   renderMobileSlots();
 });
+function waitForDesktopReady() {
+  return new Promise(resolve => {
+    const check = () => {
+      if (window.calendars && window.fetchEvents && window.getAvailabilityForSlot) {
+        resolve();
+      } else {
+        setTimeout(check, 50);
+      }
+    };
+    check();
+  });
+}
 
 /* -------------------------------------------------------
    INITIALISE MOBILE CALENDAR (wait for desktop)
 -------------------------------------------------------- */
-setTimeout(async () => {
+(async () => {
   try {
-    await window.loadEventsForMobile();
+    await waitForDesktopReady();          // NEW: wait for desktop calendar to be ready
+    await window.loadEventsForMobile();   // then load events
     updateDayLabel();
     renderMobileSlots();
   } catch (err) {
     console.error("❌ Mobile init failed:", err);
   }
-}, 150);
-
-/* -------------------------------------------------------
-   INITIALISE MOBILE CALENDAR
--------------------------------------------------------- */
-(async () => {
-  try {
-    await window.loadEventsForMobile();   // wait for events
-    updateDayLabel();
-    renderMobileSlots();                  // render AFTER events load
-  } catch (err) {
-    console.error("❌ Mobile init failed:", err);
-  }
 })();
+
 
