@@ -126,8 +126,7 @@ const slotTime = new Date(Date.UTC(
 
 
 
-    if (hour + duration > 22) return;
-
+    if (hour + duration > 22) continue;
 const { available, freeRooms } = getRoomAvailabilityFromEvents(slotTime, duration);
 
 const div = document.createElement("div");
