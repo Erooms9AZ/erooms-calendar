@@ -109,58 +109,51 @@ function renderMobileSlots() {
   const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
   const duration = window.selectedDuration;
 
-  hours.forEach(hour => {
+  for (let i = 0; i < hours.length; i++) {
+    const hour = hours[i];
 
-    // NORMALISED DATE (critical fix)
-const slotTime = new Date(Date.UTC(
-  mobileCurrentDay.getUTCFullYear(),
-  mobileCurrentDay.getUTCMonth(),
-  mobileCurrentDay.getUTCDate(),
-  hour,
-  0,
-  0,
-  0
-));
+    const slotTime = new Date(Date.UTC(
+      mobileCurrentDay.getUTCFullYear(),
+      mobileCurrentDay.getUTCMonth(),
+      mobileCurrentDay.getUTCDate(),
+      hour,
+      0,
+      0,
+      0
+    ));
 
-
-
-
-
+    // FIXED: skip invalid hours, do NOT exit the whole function
     if (hour + duration > 22) continue;
-const { available, freeRooms } = getRoomAvailabilityFromEvents(slotTime, duration);
 
-const div = document.createElement("div");
-div.className = "slotItem";
+    const { available, freeRooms } = getRoomAvailabilityFromEvents(slotTime, duration);
 
-if (!available) {
-  div.classList.add("unavailable");        // grey
-} else if (freeRooms.length === 2) {
-  div.classList.add("both");               // purple
-} else if (freeRooms.includes("room1")) {
-  div.classList.add("room1");              // green
-} else if (freeRooms.includes("room2")) {
-  div.classList.add("room2");              // blue
-}
+    const div = document.createElement("div");
+    div.className = "slotItem";
 
-
-
+    if (!available) {
+      div.classList.add("unavailable");
+    } else if (freeRooms.length === 2) {
+      div.classList.add("both");
+    } else if (freeRooms.includes("room1")) {
+      div.classList.add("room1");
+    } else if (freeRooms.includes("room2")) {
+      div.classList.add("room2");
+    }
 
     div.textContent = `${hour}:00–${hour + duration}:00`;
 
-    // CLICK HANDLER (corrected)
     if (available && freeRooms.length > 0) {
-  div.onclick = () => {
-    if (freeRooms.length === 2) {
-      showMobileRoomSelector(["room1", "room2"], slotTime);
-    } else {
-      openMobileBooking(freeRooms[0], slotTime);
+      div.onclick = () => {
+        if (freeRooms.length === 2) {
+          showMobileRoomSelector(["room1", "room2"], slotTime);
+        } else {
+          openMobileBooking(freeRooms[0], slotTime);
+        }
+      };
     }
-  };
-}
-
 
     slotList.appendChild(div);
-  });
+  }
 }
 
 /* -------------------------------------------------------
