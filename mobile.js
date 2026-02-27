@@ -79,7 +79,7 @@ function renderMobileSlots() {
   hours.forEach(hour => {
 
     // NORMALISED DATE (critical fix)
-    const slotTime = new Date(Date.UTC(
+const slotTime = new Date(
   mobileCurrentDay.getFullYear(),
   mobileCurrentDay.getMonth(),
   mobileCurrentDay.getDate(),
@@ -87,7 +87,8 @@ function renderMobileSlots() {
   0,
   0,
   0
-));
+);
+
 
 
     if (hour + duration > 22) return;
