@@ -119,26 +119,25 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     window.selectedDuration = Number(btn.dataset.hours);
-    renderMobileSlots();
+   window.loadEventsForMobile().then(renderMobileSlots);
   });
 });
 
 /* -------------------------------------------------------
    NAVIGATION
 -------------------------------------------------------- */
-document.getElementById("prevDayBtn")?.addEventListener("click", async () => {
+document.getElementById("prevDayBtn")?.addEventListener("click", () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
   updateDayLabel();
-  await window.loadEventsForMobile();
   renderMobileSlots();
 });
 
-document.getElementById("nextDayBtn")?.addEventListener("click", async () => {
+document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
   updateDayLabel();
-  await window.loadEventsForMobile();
   renderMobileSlots();
 });
+
 function waitForDesktopReady() {
   return new Promise(resolve => {
     const check = () => {
