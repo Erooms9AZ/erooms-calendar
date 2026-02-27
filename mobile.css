@@ -117,38 +117,42 @@ body {
 /* -------------------------------------------------------
    LEGEND
 -------------------------------------------------------- */
-#slotLegend {
-  display: block;
-  width: 100%;
-  padding: 8px 0;
-  margin-bottom: 10px;
+#legend {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+  flex-wrap: wrap;
 }
 
-.legendItem {
+.legend-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 4px;
+  font-size: 14px;
 }
 
-.legendColor {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
   display: inline-block;
-  margin-right: 8px;
 }
 
-.legendColor.both {
-  background: #9c27b0;
+/* Match slot colours */
+.legend-color.available {
+  background: #4caf50; /* green */
 }
 
-.legendColor.room1 {
-  background: #4caf50;
+.legend-color.room1 {
+  background: #9c27b0; /* purple */
 }
 
-.legendColor.room2 {
-  background: #2196f3;
+.legend-color.room2 {
+  background: #2196f3; /* blue */
+}
+
+.legend-color.unavailable {
+  background: #808080; /* grey */
 }
 
 /* -------------------------------------------------------
