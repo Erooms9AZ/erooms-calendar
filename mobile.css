@@ -117,42 +117,52 @@ body {
 /* -------------------------------------------------------
    LEGEND
 -------------------------------------------------------- */
-#legend {
+#legend-strip {
+  width: 100%;
   display: flex;
-  gap: 12px;
-  margin: 10px 0;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
-.legend-item {
+.legend-entry {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  white-space: nowrap;
 }
 
-.legend-color {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+.legend-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
   display: inline-block;
 }
 
-/* Match slot colours */
-.legend-color.available {
-  background: #4caf50; /* green */
+.legend-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
 }
 
-.legend-color.room1 {
-  background: #9c27b0; /* purple */
+/* Your actual colour meanings */
+.legend-icon.both {
+  background: purple;
 }
 
-.legend-color.room2 {
-  background: #2196f3; /* blue */
+.legend-icon.room1 {
+  background: green;
 }
 
-.legend-color.unavailable {
-  background: #808080; /* grey */
+.legend-icon.room2 {
+  background: blue;
+}
+
+.legend-icon.unavailable {
+  background: grey;
 }
 
 /* -------------------------------------------------------
