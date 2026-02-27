@@ -135,6 +135,15 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   updateDayLabel();
   renderMobileSlots();
 });
+/* -------------------------------------------------------
+   SYNC CALENDAR IDS FROM DESKTOP
+-------------------------------------------------------- */
+if (!window.calendars) {
+  window.calendars = {
+    room1: "room1",
+    room2: "room2"
+  };
+}
 
 /* -------------------------------------------------------
    EVENT LOADER (matches desktop)
