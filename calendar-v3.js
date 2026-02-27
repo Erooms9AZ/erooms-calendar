@@ -194,6 +194,8 @@ async function renderCalendar() {
       <div class="day-date">${dayDate.getDate()}</div>
     `;
     headerRow.appendChild(cell);
+     calendarEl.appendChild(headerRow);
+
   }
 
   
