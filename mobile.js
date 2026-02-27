@@ -79,17 +79,16 @@ function renderMobileSlots() {
   hours.forEach(hour => {
 
     // NORMALISED DATE (critical fix)
-const slotTime = new Date(
-  Date.UTC(
-    mobileCurrentDay.getUTCFullYear(),
-    mobileCurrentDay.getUTCMonth(),
-    mobileCurrentDay.getUTCDate(),
-    hour,
-    0,
-    0,
-    0
-  )
-);
+const slotTime = new Date(Date.UTC(
+  mobileCurrentDay.getUTCFullYear(),
+  mobileCurrentDay.getUTCMonth(),
+  mobileCurrentDay.getUTCDate(),
+  hour,
+  0,
+  0,
+  0
+));
+
 
 
 
