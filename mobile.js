@@ -80,14 +80,17 @@ function renderMobileSlots() {
 
     // NORMALISED DATE (critical fix)
 const slotTime = new Date(
-  mobileCurrentDay.getFullYear(),
-  mobileCurrentDay.getMonth(),
-  mobileCurrentDay.getDate(),
-  hour,
-  0,
-  0,
-  0
+  Date.UTC(
+    mobileCurrentDay.getUTCFullYear(),
+    mobileCurrentDay.getUTCMonth(),
+    mobileCurrentDay.getUTCDate(),
+    hour,
+    0,
+    0,
+    0
+  )
 );
+
 
 
 
