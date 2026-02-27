@@ -177,8 +177,3 @@ function waitForDesktopReady() {
   }
   
 })();
-window.addEventListener("DOMContentLoaded", () => {
-  console.log("mobile.js loaded");
-  renderMobileSlots();
-});
-
