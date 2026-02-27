@@ -95,9 +95,15 @@ body {
   color: white !important;
 }
 
-/* Room 1 (green) */
+/* Both rooms free (green) */
+.slotItem.available {
+  background: #4caf50 !important;
+  color: white;
+}
+
+/* Room 1 (purple) */
 .slotItem.room1 {
-  background: #4caf50;
+  background: #9c27b0;
   color: white;
 }
 
@@ -107,10 +113,6 @@ body {
   color: white;
 }
 
-.slotItem.available {
-  background: #9c27b0 !important;
-  color: white;
-}
 
 /* -------------------------------------------------------
    LEGEND
