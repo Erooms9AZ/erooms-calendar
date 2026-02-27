@@ -126,17 +126,20 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
 /* -------------------------------------------------------
    NAVIGATION
 -------------------------------------------------------- */
-document.getElementById("prevDayBtn")?.addEventListener("click", () => {
+document.getElementById("prevDayBtn")?.addEventListener("click", async () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
   updateDayLabel();
+  await window.loadEventsForMobile();
   renderMobileSlots();
 });
 
-document.getElementById("nextDayBtn")?.addEventListener("click", () => {
+document.getElementById("nextDayBtn")?.addEventListener("click", async () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
   updateDayLabel();
+  await window.loadEventsForMobile();
   renderMobileSlots();
 });
+
 /* -------------------------------------------------------
    INITIALISE MOBILE CALENDAR (wait for desktop)
 -------------------------------------------------------- */
