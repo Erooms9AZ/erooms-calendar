@@ -95,21 +95,26 @@ const slotTime = new Date(Date.UTC(
 
     if (hour + duration > 22) return;
 
-    const { available, rooms } = window.getAvailabilityForSlot(slotTime, duration);
+const availability = window.getAvailabilityForSlot(slotTime, duration);
+const { available, rooms } = availability;
 
-    const div = document.createElement("div");
-    div.className = "slotItem";
+const div = document.createElement("div");
+div.className = "slotItem";
 
-    // CORRECT AVAILABILITY LOGIC (critical fix)
-    if (!available) {
-      div.classList.add("unavailable");
-    } else if (rooms.length === 2) {
-      div.classList.add("available");
-    } else if (rooms.includes("room1")) {
-      div.classList.add("room1");
-    } else if (rooms.includes("room2")) {
-      div.classList.add("room2");
-    }
+// Determine which rooms are actually free
+const freeRooms = rooms.filter(r => availability[r] === true);
+
+// Correct availability logic
+if (!available) {
+  div.classList.add("unavailable");
+} else if (freeRooms.length === 2) {
+  div.classList.add("available");
+} else if (freeRooms.includes("room1")) {
+  div.classList.add("room1");
+} else if (freeRooms.includes("room2")) {
+  div.classList.add("room2");
+}
+
 
     div.textContent = `${hour}:00–${hour + duration}:00`;
 
