@@ -32,7 +32,6 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  // Use desktop booking overlay
   window.openBookingForm(summary);
 }
 
@@ -78,8 +77,17 @@ function renderMobileSlots() {
   const duration = window.selectedDuration;
 
   hours.forEach(hour => {
-    const slotTime = new Date(mobileCurrentDay);
-    slotTime.setHours(hour, 0, 0, 0);
+
+    // NORMALISED DATE (critical fix)
+    const slotTime = new Date(
+      mobileCurrentDay.getFullYear(),
+      mobileCurrentDay.getMonth(),
+      mobileCurrentDay.getDate(),
+      hour,
+      0,
+      0,
+      0
+    );
 
     if (hour + duration > 22) return;
 
@@ -88,7 +96,8 @@ function renderMobileSlots() {
     const div = document.createElement("div");
     div.className = "slotItem";
 
-    if (available && rooms && rooms.length > 0) {
+    // CORRECT AVAILABILITY LOGIC (critical fix)
+    if (!available) {
       div.classList.add("unavailable");
     } else if (rooms.length === 2) {
       div.classList.add("available");
@@ -100,7 +109,8 @@ function renderMobileSlots() {
 
     div.textContent = `${hour}:00–${hour + duration}:00`;
 
-    if (available) {
+    // CLICK HANDLER (corrected)
+    if (available && rooms.length > 0) {
       div.onclick = () => {
         if (rooms.length === 2) showMobileRoomSelector(rooms, slotTime);
         else openMobileBooking(rooms[0], slotTime);
@@ -119,25 +129,31 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     window.selectedDuration = Number(btn.dataset.hours);
-   window.loadEventsForMobile().then(renderMobileSlots);
+
+    window.loadEventsForMobile().then(renderMobileSlots);
   });
 });
 
 /* -------------------------------------------------------
-   NAVIGATION
+   NAVIGATION (critical fix)
 -------------------------------------------------------- */
-document.getElementById("prevDayBtn")?.addEventListener("click", () => {
+document.getElementById("prevDayBtn")?.addEventListener("click", async () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
   updateDayLabel();
+  await window.loadEventsForMobile();
   renderMobileSlots();
 });
 
-document.getElementById("nextDayBtn")?.addEventListener("click", () => {
+document.getElementById("nextDayBtn")?.addEventListener("click", async () => {
   mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
   updateDayLabel();
+  await window.loadEventsForMobile();
   renderMobileSlots();
 });
 
+/* -------------------------------------------------------
+   WAIT FOR DESKTOP (critical fix)
+-------------------------------------------------------- */
 function waitForDesktopReady() {
   return new Promise(resolve => {
     const check = () => {
@@ -152,17 +168,15 @@ function waitForDesktopReady() {
 }
 
 /* -------------------------------------------------------
-   INITIALISE MOBILE CALENDAR (wait for desktop)
+   INITIALISE MOBILE CALENDAR
 -------------------------------------------------------- */
 (async () => {
   try {
-    await waitForDesktopReady();          // NEW: wait for desktop calendar to be ready
-    await window.loadEventsForMobile();   // then load events
+    await waitForDesktopReady();
+    await window.loadEventsForMobile();
     updateDayLabel();
     renderMobileSlots();
   } catch (err) {
     console.error("❌ Mobile init failed:", err);
   }
 })();
-
-
