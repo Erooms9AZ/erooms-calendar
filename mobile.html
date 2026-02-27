@@ -179,7 +179,27 @@ body {
 
 <body>
 
-<div id="mobileContainer"><!-- ⭐ ADDED WRAPPER -->
+<!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
+<div id="calendar" style="display:none"></div>
+<div id="monthLabel" style="display:none"></div>
+<button id="prevWeekBtn" style="display:none"></button>
+<button id="nextWeekBtn" style="display:none"></button>
+<div id="floatingSelector" style="display:none"></div>
+
+<div id="bookingOverlay" style="display:none"></div>
+<div id="bookingSummary" style="display:none"></div>
+<input id="bfName" style="display:none">
+<input id="bfEmail" style="display:none">
+<input id="bfPhone" style="display:none">
+<textarea id="bfComments" style="display:none"></textarea>
+<button id="bfSubmit" style="display:none"></button>
+<button id="bfCancel" style="display:none"></button>
+<div id="bookingStatus" style="display:none"></div>
+<form id="bookingForm" style="display:none"></form>
+<div id="successBox" style="display:none"></div>
+<button id="successOk" style="display:none"></button>
+
+<div id="mobileContainer">
 
   <!-- Mobile Header -->
   <div id="mobileHeader">
@@ -232,18 +252,19 @@ body {
     </div>
 
     <div id="successBox" class="booking-box" style="display:none;">
-  <div id="successMessage"></div>
-  <br>
-  <button id="successOk">OK</button>
-</div>
+      <div id="successMessage"></div>
+      <br>
+      <button id="successOk">OK</button>
+    </div>
 
   </div>
 
 </div><!-- END mobileContainer -->
 
- <script src="calendar-v3.js"></script>
+<!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
 <script src="mobile.js"></script>
-
+<script src="calendar-v3.js"></script>
 
 </body>
+
 </html>
