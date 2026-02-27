@@ -2,7 +2,6 @@
    STATE
 -------------------------------------------------------- */
 window.selectedDuration = 1;
-
 let mobileCurrentDay = new Date();
 
 /* -------------------------------------------------------
@@ -32,7 +31,6 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  // Use desktop booking overlay
   window.openBookingForm(summary);
 }
 
@@ -138,6 +136,21 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   renderMobileSlots();
 });
 
+/* -------------------------------------------------------
+   EVENT LOADER (matches desktop)
+-------------------------------------------------------- */
+window.loadEventsForMobile = async function () {
+  const startOfWeek = new Date(window.currentWeekStart);
+  const endOfRange = new Date(startOfWeek);
+  endOfRange.setDate(startOfWeek.getDate() + 13);
+
+  const events = [
+    ...(await window.fetchEvents(window.calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
+    ...(await window.fetchEvents(window.calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
+  ];
+
+  window.allEvents = events;
+};
 
 /* -------------------------------------------------------
    INITIALISE MOBILE CALENDAR
@@ -151,4 +164,3 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
     console.error("❌ Mobile init failed:", err);
   }
 })();
-
