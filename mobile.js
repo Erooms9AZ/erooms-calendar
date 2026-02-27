@@ -143,10 +143,11 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
 -------------------------------------------------------- */
 (async () => {
   try {
-    await window.loadEventsForMobile(); // from calendar-v3.js
+    await window.loadEventsForMobile();   // wait for events
     updateDayLabel();
-    renderMobileSlots();
+    renderMobileSlots();                  // render AFTER events load
   } catch (err) {
     console.error("❌ Mobile init failed:", err);
   }
 })();
+
