@@ -1,3 +1,34 @@
+function getRoomAvailabilityFromEvents(slotTime, duration) {
+  const endTime = new Date(slotTime.getTime() + duration * 60 * 60 * 1000);
+
+  let room1Free = true;
+  let room2Free = true;
+
+  for (const ev of window.allEvents || []) {
+    const evStart = new Date(ev.start);
+    const evEnd = new Date(ev.end);
+
+    const overlaps =
+      evStart < endTime &&
+      evEnd > slotTime;
+
+    if (overlaps) {
+      if (ev.room === "room1") room1Free = false;
+      if (ev.room === "room2") room2Free = false;
+    }
+  }
+
+  return {
+    available: room1Free || room2Free,
+    freeRooms: [
+      ...(room1Free ? ["room1"] : []),
+      ...(room2Free ? ["room2"] : [])
+    ]
+  };
+}
+
+
+
 /* -------------------------------------------------------
    STATE
 -------------------------------------------------------- */
