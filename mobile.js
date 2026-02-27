@@ -126,8 +126,7 @@ const slotTime = new Date(Date.UTC(
 
     if (hour + duration > 22) return;
 
-const availability = window.getAvailabilityForSlot(slotTime, duration);
-const { available, freeRooms } = availability;
+const { available, freeRooms } = getRoomAvailabilityFromEvents(slotTime, duration);
 
 const div = document.createElement("div");
 div.className = "slotItem";
@@ -141,6 +140,7 @@ if (!available) {
 } else if (freeRooms.includes("room2")) {
   div.classList.add("room2");
 }
+
 
 
 
