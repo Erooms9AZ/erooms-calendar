@@ -1,89 +1,173 @@
-<body>
 
-<!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
-<div id="calendar" style="display:none"></div>
-<div id="monthLabel" style="display:none"></div>
-<button id="prevWeekBtn" style="display:none"></button>
-<button id="nextWeekBtn" style="display:none"></button>
-<div id="floatingSelector" style="display:none"></div>
+/* -------------------------------------------------------
+   STATE
+-------------------------------------------------------- */
+window.selectedDuration = 1;
 
-<div id="bookingOverlay" style="display:none"></div>
-<div id="bookingSummary" style="display:none"></div>
-<input id="bfName" style="display:none">
-<input id="bfEmail" style="display:none">
-<input id="bfPhone" style="display:none">
-<textarea id="bfComments" style="display:none"></textarea>
-<button id="bfSubmit" style="display:none"></button>
-<button id="bfCancel" style="display:none"></button>
-<div id="bookingStatus" style="display:none"></div>
-<form id="bookingForm" style="display:none"></form>
-<div id="successBox" style="display:none"></div>
-<button id="successOk" style="display:none"></button>
+let mobileCurrentDay = new Date();
 
-<div id="mobileContainer">
+/* -------------------------------------------------------
+   UPDATE HEADER LABEL
+-------------------------------------------------------- */
+function updateDayLabel() {
+  const label = document.getElementById("dayLabel");
+  if (label) {
+    const options = { weekday: "long", day: "numeric", month: "long" };
+    label.textContent = mobileCurrentDay.toLocaleDateString("en-GB", options);
+  }
+}
 
-  <!-- Mobile Header -->
-  <div id="mobileHeader">
-    <button id="prevDayBtn">←</button>
-    <div id="dayLabel">Loading…</div>
-    <button id="nextDayBtn">→</button>
-  </div>
+/* -------------------------------------------------------
+   OPEN BOOKING OVERLAY (uses desktop booking)
+-------------------------------------------------------- */
+function openMobileBooking(room, slotTime) {
+  const start = new Date(slotTime);
+  const end = new Date(start.getTime() + window.selectedDuration * 60 * 60 * 1000);
 
-  <!-- Duration Buttons -->
-  <div id="durationButtons">
-    <button data-hours="1" class="active">1 Hour</button>
-    <button data-hours="2">2 Hours</button>
-    <button data-hours="3">3 Hours</button>
-  </div>
+  window.selectedRoom = room;
+  window.selectedStart = start;
+  window.selectedEnd = end;
 
-  <!-- Room Selector -->
-  <div id="mobileRoomSelector" style="display:none;">
-    <button class="room-btn" data-room="room1">Room 1</button>
-    <button class="room-btn" data-room="room2">Room 2</button>
-    <button id="mobileRoomCancel">Cancel</button>
-  </div>
+  const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
-  <!-- Slot List -->
-  <div id="slotList"></div>
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  <!-- Booking Overlay -->
-  <div id="bookingOverlay" class="overlay" style="display:none;">
-    
-    <div id="bookingForm" class="booking-box">
-      <h3>Booking Summary</h3>
-      <div id="bookingSummary"></div>
-      <br>
+  // Use desktop booking overlay
+  window.openBookingForm(summary);
+}
 
-      <label>Name*</label><br>
-      <input id="bfName" type="text" style="width:100%"><br><br>
+/* -------------------------------------------------------
+   ROOM SELECTOR
+-------------------------------------------------------- */
+function showMobileRoomSelector(rooms, slotTime) {
+  const selector = document.getElementById("mobileRoomSelector");
+  if (!selector) return;
 
-      <label>Email*</label><br>
-      <input id="bfEmail" type="email" style="width:100%"><br><br>
+  selector.style.display = "flex";
 
-      <label>Phone*</label><br>
-      <input id="bfPhone" type="text" style="width:100%"><br><br>
+  selector.querySelectorAll(".room-btn").forEach(btn => {
+    btn.onclick = () => {
+      const room = btn.dataset.room;
+      selector.style.display = "none";
+      openMobileBooking(room, slotTime);
+    };
+  });
 
-      <label>Comments</label><br>
-      <textarea id="bfComments" style="width:100%"></textarea><br><br>
+  const cancelBtn = document.getElementById("mobileRoomCancel");
+  if (cancelBtn) cancelBtn.onclick = () => (selector.style.display = "none");
+}
 
-      <div id="bookingStatus" style="color:red;"></div><br>
+/* -------------------------------------------------------
+   RENDER SLOTS (uses desktop availability engine)
+-------------------------------------------------------- */
+function renderMobileSlots() {
+  const slotList = document.getElementById("slotList");
+  if (!slotList) return;
 
-      <button id="bfSubmit">Submit</button>
-      <button id="bfCancel">Cancel</button>
-    </div>
+  slotList.innerHTML = "";
 
-    <div id="successBox" class="booking-box" style="display:none;">
-      <div id="successMessage"></div>
-      <br>
-      <button id="successOk">OK</button>
-    </div>
+  if (mobileCurrentDay.getDay() === 0) {
+    const div = document.createElement("div");
+    div.className = "slotItem unavailable";
+    div.textContent = "No bookings on Sunday";
+    slotList.appendChild(div);
+    return;
+  }
 
-  </div>
+  const hours = [...Array(12).keys()].map(i => i + 10); // 10:00–21:00
+  const duration = window.selectedDuration;
 
-</div><!-- END mobileContainer -->
+  hours.forEach(hour => {
+    const slotTime = new Date(mobileCurrentDay);
+    slotTime.setHours(hour, 0, 0, 0);
 
-<!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
-<script src="mobile.js"></script>
-<script src="calendar-v3.js"></script>
+    if (hour + duration > 22) return;
 
-</body>
+    const { available, rooms } = window.getAvailabilityForSlot(slotTime, duration);
+
+    const div = document.createElement("div");
+    div.className = "slotItem";
+
+    if (!available) {
+      div.classList.add("unavailable");
+    } else if (rooms.length === 2) {
+      div.classList.add("available");
+    } else if (rooms.includes("room1")) {
+      div.classList.add("room1");
+    } else if (rooms.includes("room2")) {
+      div.classList.add("room2");
+    }
+
+    div.textContent = `${hour}:00–${hour + duration}:00`;
+
+    if (available) {
+      div.onclick = () => {
+        if (rooms.length === 2) showMobileRoomSelector(rooms, slotTime);
+        else openMobileBooking(rooms[0], slotTime);
+      };
+    }
+
+    slotList.appendChild(div);
+  });
+}
+
+/* -------------------------------------------------------
+   DURATION BUTTONS
+-------------------------------------------------------- */
+document.querySelectorAll("#durationButtons button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#durationButtons button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    window.selectedDuration = Number(btn.dataset.hours);
+    renderMobileSlots();
+  });
+});
+
+/* -------------------------------------------------------
+   NAVIGATION
+-------------------------------------------------------- */
+document.getElementById("prevDayBtn")?.addEventListener("click", () => {
+  mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+  updateDayLabel();
+  renderMobileSlots();
+});
+
+document.getElementById("nextDayBtn")?.addEventListener("click", () => {
+  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+  updateDayLabel();
+  renderMobileSlots();
+});
+/* -------------------------------------------------------
+   MOBILE EVENT SYNC WITH DESKTOP
+-------------------------------------------------------- */
+
+// Render only after desktop has loaded events
+(async () => {
+  await window.loadEventsForMobile();
+  // mobile render logic
+})();
+
+  updateDayLabel();
+  renderMobileSlots();
+});
+
+// If mobile loads after desktop (rare but possible), render immediately
+if (window.allEvents && window.allEvents.length > 0) {
+  updateDayLabel();
+  renderMobileSlots();
+}
+
+
+/* -------------------------------------------------------
+   INITIALISE MOBILE CALENDAR
+-------------------------------------------------------- */
+(async () => {
+  try {
+    await window.loadEventsForMobile();
+    renderMobileSlots();
+    updateDayLabel();
+  } catch (err) {
+    console.error("❌ Mobile init failed:", err);
+  }
+})();
