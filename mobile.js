@@ -12,10 +12,13 @@ function getRoomAvailabilityFromEvents(slotTime, duration) {
       evStart < endTime &&
       evEnd > slotTime;
 
-    if (overlaps) {
-      if (ev.room === "room1") room1Free = false;
-      if (ev.room === "room2") room2Free = false;
-    }
+    if (!overlaps) continue;
+
+    // Detect room field automatically
+    const room = ev.room || ev.resource || ev.resourceId || ev.roomId || ev.location || ev.type;
+
+    if (room === "room1") room1Free = false;
+    if (room === "room2") room2Free = false;
   }
 
   return {
@@ -26,7 +29,6 @@ function getRoomAvailabilityFromEvents(slotTime, duration) {
     ]
   };
 }
-
 
 
 /* -------------------------------------------------------
@@ -132,13 +134,13 @@ const div = document.createElement("div");
 div.className = "slotItem";
 
 if (!available) {
-  div.classList.add("unavailable");
+  div.classList.add("unavailable");        // grey
 } else if (freeRooms.length === 2) {
-  div.classList.add("available");
+  div.classList.add("both");               // purple
 } else if (freeRooms.includes("room1")) {
-  div.classList.add("room1");
+  div.classList.add("room1");              // green
 } else if (freeRooms.includes("room2")) {
-  div.classList.add("room2");
+  div.classList.add("room2");              // blue
 }
 
 
@@ -150,7 +152,7 @@ if (!available) {
     if (available && freeRooms.length > 0) {
   div.onclick = () => {
     if (freeRooms.length === 2) {
-      showMobileRoomSelector(freeRooms, slotTime);
+      showMobileRoomSelector(["room1", "room2"], slotTime);
     } else {
       openMobileBooking(freeRooms[0], slotTime);
     }
