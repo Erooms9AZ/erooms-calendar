@@ -158,7 +158,7 @@ document.getElementById("nextDayBtn")?.addEventListener("click", async () => {
 function waitForDesktopReady() {
   return new Promise(resolve => {
     const check = () => {
-      if (window.calendars && window.fetchEvents && window.getAvailabilityForSlot) {
+      if (window.getAvailabilityForSlot && window.loadEventsForMobile) {
         resolve();
       } else {
         setTimeout(check, 50);
@@ -167,6 +167,7 @@ function waitForDesktopReady() {
     check();
   });
 }
+
 
 /* -------------------------------------------------------
    INITIALISE MOBILE CALENDAR
