@@ -1,3 +1,15 @@
+// Mobile-safe booking form wrapper
+window.mobileOpenBookingForm = function(summaryText) {
+  // Only call desktop booking if it exists
+  if (typeof window.openBookingForm === "function") {
+    try {
+      window.openBookingForm(summaryText);
+    } catch (e) {
+      console.warn("Desktop booking form not available on mobile:", e);
+    }
+  }
+};
+
 /* -------------------------------------------------------
    STATE
 -------------------------------------------------------- */
@@ -31,7 +43,8 @@ function openMobileBooking(room, slotTime) {
 
   const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
 
-  window.openBookingForm(summary);
+  window.mobileOpenBookingForm(summary);
+
 }
 
 /* -------------------------------------------------------
