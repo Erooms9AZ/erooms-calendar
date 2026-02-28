@@ -201,6 +201,21 @@ body {
       <button data-hours="2">2 Hours</button>
       <button data-hours="3">3 Hours</button>
     </div>
+<div id="mobileLegend" style="
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:6px 0;
+  background:#f5f5f5;
+  font-size:14px;
+  border-bottom:1px solid #ddd;
+  margin-bottom:15px;
+">
+  <span>🟣 Both rooms</span>
+  <span>🔵 Room 1</span>
+  <span>🟢 Room 2</span>
+  <span>⚫ Unavailable</span>
+</div>
 
     <!-- Room Selector -->
     <div id="mobileRoomSelector" style="display:none;">
@@ -242,25 +257,7 @@ body {
         <br>
         <button id="successOk">OK</button>
       </div>
-
-      <div id="legend-strip">
-        <div class="legend-entry">
-          <span class="legend-icon both"></span>
-          <span class="legend-label">Both</span>
-        </div>
-        <div class="legend-entry">
-          <span class="legend-icon room1"></span>
-          <span class="legend-label">Room 1</span>
-        </div>
-        <div class="legend-entry">
-          <span class="legend-icon room2"></span>
-          <span class="legend-label">Room 2</span>
-        </div>
-        <div class="legend-entry">
-          <span class="legend-icon unavailable"></span>
-          <span class="legend-label">Not Available</span>
-        </div>
-      </div>
+      
     </div><!-- end bookingOverlay -->
 
     <div id="legendBar" style="
@@ -271,13 +268,6 @@ body {
   background:#f5f5f5;
   font-size:14px;
   border-bottom:1px solid #ddd;
-">
-  <span>🟣 Both rooms</span>
-  <span>🔵 Room 1</span>
-  <span>🟢 Room 2</span>
-  <span>⚫ Unavailable</span>
-</div>
-
 
   </div><!-- END mobileContainer -->
 
