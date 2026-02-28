@@ -107,14 +107,48 @@ function renderMobileSlots() {
   const duration = window.selectedDuration || 1;
 
   for (let hour of hours) {
+    const slotTime = new Date(mobileCurrentDay);
+    slotTime.setHours(hour, 0, 0, 0);
+
+    // Use the desktop engine
+    const availability = window.getAvailabilityForSlot(slotTime, duration);
+
     const div = document.createElement("div");
-    div.className = "slotItem testSlot";
+    div.classList.add("slotItem");
+
+    // Assign colour class
+    if (!availability.available) {
+      div.classList.add("unavailable");
+    } else if (availability.freeRooms.length === 2) {
+      div.classList.add("available"); // both rooms free
+    } else if (availability.freeRooms[0] === "room1") {
+      div.classList.add("room1");
+    } else if (availability.freeRooms[0] === "room2") {
+      div.classList.add("room2");
+    }
+
+    // Label
     div.textContent = `${hour}:00–${hour + duration}:00`;
+
+    // Click behaviour
+    if (availability.available) {
+      div.onclick = () => {
+        if (availability.freeRooms.length === 1) {
+          // Only one room free → book directly
+          openMobileBooking(availability.freeRooms[0], slotTime);
+        } else {
+          // Both free → show selector
+          showMobileRoomSelector(availability.freeRooms, slotTime);
+        }
+      };
+    }
+
     slotList.appendChild(div);
   }
 
   console.log("Slots rendered:", slotList.children.length);
 }
+
 
 /* -------------------------------------------------------
    DURATION BUTTONS
