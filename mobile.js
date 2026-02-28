@@ -221,6 +221,22 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     renderMobileSlots();
   });
 });
+function updatePrevButtonState() {
+  const btn = document.getElementById("prevDayBtn");
+  if (!btn) return;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const checkDay = new Date(mobileCurrentDay);
+  checkDay.setHours(0,0,0,0);
+
+  if (checkDay.getTime() === today.getTime()) {
+    btn.classList.add("disabled");
+  } else {
+    btn.classList.remove("disabled");
+  }
+}
 
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
@@ -232,7 +248,7 @@ document.getElementById("prevDayBtn")?.addEventListener("click", () => {
   const checkDay = new Date(mobileCurrentDay);
   checkDay.setHours(0,0,0,0);
 
-  // If already on today → do nothing
+  // Already on today → do nothing
   if (checkDay.getTime() === today.getTime()) {
     return;
   }
@@ -244,9 +260,9 @@ document.getElementById("prevDayBtn")?.addEventListener("click", () => {
 
   updateDayLabel();
   renderMobileSlots();
-
   updatePrevButtonState();
 });
+
 
 
 document.getElementById("nextDayBtn")?.addEventListener("click", () => {
@@ -263,4 +279,6 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
 (async () => {
   updateDayLabel();
   await renderMobileSlots();
+  updatePrevButtonState();
+
 })();
