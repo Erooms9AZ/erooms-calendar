@@ -262,6 +262,7 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   } while (mobileCurrentDay.getDay() === 0);
   updateDayLabel();
   renderMobileSlots();
+  updatePrevButtonState(); // <-- THIS is the missing line
 });
 
 // ---------------------------------------------------------
