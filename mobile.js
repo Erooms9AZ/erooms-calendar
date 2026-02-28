@@ -119,11 +119,12 @@ function renderMobileSlots() {
     // Assign colour class
     if (!availability.available) {
       div.classList.add("unavailable");
-    } else if (availability.freeRooms.length === 2) {
+    } else if (availability.rooms
+.length === 2) {
       div.classList.add("available"); // both rooms free
-    } else if (availability.freeRooms[0] === "room1") {
+    } else if (availability.rooms[0] === "room1") {
       div.classList.add("room1");
-    } else if (availability.freeRooms[0] === "room2") {
+    } else if (availability.rooms[0] === "room2") {
       div.classList.add("room2");
     }
 
@@ -135,10 +136,10 @@ function renderMobileSlots() {
       div.onclick = () => {
         if (availability.freeRooms.length === 1) {
           // Only one room free → book directly
-          openMobileBooking(availability.freeRooms[0], slotTime);
+          openMobileBooking(availability.rooms[0], slotTime);
         } else {
           // Both free → show selector
-          showMobileRoomSelector(availability.freeRooms, slotTime);
+          showMobileRoomSelector(availability.rooms, slotTime);
         }
       };
     }
