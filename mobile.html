@@ -228,48 +228,39 @@ body {
     <div id="slotList"></div>
 
     <!-- Booking Overlay -->
-    <div id="bookingOverlay" class="overlay" style="display:none;">
-      <div id="bookingForm" class="booking-box">
-        <h3>Booking Summary</h3>
-        <div id="bookingSummary"></div>
-        <br>
+<div id="bookingOverlay" class="overlay" style="display:none;">
+  <div id="bookingForm" class="booking-box">
+    <h3>Booking Summary</h3>
+    <div id="bookingSummary"></div>
+    <br>
 
-        <label>Name*</label><br>
-        <input id="bfName" type="text" style="width:100%"><br><br>
+    <label>Name*</label><br>
+    <input id="bfName" type="text" style="width:100%"><br><br>
 
-        <label>Email*</label><br>
-        <input id="bfEmail" type="email" style="width:100%"><br><br>
+    <label>Email*</label><br>
+    <input id="bfEmail" type="email" style="width:100%"><br><br>
 
-        <label>Phone*</label><br>
-        <input id="bfPhone" type="text" style="width:100%"><br><br>
+    <label>Phone*</label><br>
+    <input id="bfPhone" type="text" style="width:100%"><br><br>
 
-        <label>Comments</label><br>
-        <textarea id="bfComments" style="width:100%"></textarea><br><br>
+    <label>Comments</label><br>
+    <textarea id="bfComments" style="width:100%"></textarea><br><br>
 
-        <div id="bookingStatus" style="color:red;"></div><br>
+    <div id="bookingStatus" style="color:red;"></div><br>
 
-        <button id="bfSubmit">Submit</button>
-        <button id="bfCancel">Cancel</button>
-      </div>
-</div>
-      <div id="successBox" class="booking-box" style="display:none;">
-        <div id="successMessage"></div>
-        <br>
-        <button id="successOk">OK</button>
-      </div>
-      
-    </div><!-- end bookingOverlay -->
+    <button id="bfSubmit">Submit</button>
+    <button id="bfCancel">Cancel</button>
+  </div>
 
-    <div id="legendBar" style="
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  padding:6px 0;
-  background:#f5f5f5;
-  font-size:14px;
-  border-bottom:1px solid #ddd;
+  <div id="successBox" class="booking-box" style="display:none;">
+    <div id="successMessage"></div>
+    <br>
+    <button id="successOk">OK</button>
+  </div>
+</div><!-- end bookingOverlay -->
 
-  </div><!-- END mobileContainer -->
+</div><!-- END mobileContainer -->
+
 
   <!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
   <script src="mobile.js"></script>
