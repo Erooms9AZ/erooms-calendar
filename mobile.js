@@ -231,12 +231,15 @@ function updatePrevButtonState() {
   const checkDay = new Date(mobileCurrentDay);
   checkDay.setHours(0,0,0,0);
 
-  if (checkDay.getTime() === today.getTime()) {
+  const isToday = checkDay.getTime() === today.getTime();
+
+  if (isToday) {
     btn.classList.add("disabled");
   } else {
     btn.classList.remove("disabled");
   }
 }
+
 
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
@@ -262,7 +265,6 @@ document.getElementById("prevDayBtn")?.addEventListener("click", () => {
   renderMobileSlots();
   updatePrevButtonState();
 });
-
 
 
 document.getElementById("nextDayBtn")?.addEventListener("click", () => {
