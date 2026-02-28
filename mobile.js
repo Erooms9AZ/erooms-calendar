@@ -246,8 +246,7 @@ function updatePrevButtonState() {
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
 // ---------------------------------------------------------
-document.getElementById("prevDayBtn")?.addEventListener("click", (event) => {
-  event.preventDefault(); // <-- REQUIRED for <button> elements
+document.getElementById("prevDayBtn")?.addEventListener("click", () => {
 
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -255,8 +254,10 @@ document.getElementById("prevDayBtn")?.addEventListener("click", (event) => {
   const checkDay = new Date(mobileCurrentDay);
   checkDay.setHours(0,0,0,0);
 
-  // Already on today → do nothing
-  if (checkDay.getTime() === today.getTime()) {
+  // Only block when actually on today
+  const onToday = checkDay.getTime() === today.getTime();
+
+  if (onToday) {
     return;
   }
 
