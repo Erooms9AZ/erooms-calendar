@@ -253,3 +253,11 @@ BOOKING OVERLAY
   max-width: 400px;
   border-radius: 12px;
 }
+/*---------------------------------------------------
+DISABALE PREVIOUS DAY
+----------------------------------------------------*/
+#prevDayBtn.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
