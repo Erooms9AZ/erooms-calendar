@@ -226,12 +226,28 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
 //  NAVIGATION (SKIP SUNDAY)
 // ---------------------------------------------------------
 document.getElementById("prevDayBtn")?.addEventListener("click", () => {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const checkDay = new Date(mobileCurrentDay);
+  checkDay.setHours(0,0,0,0);
+
+  // If already on today → do nothing
+  if (checkDay.getTime() === today.getTime()) {
+    return;
+  }
+
+  // Move back one day, skipping Sunday
   do {
     mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
   } while (mobileCurrentDay.getDay() === 0);
+
   updateDayLabel();
   renderMobileSlots();
+
+  updatePrevButtonState();
 });
+
 
 document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   do {
