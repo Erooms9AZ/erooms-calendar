@@ -112,29 +112,47 @@ async function renderMobileSlots() {
     }
 
     const room1Free = !room1Events.some(ev => overlaps(ev, slotStart, slotEnd));
-    const room2Free = !room2Events.some(ev => overlaps(ev, slotStart, slotEnd));
+const room2Free = !room2Events.some(ev => overlaps(ev, slotStart, slotEnd));
 
-    let freeRooms = [];
-    if (room1Free) freeRooms.push("room1");
-    if (room2Free) freeRooms.push("room2");
+let freeRooms = [];
+if (room1Free) freeRooms.push("room1");
+if (room2Free) freeRooms.push("room2");
 
-    if (freeRooms.length === 2) {
-      div.classList.add("available");
-    } else if (freeRooms.length === 1) {
-      div.classList.add(freeRooms[0]);
+// --- PAST SLOT CHECK (TODAY ONLY) ---
+const now = new Date();
+
+// normalise dates to compare only the date for "today"
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const checkDay = new Date(mobileCurrentDay);
+checkDay.setHours(0, 0, 0, 0);
+
+const isToday = today.getTime() === checkDay.getTime();
+const isPast = isToday && slotStart < now;
+
+if (isPast || freeRooms.length === 0) {
+  // match desktop behaviour: grey, not clickable
+  div.classList.add("unavailable");
+  div.style.pointerEvents = "none";
+  div.textContent = "Not Available";
+} else if (freeRooms.length === 2) {
+  div.classList.add("available");
+} else if (freeRooms.length === 1) {
+  div.classList.add(freeRooms[0]);
+}
+
+// only attach click handler if not past and at least one room free
+if (!isPast && freeRooms.length > 0) {
+  div.onclick = () => {
+    if (freeRooms.length === 1) {
+      openMobileBooking(freeRooms[0], slotStart);
     } else {
-      div.classList.add("unavailable");
+      showMobileRoomSelector(freeRooms, slotStart);
     }
+  };
+}
 
-    if (freeRooms.length > 0) {
-      div.onclick = () => {
-        if (freeRooms.length === 1) {
-          openMobileBooking(freeRooms[0], slotStart);
-        } else {
-          showMobileRoomSelector(freeRooms, slotStart);
-        }
-      };
-    }
 
     slotList.appendChild(div);
   }
