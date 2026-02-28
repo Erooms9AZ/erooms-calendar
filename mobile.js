@@ -45,41 +45,7 @@ function isSlotWithinBusinessHours(date, hour) {
   }
   return hour >= 10 && hour < 22; // Mon–Fri
 }
-// BLOCK PAST HOURS ON CURRENT DAY
-const now = new Date();
-    const slotStart = new Date(mobileCurrentDay);
-    slotStart.setHours(hour, 0, 0, 0);
 
-    const slotEnd = new Date(slotStart);
-    slotEnd.setHours(hour + selectedDuration);
-
-    const div = document.createElement("div");
-    div.classList.add("slotItem");
-    div.textContent = `${hour}:00–${hour + selectedDuration}:00`;
-
-    // BUSINESS HOURS CHECK
-    if (!isSlotWithinBusinessHours(mobileCurrentDay, hour)) {
-        div.classList.add("unavailable");
-        slotList.appendChild(div);
-        continue;
-    }
-
-    // BLOCK PAST HOURS ON CURRENT DAY
-    const now = new Date();
-
-    const today = new Date();
-    today.setHours(0,0,0,0);
-
-    const checkDay = new Date(mobileCurrentDay);
-    checkDay.setHours(0,0,0,0);
-
-    const isToday = today.getTime() === checkDay.getTime();
-
-    if (isToday && hour < now.getHours()) {
-        div.classList.add("unavailable");
-        slotList.appendChild(div);
-        continue;
-    }
 
 
 
