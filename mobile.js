@@ -46,6 +46,18 @@ function isSlotWithinBusinessHours(date, hour) {
 
   return hour >= 10 && hour < 22; // Mon–Fri
 }
+// BLOCK PAST HOURS ON CURRENT DAY
+const now = new Date();
+const isToday =
+  mobileCurrentDay.getFullYear() === now.getFullYear() &&
+  mobileCurrentDay.getMonth() === now.getMonth() &&
+  mobileCurrentDay.getDate() === now.getDate();
+
+if (isToday && hour < now.getHours()) {
+  div.classList.add("unavailable");
+  slotList.appendChild(div);
+  continue;
+}
 
 // ---------------------------------------------------------
 //  FETCH EVENTS FROM GOOGLE CALENDAR
