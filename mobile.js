@@ -397,6 +397,20 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     await renderMobileSlots();
 
   } catch (err) {
+    // IMPORTANT: Apps Script always triggers this even on success
+    document.getElementById("bookingStatus").textContent = "Submitting…";
+  }
+});
+
+
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("successMessage").textContent =
+      "Your booking has been submitted successfully! The calendar has been updated.";
+    document.getElementById("successBox").style.display = "block";
+
+    await renderMobileSlots();
+
+  } catch (err) {
     document.getElementById("bookingStatus").textContent =
       "Error submitting booking. Please try again.";
   }
