@@ -206,7 +206,8 @@ function waitForDesktopReady() {
     await waitForDesktopReady();
     await window.loadEventsForMobile();
     updateDayLabel();
-    renderMobileSlots();
+    setTimeout(renderMobileSlots, 50);
+
   } catch (err) {
     console.error("❌ Mobile init failed:", err);
   }
