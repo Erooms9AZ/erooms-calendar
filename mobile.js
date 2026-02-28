@@ -304,11 +304,38 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
 
   document.getElementById("bookingStatus").textContent = "";
 
-  // TEMP SUCCESS (replace with Apps Script call later)
-  document.getElementById("bookingForm").style.display = "none";
-  document.getElementById("successMessage").textContent =
-    "Booking submitted successfully!";
-  document.getElementById("successBox").style.display = "block";
+  // Build payload for Apps Script
+  const payload = {
+    name,
+    email,
+    phone,
+    comments,
+    room: window.selectedRoom,
+    start: window.selectedStart.toISOString(),
+    end: window.selectedEnd.toISOString()
+  };
+
+  try {
+    // IMPORTANT: Replace with your real Apps Script URL
+    const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
+
+    await fetch(BOOKING_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Show success UI
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("successMessage").textContent =
+      "Booking submitted successfully!";
+    document.getElementById("successBox").style.display = "block";
+
+  } catch (err) {
+    document.getElementById("bookingStatus").textContent =
+      "Error submitting booking. Please try again.";
+  }
 });
 
 // Success OK
@@ -317,6 +344,7 @@ document.getElementById("successOk")?.addEventListener("click", () => {
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingForm").style.display = "block";
 });
+
 
 // ---------------------------------------------------------
 //  INIT
