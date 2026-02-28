@@ -280,6 +280,43 @@ document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   renderMobileSlots();
   updatePrevButtonState(); // <-- THIS is the missing line
 });
+// ---------------------------------------------------------
+//  BOOKING FORM BUTTONS
+// ---------------------------------------------------------
+
+// Cancel booking
+document.getElementById("bfCancel")?.addEventListener("click", () => {
+  document.getElementById("bookingOverlay").style.display = "none";
+});
+
+// Submit booking
+document.getElementById("bfSubmit")?.addEventListener("click", async () => {
+  const name = document.getElementById("bfName").value.trim();
+  const email = document.getElementById("bfEmail").value.trim();
+  const phone = document.getElementById("bfPhone").value.trim();
+  const comments = document.getElementById("bfComments").value.trim();
+
+  if (!name || !email || !phone) {
+    document.getElementById("bookingStatus").textContent =
+      "Please fill in all required fields.";
+    return;
+  }
+
+  document.getElementById("bookingStatus").textContent = "";
+
+  // TEMP SUCCESS (replace with Apps Script call later)
+  document.getElementById("bookingForm").style.display = "none";
+  document.getElementById("successMessage").textContent =
+    "Booking submitted successfully!";
+  document.getElementById("successBox").style.display = "block";
+});
+
+// Success OK
+document.getElementById("successOk")?.addEventListener("click", () => {
+  document.getElementById("bookingOverlay").style.display = "none";
+  document.getElementById("successBox").style.display = "none";
+  document.getElementById("bookingForm").style.display = "block";
+});
 
 // ---------------------------------------------------------
 //  INIT
