@@ -246,24 +246,15 @@ function updatePrevButtonState() {
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
 // ---------------------------------------------------------
-document.getElementById("prevDayBtn")?.addEventListener("click", () => {
-  const today = new Date();
-
-  // Already on today → do nothing
-  if (isSameDay(mobileCurrentDay, today)) {
-    return;
-  }
-
-  // Move back one day, skipping Sunday
+document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   do {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
   } while (mobileCurrentDay.getDay() === 0);
 
   updateDayLabel();
   renderMobileSlots();
-  updatePrevButtonState();
+  updatePrevButtonState(); // <-- this was missing
 });
-
 
 document.getElementById("nextDayBtn")?.addEventListener("click", () => {
   do {
