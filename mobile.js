@@ -48,16 +48,22 @@ function isSlotWithinBusinessHours(date, hour) {
 }
 // BLOCK PAST HOURS ON CURRENT DAY
 const now = new Date();
-const isToday =
-  mobileCurrentDay.getFullYear() === now.getFullYear() &&
-  mobileCurrentDay.getMonth() === now.getMonth() &&
-  mobileCurrentDay.getDate() === now.getDate();
+
+// Compare only the date, not the time
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const checkDay = new Date(mobileCurrentDay);
+checkDay.setHours(0,0,0,0);
+
+const isToday = today.getTime() === checkDay.getTime();
 
 if (isToday && hour < now.getHours()) {
   div.classList.add("unavailable");
   slotList.appendChild(div);
   continue;
 }
+
 
 // ---------------------------------------------------------
 //  FETCH EVENTS FROM GOOGLE CALENDAR
