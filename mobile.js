@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-//  SAFE API KEY (same obfuscation as calendar-v3.js)
+//  SAFE API KEY
 // ---------------------------------------------------------
 const k1 = "AIzaSy";
 const k2 = "DJbfWqdMdgjIW0EAaREvUCKlz9P6yrPCs";
@@ -37,17 +37,14 @@ function updateDayLabel() {
 function isSlotWithinBusinessHours(date, hour) {
   const day = date.getDay(); // 0=Sun, 6=Sat
 
-  // Sunday: closed
-  if (day === 0) return false;
+  if (day === 0) return false; // Sunday removed
 
-  // Saturday: 10–12 blocked
   if (day === 6) {
-    if (hour < 12) return false;
+    if (hour < 12) return false; // Saturday 10–12 blocked
     return hour >= 10 && hour < 22;
   }
 
-  // Monday–Friday: 10–22
-  return hour >= 10 && hour < 22;
+  return hour >= 10 && hour < 22; // Mon–Fri
 }
 
 // ---------------------------------------------------------
@@ -89,13 +86,11 @@ async function renderMobileSlots() {
   if (!slotList) return;
   slotList.innerHTML = "";
 
-  // Fetch events for both rooms
   const [room1Events, room2Events] = await Promise.all([
     fetchEventsForRoom(ROOM1_ID, mobileCurrentDay),
     fetchEventsForRoom(ROOM2_ID, mobileCurrentDay)
   ]);
 
-  // Build slots 10:00–22:00
   for (let hour = 10; hour < 22; hour++) {
     const slotStart = new Date(mobileCurrentDay);
     slotStart.setHours(hour, 0, 0, 0);
@@ -107,14 +102,12 @@ async function renderMobileSlots() {
     div.classList.add("slotItem");
     div.textContent = `${hour}:00–${hour + selectedDuration}:00`;
 
-    // Business hour rules override everything
     if (!isSlotWithinBusinessHours(mobileCurrentDay, hour)) {
       div.classList.add("unavailable");
       slotList.appendChild(div);
       continue;
     }
 
-    // Determine free rooms
     const room1Free = !room1Events.some(ev => overlaps(ev, slotStart, slotEnd));
     const room2Free = !room2Events.some(ev => overlaps(ev, slotStart, slotEnd));
 
@@ -122,16 +115,14 @@ async function renderMobileSlots() {
     if (room1Free) freeRooms.push("room1");
     if (room2Free) freeRooms.push("room2");
 
-    // Colour logic
     if (freeRooms.length === 2) {
-      div.classList.add("available"); // purple
+      div.classList.add("available");
     } else if (freeRooms.length === 1) {
-      div.classList.add(freeRooms[0]); // blue or green
+      div.classList.add(freeRooms[0]);
     } else {
-      div.classList.add("unavailable"); // grey
+      div.classList.add("unavailable");
     }
 
-    // Click behaviour
     if (freeRooms.length > 0) {
       div.onclick = () => {
         if (freeRooms.length === 1) {
@@ -163,8 +154,8 @@ function showMobileRoomSelector(rooms, slotTime) {
     };
   });
 
-  const cancelBtn = document.getElementById("mobileRoomCancel");
-  if (cancelBtn) cancelBtn.onclick = () => (selector.style.display = "none");
+  document.getElementById("mobileRoomCancel").onclick = () =>
+    (selector.style.display = "none");
 }
 
 // ---------------------------------------------------------
@@ -190,7 +181,10 @@ function openMobileBooking(room, slotTime) {
     "0"
   )}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
 
-  window.openBookingForm(summary);
+  document.getElementById("bookingSummary").textContent = summary;
+
+  // SHOW OVERLAY
+  document.getElementById("bookingOverlay").style.display = "flex";
 }
 
 // ---------------------------------------------------------
@@ -208,16 +202,20 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
 });
 
 // ---------------------------------------------------------
-//  NAVIGATION
+//  NAVIGATION (SKIP SUNDAY)
 // ---------------------------------------------------------
 document.getElementById("prevDayBtn")?.addEventListener("click", () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+  do {
+    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
+  } while (mobileCurrentDay.getDay() === 0);
   updateDayLabel();
   renderMobileSlots();
 });
 
 document.getElementById("nextDayBtn")?.addEventListener("click", () => {
-  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+  do {
+    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+  } while (mobileCurrentDay.getDay() === 0);
   updateDayLabel();
   renderMobileSlots();
 });
