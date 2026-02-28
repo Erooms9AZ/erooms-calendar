@@ -302,43 +302,6 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     return;
   }
 
-  document.getElementById("bookingStatus").textContent = "";
-
-  // Build payload for Apps Script
-  const payload = {
-    name,
-    email,
-    phone,
-    comments,
-    room: window.selectedRoom,
-    start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString()
-  };
-
-  try {
-    // IMPORTANT: Replace with your real Apps Script URL
-    const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
-
-    await fetch(BOOKING_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    // Submit booking
-document.getElementById("bfSubmit")?.addEventListener("click", async () => {
-  const name = document.getElementById("bfName").value.trim();
-  const email = document.getElementById("bfEmail").value.trim();
-  const phone = document.getElementById("bfPhone").value.trim();
-  const comments = document.getElementById("bfComments").value.trim();
-
-  if (!name || !email || !phone) {
-    document.getElementById("bookingStatus").textContent =
-      "Please fill in all required fields.";
-    return;
-  }
-
   document.getElementById("bookingStatus").textContent = "Submitting...";
 
   const payload = {
@@ -350,6 +313,8 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     start: window.selectedStart.toISOString(),
     end: window.selectedEnd.toISOString()
   };
+
+  const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
 
   try {
     await fetch(BOOKING_URL, {
@@ -372,6 +337,7 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     document.getElementById("bookingStatus").textContent = "Submitting…";
   }
 });
+
 
 //-------------------------------------------------------
 // RESET BOOKING FORM
