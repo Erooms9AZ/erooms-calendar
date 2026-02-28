@@ -43,7 +43,6 @@ function isSlotWithinBusinessHours(date, hour) {
     if (hour < 12) return false; // Saturday 10–12 blocked
     return hour >= 10 && hour < 22;
   }
-
   return hour >= 10 && hour < 22; // Mon–Fri
 }
 // BLOCK PAST HOURS ON CURRENT DAY
@@ -61,8 +60,9 @@ const isToday = today.getTime() === checkDay.getTime();
 if (isToday && hour < now.getHours()) {
   div.classList.add("unavailable");
   slotList.appendChild(div);
-  continue;
+  continue;   // <-- SAFE HERE because we are inside the for-loop
 }
+
 
 
 // ---------------------------------------------------------
