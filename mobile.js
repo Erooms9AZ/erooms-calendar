@@ -46,8 +46,13 @@ function isSlotWithinBusinessHours(date, hour) {
   return hour >= 10 && hour < 22; // Mon–Fri
 }
 
-
-
+function isSameDay(a, b) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
 
 
 // ---------------------------------------------------------
@@ -221,38 +226,31 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     renderMobileSlots();
   });
 });
+
+//--------------------------------------------------------
+// UPDATE PREV BUTTON STATE
+//--------------------------------------------------------
 function updatePrevButtonState() {
   const btn = document.getElementById("prevDayBtn");
   if (!btn) return;
 
   const today = new Date();
-  today.setHours(0,0,0,0);
 
-  const checkDay = new Date(mobileCurrentDay);
-  checkDay.setHours(0,0,0,0);
-
-  const isToday = checkDay.getTime() === today.getTime();
-
-  if (isToday) {
+  if (isSameDay(mobileCurrentDay, today)) {
     btn.classList.add("disabled");
   } else {
     btn.classList.remove("disabled");
   }
 }
 
-
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
 // ---------------------------------------------------------
 document.getElementById("prevDayBtn")?.addEventListener("click", () => {
   const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const checkDay = new Date(mobileCurrentDay);
-  checkDay.setHours(0,0,0,0);
 
   // Already on today → do nothing
-  if (checkDay.getTime() === today.getTime()) {
+  if (isSameDay(mobileCurrentDay, today)) {
     return;
   }
 
