@@ -95,21 +95,21 @@ body {
   color: white !important;
 }
 
-/* Both rooms free (green) */
+/* Both rooms free (purple) */
 .slotItem.available {
-  background: #4caf50 !important;
+  background: #9c27b0 !important;
   color: white;
 }
 
-/* Room 1 (purple) */
+/* Room 1 (green) */
 .slotItem.room1 {
-  background: #9c27b0;
+  background: #4caf50 !important;
   color: white;
 }
 
 /* Room 2 (blue) */
 .slotItem.room2 {
-  background: #2196f3;
+  background: #2196f3 !important;
   color: white;
 }
 
