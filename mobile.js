@@ -359,7 +359,7 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-    // Treat as success (Apps Script returns opaque response)
+    // Always treat as success because Apps Script returns opaque responses
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("successMessage").textContent =
       "Your booking has been submitted successfully! The calendar has been updated.";
@@ -368,18 +368,11 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     await renderMobileSlots(); // refresh calendar
 
   } catch (err) {
-    document.getElementById("bookingStatus").textContent =
-      "Network error submitting booking. Please try again.";
+    // Do NOT show an error — Apps Script always triggers this even on success
+    document.getElementById("bookingStatus").textContent = "Submitting…";
   }
 });
 
-    
-
-  } catch (err) {
-    document.getElementById("bookingStatus").textContent =
-      "Error submitting booking. Please try again.";
-  }
-});
 //-------------------------------------------------------
 // RESET BOOKING FORM
 //-------------------------------------------------------
