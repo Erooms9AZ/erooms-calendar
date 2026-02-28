@@ -326,11 +326,54 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-    // Show success UI
+    // Submit booking
+document.getElementById("bfSubmit")?.addEventListener("click", async () => {
+  const name = document.getElementById("bfName").value.trim();
+  const email = document.getElementById("bfEmail").value.trim();
+  const phone = document.getElementById("bfPhone").value.trim();
+  const comments = document.getElementById("bfComments").value.trim();
+
+  if (!name || !email || !phone) {
+    document.getElementById("bookingStatus").textContent =
+      "Please fill in all required fields.";
+    return;
+  }
+
+  document.getElementById("bookingStatus").textContent = "Submitting...";
+
+  const payload = {
+    name,
+    email,
+    phone,
+    comments,
+    room: window.selectedRoom,
+    start: window.selectedStart.toISOString(),
+    end: window.selectedEnd.toISOString()
+  };
+
+  try {
+    await fetch(BOOKING_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Treat as success (Apps Script returns opaque response)
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("successMessage").textContent =
-      "Booking submitted successfully!";
+      "Your booking has been submitted successfully! The calendar has been updated.";
     document.getElementById("successBox").style.display = "block";
+
+    await renderMobileSlots(); // refresh calendar
+
+  } catch (err) {
+    document.getElementById("bookingStatus").textContent =
+      "Network error submitting booking. Please try again.";
+  }
+});
+
+    
 
   } catch (err) {
     document.getElementById("bookingStatus").textContent =
