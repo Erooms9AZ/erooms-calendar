@@ -221,6 +221,24 @@ body {
   padding: 20px;
 }
 
+#bookingSummary,
+#bfName,
+#bfEmail,
+#bfPhone,
+#bfComments,
+#bookingStatus {
+  flex-shrink: 0;
+}
+
+#bookingForm > *:not(button):not(h3):not(#bookingStatus):not(#successBox) {
+  flex-shrink: 0;
+}
+
+/* Make the middle content scrollable */
+#bookingForm .scroll-area {
+  overflow-y: auto;
+  flex: 1;
+}
 
 /*----------------------------------------------
 BOOKING OVERLAY
