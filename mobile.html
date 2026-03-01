@@ -1,247 +1,296 @@
-// ---------------------------------------------------------
-//  DURATION BUTTONS
-// ---------------------------------------------------------
-document.querySelectorAll("#durationButtons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll("#durationButtons button")
-      .forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    selectedDuration = Number(btn.dataset.hours);
-    renderMobileSlots();
-  });
-});
-//--------------------------------------------------------
-// EARLIEST DAY CHECK (shared by Prev button + swipe)
-//--------------------------------------------------------
-function isAtEarliestDay() {
-  // Determine the earliest allowed day (skip Sunday)
-  const earliest = new Date();
-  if (earliest.getDay() === 0) {
-    earliest.setDate(earliest.getDate() + 1); // move Sunday → Monday
-  }
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>E Rooms – Mobile</title>
+  <link rel="stylesheet" href="mobile.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  return (
-    mobileCurrentDay.getFullYear() === earliest.getFullYear() &&
-    mobileCurrentDay.getMonth() === earliest.getMonth() &&
-    mobileCurrentDay.getDate() === earliest.getDate()
-  );
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: #fafafa;
 }
 
-//--------------------------------------------------------
-// UPDATE PREV BUTTON STATE
-//--------------------------------------------------------
-function updatePrevButtonState() {
-  const btn = document.getElementById("prevDayBtn");
-  if (!btn) return;
+/* MOBILE HEADER — NOW STICKY */
+#mobileHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
-  // Determine the earliest allowed day (skip Sunday)
-  const earliest = new Date();
-  if (earliest.getDay() === 0) {
-    earliest.setDate(earliest.getDate() + 1); // move Sunday → Monday
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #673ab7;
+  color: white;
 
-  // Compare earliest allowed day with current day
-  const isEarliest =
-    mobileCurrentDay.getFullYear() === earliest.getFullYear() &&
-    mobileCurrentDay.getMonth() === earliest.getMonth() &&
-    mobileCurrentDay.getDate() === earliest.getDate();
-
-  if (isEarliest) {
-    btn.classList.add("disabled");
-  } else {
-    btn.classList.remove("disabled");
-  }
+  /* full‑width look inside padded body */
+  margin: 0 -10px 15px;
+  border-radius: 0 0 8px 8px;
 }
 
-
-
-// ---------------------------------------------------------
-//  NAVIGATION (SKIP SUNDAY)
-// ---------------------------------------------------------
-document.getElementById("prevDayBtn")?.addEventListener("click", () => {
-
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const checkDay = new Date(mobileCurrentDay);
-  checkDay.setHours(0,0,0,0);
-
-  // Only block when actually on today
-  const onToday = checkDay.getTime() === today.getTime();
-
-  if (onToday) {
-    return;
-  }
-
-  // Move back one day, skipping Sunday
-  do {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() - 1);
-  } while (mobileCurrentDay.getDay() === 0);
-
-  updateDayLabel();
-  renderMobileSlots();
-  updatePrevButtonState();
-});
-
-
-document.getElementById("nextDayBtn")?.addEventListener("click", () => {
-  do {
-    mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
-  } while (mobileCurrentDay.getDay() === 0);
-  updateDayLabel();
-  renderMobileSlots();
-  updatePrevButtonState(); // <-- THIS is the missing line
-});
-// ---------------------------------------------------------
-//  BOOKING FORM BUTTONS
-// ---------------------------------------------------------
-
-// Cancel booking
-document.getElementById("bfCancel")?.addEventListener("click", () => {
-  document.getElementById("bookingOverlay").style.display = "none";
-});
-
-//-------------------------------------------------------
-// RESET BOOKING FORM
-//-------------------------------------------------------
-function resetBookingForm() {
-  document.getElementById("bfName").value = "";
-  document.getElementById("bfEmail").value = "";
-  document.getElementById("bfPhone").value = "";
-  document.getElementById("bfComments").value = "";
-  document.getElementById("bookingStatus").textContent = "";
+#mobileHeader button {
+  background: white;
+  color: #673ab7;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+.testSlot {
+  background: #e8ddff;
+  border-color: #c7b3ff;
 }
 
-//-------------------------------------------------------
-// CANCEL BOOKING
-//-------------------------------------------------------
-document.getElementById("bfCancel")?.addEventListener("click", () => {
-  document.getElementById("bookingOverlay").style.display = "none";
-  resetBookingForm();
-});
-
-//-------------------------------------------------------
-// SUBMIT BOOKING
-//-------------------------------------------------------
-document.getElementById("bfSubmit")?.addEventListener("click", async () => {
-  const name = document.getElementById("bfName").value.trim();
-  const email = document.getElementById("bfEmail").value.trim();
-  const phone = document.getElementById("bfPhone").value.trim();
-  const comments = document.getElementById("bfComments").value.trim();
-
-  if (!name || !email || !phone) {
-    document.getElementById("bookingStatus").textContent =
-      "Please fill in all required fields.";
-    return;
-  }
-
-  document.getElementById("bookingStatus").textContent = "Submitting...";
-
-  const payload = {
-    name,
-    email,
-    phone,
-    comments,
-    room: window.selectedRoom,
-    start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString()
-  };
-
-  const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
-
-  try {
-    await fetch(BOOKING_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    // Treat as success (Apps Script always returns opaque responses)
-    document.getElementById("bookingForm").style.display = "none";
-    document.getElementById("successMessage").textContent =
-      "Your booking has been submitted successfully! The calendar has been updated.";
-    document.getElementById("successBox").style.display = "block";
-
-    await renderMobileSlots(); // refresh calendar
-
-  } catch (err) {
-    // Silent fallback — do NOT show an error
-    document.getElementById("bookingStatus").textContent = "Submitting…";
-  }
-});
-
-//-------------------------------------------------------
-// SUCCESS OK (ONLY ONE HANDLER)
-//-------------------------------------------------------
-document.getElementById("successOk")?.addEventListener("click", () => {
-  document.getElementById("bookingOverlay").style.display = "none";
-  document.getElementById("successBox").style.display = "none";
-  document.getElementById("bookingForm").style.display = "block";
-  resetBookingForm();
-});
-//-------------------------------------------------------
-// SWIPE TO CHANGE WEEK + SLIDE ANIMATION
-//-------------------------------------------------------
-let touchStartX = 0;
-let touchEndX = 0;
-
-const swipeArea = document.getElementById("slotList");
-
-swipeArea.addEventListener("touchstart", (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-swipeArea.addEventListener("touchend", (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-});
-
-function handleSwipe() {
-  const swipeDistance = touchEndX - touchStartX;
-  const threshold = 60; // minimum swipe distance
-
-  if (swipeDistance < -threshold) {
-    animateNext();
-  }
-
-  if (swipeDistance > threshold) {
-    animatePrev();
-  }
+/* DURATION BUTTONS */
+#durationButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-function animateNext() {
-  const slotList = document.getElementById("slotList");
-  slotList.style.transform = "translateX(-100%)";
-
-  setTimeout(() => {
-    slotList.style.transform = "translateX(0)";
-    document.getElementById("nextDayBtn").click();
-  }, 250);
+#durationButtons button {
+  flex: 1;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #444;
+  background: #eee;
+  border-radius: 6px;
 }
 
-function animatePrev() {
-  if (isAtEarliestDay()) {
-    return; // block swipe-back beyond week 1 Monday
-  }
-
-  const slotList = document.getElementById("slotList");
-  slotList.style.transform = "translateX(100%)";
-
-  setTimeout(() => {
-    slotList.style.transform = "translateX(0)";
-    document.getElementById("prevDayBtn").click();
-  }, 250);
+#durationButtons button.active {
+  background: #444;
+  color: white;
 }
 
+/* SLOT LIST */
+#slotList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-// ---------------------------------------------------------
-//  INIT
-// ---------------------------------------------------------
-(async () => {
-  updateDayLabel();
-  await renderMobileSlots();
-  updatePrevButtonState();
+.slotItem {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-})();
+.slotItem.available {
+  background: #e8ddff;
+  border-color: #c7b3ff;
+}
+
+.slotItem.unavailable {
+  background: #eee;
+  color: #777;
+}
+
+/* BOOKING OVERLAY */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.booking-box {
+  background: white;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+}
+
+/* ROOM SELECTOR */
+#mobileRoomSelector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 3000;
+}
+
+#mobileRoomSelector .room-btn {
+  background: #673ab7;
+  color: white;
+  padding: 14px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 200px;
+  text-align: center;
+}
+
+#mobileRoomCancel {
+  background: #444;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 200px;
+}
+
+/* LEGEND */
+#slotLegend {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 15px;
+  font-size: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legendColor.both  { background-color: #9c27b0; }
+.legendColor.room1 { background-color: #4caf50; }
+.legendColor.room2 { background-color: #2196f3; }
+
+  #mobileStickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+</style>
+</head>
+
+<body>
+
+  
+  <!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
+
+<div id="mobileContainer">
+
+  <!-- Unified Sticky Header -->
+  <div id="mobileStickyHeader">
+
+    <!-- Day / Date Bar -->
+    <div id="mobileHeader">
+      <button id="prevDayBtn">←</button>
+      <div id="dayLabel">Loading…</div>
+      <button id="nextDayBtn">→</button>
+    </div>
+
+    <!-- Duration Buttons -->
+    <div id="durationButtons">
+      <button data-hours="1" class="active">1 Hour</button>
+      <button data-hours="2">2 Hours</button>
+      <button data-hours="3">3 Hours</button>
+    </div>
+
+    <!-- Legend -->
+<div id="mobileLegend" style="
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:6px 0;
+  background:#f5f5f5;
+  font-size:14px;
+  border-bottom:1px solid #ddd;
+">
+  <span class="legendItem">
+    <span class="legendColor both"></span> Both rooms
+  </span>
+  <span class="legendItem">
+    <span class="legendColor room1"></span> Room 1
+  </span>
+  <span class="legendItem">
+    <span class="legendColor room2"></span> Room 2
+  </span>
+  <span class="legendItem">
+    <span class="legendColor unavailable"></span> Unavailable
+  </span>
+</div>
+
+  </div>
+
+  <!-- Room Selector -->
+  <div id="mobileRoomSelector" style="display:none;">
+    <button class="room-btn" data-room="room1">Room 1</button>
+    <button class="room-btn" data-room="room2">Room 2</button>
+    <button id="mobileRoomCancel">Cancel</button>
+  </div>
+
+  <!-- Slot List -->
+  <div id="slotList"></div>
+</div>
+
+   <!-- Booking Overlay -->
+<div id="bookingOverlay" class="overlay" style="display:none;">
+  <div id="bookingForm" class="booking-box">
+    <h3>Booking Summary</h3>
+    <div id="bookingSummary"></div>
+    <br>
+
+    <label>Name*</label><br>
+    <input id="bfName" type="text" style="width:100%"><br><br>
+
+    <label>Email*</label><br>
+    <input id="bfEmail" type="email" style="width:100%"><br><br>
+
+    <label>Phone*</label><br>
+    <input id="bfPhone" type="text" style="width:100%"><br><br>
+
+    <label>Comments</label><br>
+    <textarea id="bfComments" style="width:100%"></textarea><br><br>
+
+    <div id="bookingStatus" style="color:red;"></div><br>
+
+    <button id="bfSubmit">Submit</button>
+    <button id="bfCancel">Cancel</button>
+  </div>
+
+  <div id="successBox" class="booking-box" style="display:none;">
+    <div id="successMessage"></div>
+    <br>
+    <button id="successOk">OK</button>
+  </div>
+</div><!-- end bookingOverlay -->
+
+</div><!-- END mobileContainer -->
+
+
+  <!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
+  <script src="mobile.js"></script>
+  <script src="calendar-v3.js"></script>
+
+</body>
+</html>
+  
