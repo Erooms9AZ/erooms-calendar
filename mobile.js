@@ -209,10 +209,11 @@ function openMobileBooking(room, slotTime) {
     year: "numeric"
   });
 
-  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(
-    2,
-    "0"
-  )}:00 to ${String(end.getHours()).padStart(2, "0")}:00`;
+ const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(
+  2,
+  "0"
+)}:00 to ${String(end.getHours()).padStart(2, "0")}:00
+(Room: ${room === "room1" ? "Room 1" : room === "room2" ? "Room 2" : "Both"})`;
 
   document.getElementById("bookingSummary").textContent = summary;
 
