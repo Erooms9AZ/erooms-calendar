@@ -256,12 +256,16 @@ body {
   <div id="slotList"></div>
 </div>
 
-   <!-- Booking Overlay -->
+  <!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
+<script src="mobile.js"></script>
+<script src="calendar-v3.js"></script>
+
+</div><!-- END mobileContainer -->
+
+<!-- Booking Overlay -->
 <div id="bookingOverlay" class="overlay" style="display:none;">
   
   <div id="bookingForm" class="booking-box">
-
-    <!-- Logo placed correctly inside the overlay -->
     <img src="https://raw.githubusercontent.com/Erooms9AZ/erooms-calendar/main/assets/Erooms.png"
          alt="E Rooms"
          class="brandOverlayLogo">
@@ -295,14 +299,6 @@ body {
   </div>
 
 </div><!-- end bookingOverlay -->
-
-
-</div><!-- END mobileContainer -->
-
-
-  <!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
-  <script src="mobile.js"></script>
-  <script src="calendar-v3.js"></script>
 
 </body>
 </html>
