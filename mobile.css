@@ -305,6 +305,26 @@ body {
   margin-top: 4px;
   margin-bottom: 8px;
 }
+/* Tighter vertical spacing for booking form fields */
+#bookingForm label {
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+#bookingForm input,
+#bookingForm textarea {
+  margin-bottom: 8px;
+  padding: 10px; /* slightly smaller padding to reduce height */
+}
+
+#bookingForm h3 {
+  margin-bottom: 8px;
+}
+
+#bookingStatus {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
 
 /* Success box */
 #successBox {
