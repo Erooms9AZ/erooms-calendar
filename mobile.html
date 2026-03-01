@@ -178,6 +178,16 @@ body {
 .legendColor.both  { background-color: #9c27b0; }
 .legendColor.room1 { background-color: #4caf50; }
 .legendColor.room2 { background-color: #2196f3; }
+
+  #mobileStickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
 </style>
 </head>
 
@@ -186,9 +196,12 @@ body {
   
   <!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
 
-  <div id="mobileContainer">
+<div id="mobileContainer">
 
-    <!-- Mobile Header -->
+  <!-- Unified Sticky Header -->
+  <div id="mobileStickyHeader">
+
+    <!-- Day / Date Bar -->
     <div id="mobileHeader">
       <button id="prevDayBtn">←</button>
       <div id="dayLabel">Loading…</div>
@@ -201,31 +214,35 @@ body {
       <button data-hours="2">2 Hours</button>
       <button data-hours="3">3 Hours</button>
     </div>
-<div id="mobileLegend" style="
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  padding:6px 0;
-  background:#f5f5f5;
-  font-size:14px;
-  border-bottom:1px solid #ddd;
-  margin-bottom:15px;
-">
-  <span>🟣 Both rooms</span>
-  <span>🔵 Room 1</span>
-  <span>🟢 Room 2</span>
-  <span>⚫ Unavailable</span>
-</div>
 
-    <!-- Room Selector -->
-    <div id="mobileRoomSelector" style="display:none;">
-      <button class="room-btn" data-room="room1">Room 1</button>
-      <button class="room-btn" data-room="room2">Room 2</button>
-      <button id="mobileRoomCancel">Cancel</button>
+    <!-- Legend -->
+    <div id="mobileLegend" style="
+      display:flex;
+      justify-content:space-around;
+      align-items:center;
+      padding:6px 0;
+      background:#f5f5f5;
+      font-size:14px;
+      border-bottom:1px solid #ddd;
+    ">
+      <span>🟣 Both rooms</span>
+      <span>🔵 Room 1</span>
+      <span>🟢 Room 2</span>
+      <span>⚫ Unavailable</span>
     </div>
 
-    <!-- Slot List -->
-    <div id="slotList"></div>
+  </div>
+
+  <!-- Room Selector -->
+  <div id="mobileRoomSelector" style="display:none;">
+    <button class="room-btn" data-room="room1">Room 1</button>
+    <button class="room-btn" data-room="room2">Room 2</button>
+    <button id="mobileRoomCancel">Cancel</button>
+  </div>
+
+  <!-- Slot List -->
+  <div id="slotList"></div>
+</div>
 
    <!-- Booking Overlay -->
 <div id="bookingOverlay" class="overlay" style="display:none;">
