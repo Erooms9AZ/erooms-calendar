@@ -264,6 +264,10 @@ body {
   margin-top: 6px;
   margin-bottom: 10px;
 }
+#bookingForm.booking-box {
+  padding-top: 12px;
+  padding-bottom: 20px;
+}
 
 /*----------------------------------------------
 BOOKING OVERLAY
