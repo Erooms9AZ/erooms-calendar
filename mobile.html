@@ -256,22 +256,25 @@ body {
 <div id="bookingOverlay" class="overlay" style="display:none;">
   <div id="bookingForm" class="booking-box">
     <h3>Booking Summary</h3>
-    <div id="bookingSummary"></div>
-    <br>
 
-    <label>Name*</label><br>
-    <input id="bfName" type="text" style="width:100%"><br><br>
+<div class="scroll-area">
+  <div id="bookingSummary"></div>
+  <br>
 
-    <label>Email*</label><br>
-    <input id="bfEmail" type="email" style="width:100%"><br><br>
+  <label>Name*</label><br>
+  <input id="bfName" type="text" style="width:100%"><br><br>
 
-    <label>Phone*</label><br>
-    <input id="bfPhone" type="text" style="width:100%"><br><br>
+  <label>Email*</label><br>
+  <input id="bfEmail" type="email" style="width:100%"><br><br>
 
-    <label>Comments</label><br>
-    <textarea id="bfComments" style="width:100%"></textarea><br><br>
+  <label>Phone*</label><br>
+  <input id="bfPhone" type="text" style="width:100%"><br><br>
 
-    <div id="bookingStatus" style="color:red;"></div><br>
+  <label>Comments</label><br>
+  <textarea id="bfComments" style="width:100%"></textarea><br><br>
+
+  <div id="bookingStatus" style="color:red;"></div><br>
+</div>
 
     <button id="bfSubmit">Submit</button>
     <button id="bfCancel">Cancel</button>
