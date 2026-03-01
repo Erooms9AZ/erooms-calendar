@@ -387,7 +387,55 @@ document.getElementById("successOk")?.addEventListener("click", () => {
   document.getElementById("bookingForm").style.display = "block";
   resetBookingForm();
 });
+//-------------------------------------------------------
+// SWIPE TO CHANGE WEEK + SLIDE ANIMATION
+//-------------------------------------------------------
+let touchStartX = 0;
+let touchEndX = 0;
 
+const swipeArea = document.getElementById("slotList");
+
+swipeArea.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+swipeArea.addEventListener("touchend", (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const swipeDistance = touchEndX - touchStartX;
+  const threshold = 60; // minimum swipe distance
+
+  if (swipeDistance < -threshold) {
+    animateNext();
+  }
+
+  if (swipeDistance > threshold) {
+    animatePrev();
+  }
+}
+
+function animateNext() {
+  const slotList = document.getElementById("slotList");
+  slotList.style.transform = "translateX(-100%)";
+
+  setTimeout(() => {
+    slotList.style.transform = "translateX(0)";
+    document.getElementById("nextDayBtn").click();
+  }, 250);
+}
+
+function animatePrev() {
+  const slotList = document.getElementById("slotList");
+  slotList.style.transform = "translateX(100%)";
+
+  setTimeout(() => {
+    slotList.style.transform = "translateX(0)";
+    document.getElementById("prevDayBtn").click();
+  }, 250);
+}
 
 // ---------------------------------------------------------
 //  INIT
