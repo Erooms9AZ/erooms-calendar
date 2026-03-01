@@ -164,6 +164,7 @@ body {
 .legend-icon.unavailable {
   background: grey;
 }
+.legendColor.unavailable { background-color: #eee; }
 
 /* -------------------------------------------------------
    MOBILE ROOM SELECTOR MODAL
