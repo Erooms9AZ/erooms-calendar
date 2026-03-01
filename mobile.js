@@ -233,6 +233,22 @@ document.querySelectorAll("#durationButtons button").forEach(btn => {
     renderMobileSlots();
   });
 });
+//--------------------------------------------------------
+// EARLIEST DAY CHECK (shared by Prev button + swipe)
+//--------------------------------------------------------
+function isAtEarliestDay() {
+  // Determine the earliest allowed day (skip Sunday)
+  const earliest = new Date();
+  if (earliest.getDay() === 0) {
+    earliest.setDate(earliest.getDate() + 1); // move Sunday → Monday
+  }
+
+  return (
+    mobileCurrentDay.getFullYear() === earliest.getFullYear() &&
+    mobileCurrentDay.getMonth() === earliest.getMonth() &&
+    mobileCurrentDay.getDate() === earliest.getDate()
+  );
+}
 
 //--------------------------------------------------------
 // UPDATE PREV BUTTON STATE
@@ -428,6 +444,10 @@ function animateNext() {
 }
 
 function animatePrev() {
+  if (isAtEarliestDay()) {
+    return; // block swipe-back beyond week 1 Monday
+  }
+
   const slotList = document.getElementById("slotList");
   slotList.style.transform = "translateX(100%)";
 
@@ -436,6 +456,7 @@ function animatePrev() {
     document.getElementById("prevDayBtn").click();
   }, 250);
 }
+
 
 // ---------------------------------------------------------
 //  INIT
