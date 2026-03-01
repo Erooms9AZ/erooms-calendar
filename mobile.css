@@ -226,7 +226,7 @@ body {
 #bookingForm::before {
   content: "";
   display: block;
-  height: 56px;
+  height: 68px;
   margin: 0 auto 14px;
   opacity: 0.9;
   background-image: url("https://raw.githubusercontent.com/Erooms9AZ/erooms-calendar/main/assets/Erooms.png");
