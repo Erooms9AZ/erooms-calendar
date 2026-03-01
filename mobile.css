@@ -212,6 +212,10 @@ body {
   font-size: 16px;
   font-weight: 600;
 }
+#bookingForm {
+  max-height: 90vh;
+  overflow-y: auto;
+}
 
 /*----------------------------------------------
 BOOKING OVERLAY
