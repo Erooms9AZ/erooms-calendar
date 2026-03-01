@@ -32,7 +32,6 @@ body {
   justify-content: space-between;
   align-items: center;
 
-  /* Make header visually full-width while content stays padded */
   margin: 0 -10px 10px;
   border-radius: 0 0 10px 10px;
 }
@@ -113,7 +112,6 @@ body {
   color: white;
 }
 
-
 /* -------------------------------------------------------
    LEGEND
 -------------------------------------------------------- */
@@ -161,10 +159,10 @@ body {
   background: blue;
 }
 
+/* FIXED: exact match to .slotItem.unavailable */
 .legend-icon.unavailable {
-  background: grey;
+  background: #808080 !important;
 }
-.legendColor.unavailable { background-color: #eee; }
 
 /* -------------------------------------------------------
    MOBILE ROOM SELECTOR MODAL
@@ -254,20 +252,22 @@ BOOKING OVERLAY
   max-width: 400px;
   border-radius: 12px;
 }
+
 /*---------------------------------------------------
-DISABALE PREVIOUS DAY
+DISABLE PREVIOUS DAY
 ----------------------------------------------------*/
 #prevDayBtn.disabled {
   opacity: 0.3;
   pointer-events: none;
   filter: grayscale(100%);
 }
+
 /* Improve visibility of booking form fields */
 #bookingForm input,
 #bookingForm textarea {
-  font-size: 18px;          /* larger text */
-  padding: 12px;            /* more internal space */
-  border: 2px solid #673ab7;/* high-contrast border */
+  font-size: 18px;
+  padding: 12px;
+  border: 2px solid #673ab7;
   border-radius: 8px;
   margin-bottom: 12px;
   background: #fff;
@@ -282,6 +282,7 @@ DISABALE PREVIOUS DAY
   margin-bottom: 4px;
   display: block;
 }
+
 /* Larger Submit / Cancel buttons */
 #bfSubmit,
 #bfCancel {
@@ -304,6 +305,7 @@ DISABALE PREVIOUS DAY
   color: white;
   border: none;
 }
+
 /* Ensure success box fits comfortably on all iPhones */
 #successBox {
   width: 90% !important;
