@@ -15,7 +15,14 @@ const ROOM2_ID = "0vaic8tl54smverq0d9eso5gs8@group.calendar.google.com";
 //  STATE
 // ---------------------------------------------------------
 let mobileCurrentDay = new Date();
+
+// If today is Sunday, move to Monday
+if (mobileCurrentDay.getDay() === 0) {
+  mobileCurrentDay.setDate(mobileCurrentDay.getDate() + 1);
+}
+
 let selectedDuration = 1;
+
 
 // ---------------------------------------------------------
 //  DATE HELPERS
