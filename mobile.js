@@ -241,14 +241,16 @@ function updatePrevButtonState() {
   const btn = document.getElementById("prevDayBtn");
   if (!btn) return;
 
-  const today = new Date();
+  const day = mobileCurrentDay.getDay();
 
-  if (isSameDay(mobileCurrentDay, today)) {
+  // Disable on Monday (1) because Sunday (0) is not allowed
+  if (day === 1) {
     btn.classList.add("disabled");
   } else {
     btn.classList.remove("disabled");
   }
 }
+
 
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
