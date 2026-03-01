@@ -113,55 +113,39 @@ body {
 }
 
 /* -------------------------------------------------------
-   LEGEND
+   LEGEND (MATCHES mobile.html + SLOT COLOURS)
 -------------------------------------------------------- */
-#legend-strip {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: #fafafa;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  box-sizing: border-box;
-}
 
-.legend-entry {
+.legendItem {
   display: flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
 }
 
-.legend-icon {
+.legendColor {
   width: 16px;
   height: 16px;
   border-radius: 4px;
   display: inline-block;
 }
 
-.legend-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
+/* Exact colour meanings, matching slots */
+.legendColor.both {
+  background: #9c27b0;
 }
 
-/* Your actual colour meanings */
-.legend-icon.both {
-  background: purple;
+.legendColor.room1 {
+  background: #4caf50;
 }
 
-.legend-icon.room1 {
-  background: green;
+.legendColor.room2 {
+  background: #2196f3;
 }
 
-.legend-icon.room2 {
-  background: blue;
-}
-
-/* FIXED: exact match to .slotItem.unavailable */
-.legend-icon.unavailable {
-  background: #808080 !important;
+/* Unavailable: exact match to .slotItem.unavailable */
+.legendColor.unavailable {
+  background: #808080;
 }
 
 /* -------------------------------------------------------
