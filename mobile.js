@@ -241,15 +241,25 @@ function updatePrevButtonState() {
   const btn = document.getElementById("prevDayBtn");
   if (!btn) return;
 
-  const day = mobileCurrentDay.getDay();
+  // Determine the earliest allowed day (skip Sunday)
+  const earliest = new Date();
+  if (earliest.getDay() === 0) {
+    earliest.setDate(earliest.getDate() + 1); // move Sunday → Monday
+  }
 
-  // Disable on Monday (1) because Sunday (0) is not allowed
-  if (day === 1) {
+  // Compare earliest allowed day with current day
+  const isEarliest =
+    mobileCurrentDay.getFullYear() === earliest.getFullYear() &&
+    mobileCurrentDay.getMonth() === earliest.getMonth() &&
+    mobileCurrentDay.getDate() === earliest.getDate();
+
+  if (isEarliest) {
     btn.classList.add("disabled");
   } else {
     btn.classList.remove("disabled");
   }
 }
+
 
 
 // ---------------------------------------------------------
