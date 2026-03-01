@@ -216,20 +216,28 @@ body {
     </div>
 
     <!-- Legend -->
-    <div id="mobileLegend" style="
-      display:flex;
-      justify-content:space-around;
-      align-items:center;
-      padding:6px 0;
-      background:#f5f5f5;
-      font-size:14px;
-      border-bottom:1px solid #ddd;
-    ">
-      <span>🟣 Both rooms</span>
-      <span>🔵 Room 1</span>
-      <span>🟢 Room 2</span>
-      <span>⚫ Unavailable</span>
-    </div>
+<div id="mobileLegend" style="
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:6px 0;
+  background:#f5f5f5;
+  font-size:14px;
+  border-bottom:1px solid #ddd;
+">
+  <span class="legendItem">
+    <span class="legendColor both"></span> Both rooms
+  </span>
+  <span class="legendItem">
+    <span class="legendColor room1"></span> Room 1
+  </span>
+  <span class="legendItem">
+    <span class="legendColor room2"></span> Room 2
+  </span>
+  <span class="legendItem">
+    <span class="legendColor unavailable"></span> Unavailable
+  </span>
+</div>
 
   </div>
 
