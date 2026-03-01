@@ -289,7 +289,28 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
   document.getElementById("bookingOverlay").style.display = "none";
 });
 
-// Submit booking
+//-------------------------------------------------------
+// RESET BOOKING FORM
+//-------------------------------------------------------
+function resetBookingForm() {
+  document.getElementById("bfName").value = "";
+  document.getElementById("bfEmail").value = "";
+  document.getElementById("bfPhone").value = "";
+  document.getElementById("bfComments").value = "";
+  document.getElementById("bookingStatus").textContent = "";
+}
+
+//-------------------------------------------------------
+// CANCEL BOOKING
+//-------------------------------------------------------
+document.getElementById("bfCancel")?.addEventListener("click", () => {
+  document.getElementById("bookingOverlay").style.display = "none";
+  resetBookingForm();
+});
+
+//-------------------------------------------------------
+// SUBMIT BOOKING
+//-------------------------------------------------------
 document.getElementById("bfSubmit")?.addEventListener("click", async () => {
   const name = document.getElementById("bfName").value.trim();
   const email = document.getElementById("bfEmail").value.trim();
@@ -324,7 +345,7 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-    // Always treat as success because Apps Script returns opaque responses
+    // Treat as success (Apps Script always returns opaque responses)
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("successMessage").textContent =
       "Your booking has been submitted successfully! The calendar has been updated.";
@@ -333,102 +354,19 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
     await renderMobileSlots(); // refresh calendar
 
   } catch (err) {
-    // Do NOT show an error — Apps Script always triggers this even on success
+    // Silent fallback — do NOT show an error
     document.getElementById("bookingStatus").textContent = "Submitting…";
   }
 });
 
-
 //-------------------------------------------------------
-// RESET BOOKING FORM
+// SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
-function resetBookingForm() {
-  document.getElementById("bfName").value = "";
-  document.getElementById("bfEmail").value = "";
-  document.getElementById("bfPhone").value = "";
-  document.getElementById("bfComments").value = "";
-  document.getElementById("bookingStatus").textContent = "";
-}
-
-// Cancel booking
-document.getElementById("bfCancel")?.addEventListener("click", () => {
-  document.getElementById("bookingOverlay").style.display = "none";
-  resetBookingForm();
-});
-
-// Submit booking
-document.getElementById("bfSubmit")?.addEventListener("click", async () => {
-  const name = document.getElementById("bfName").value.trim();
-  const email = document.getElementById("bfEmail").value.trim();
-  const phone = document.getElementById("bfPhone").value.trim();
-  const comments = document.getElementById("bfComments").value.trim();
-
-  if (!name || !email || !phone) {
-    document.getElementById("bookingStatus").textContent =
-      "Please fill in all required fields.";
-    return;
-  }
-
-  document.getElementById("bookingStatus").textContent = "Submitting...";
-
-  const payload = {
-    name,
-    email,
-    phone,
-    comments,
-    room: window.selectedRoom,
-    start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString()
-  };
-
-  try {
-    await fetch(BOOKING_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    document.getElementById("bookingForm").style.display = "none";
-    document.getElementById("successMessage").textContent =
-      "Your booking has been submitted successfully! The calendar has been updated.";
-    document.getElementById("successBox").style.display = "block";
-
-    await renderMobileSlots();
-
-  } catch (err) {
-    // IMPORTANT: Apps Script always triggers this even on success
-    document.getElementById("bookingStatus").textContent = "Submitting…";
-  }
-});
-
-
-    document.getElementById("bookingForm").style.display = "none";
-    document.getElementById("successMessage").textContent =
-      "Your booking has been submitted successfully! The calendar has been updated.";
-    document.getElementById("successBox").style.display = "block";
-
-    await renderMobileSlots();
-
-  } catch (err) {
-    document.getElementById("bookingStatus").textContent =
-      "Error submitting booking. Please try again.";
-  }
-});
-
-// Success OK
 document.getElementById("successOk")?.addEventListener("click", () => {
   document.getElementById("bookingOverlay").style.display = "none";
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingForm").style.display = "block";
   resetBookingForm();
-});
-
-// Success OK
-document.getElementById("successOk")?.addEventListener("click", () => {
-  document.getElementById("bookingOverlay").style.display = "none";
-  document.getElementById("successBox").style.display = "none";
-  document.getElementById("bookingForm").style.display = "block";
 });
 
 
