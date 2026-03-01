@@ -213,12 +213,14 @@ body {
   font-weight: 600;
 }
 #bookingForm {
+  max-height: 80vh;        /* reduces total height so logo becomes visible */
+  overflow: hidden;        /* no scrollbars */
   display: flex;
   flex-direction: column;
-  max-height: 100vh;
-  overflow: hidden;
-  box-sizing: border-box;
+  justify-content: space-between;
+  padding-bottom: 24px;    /* nicer spacing under buttons */
 }
+
 
 #bookingForm .scroll-area {
   flex: 1;
