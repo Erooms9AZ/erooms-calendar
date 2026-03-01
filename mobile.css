@@ -295,7 +295,7 @@ DISABLE PREVIOUS DAY
   border: none;
 }
 /* Logo injected into booking overlay via pseudo-element */
-#bookingForm.booking-box::before {
+#bookingForm::before {
   content: "";
   display: block;
   height: 56px;
@@ -306,6 +306,7 @@ DISABLE PREVIOUS DAY
   background-position: center;
   background-size: contain;
 }
+
 
 
 /* Ensure success box fits comfortably on all iPhones */
