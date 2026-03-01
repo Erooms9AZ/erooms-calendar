@@ -245,6 +245,25 @@ body {
   overflow-y: auto;
   flex: 1;
 }
+#bookingForm label {
+  display: block;
+  margin-top: 12px;
+}
+
+#bookingForm input,
+#bookingForm textarea {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+#bookingForm h3 {
+  margin-bottom: 10px;
+}
+
+#bookingForm #bookingStatus {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
 
 /*----------------------------------------------
 BOOKING OVERLAY
