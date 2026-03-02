@@ -318,12 +318,22 @@ body {
 </div>
 
 
-  <div id="successBox" class="booking-box" style="display:none;">
-    <div id="successMessage"></div>
-    <br>
-    <button id="successOk">OK</button>
-  </div>
-</div><!-- end bookingOverlay -->
+const overlay = document.getElementById("bookingOverlay");
+const formBox = document.getElementById("bookingForm");
+const successBox = document.getElementById("successBox");
+const successMessage = document.getElementById("successMessage");
+
+// Make sure the overlay is visible
+overlay.style.display = "flex";
+
+// Hide the form, show the success box
+formBox.style.display = "none";
+
+successMessage.textContent =
+  "Your booking has been submitted successfully! The calendar has been updated.";
+
+successBox.style.display = "block";
+
 
 </div><!-- END mobileContainer -->
 
