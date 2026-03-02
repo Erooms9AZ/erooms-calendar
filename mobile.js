@@ -448,11 +448,9 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
    // ❗ Corrected success‑screen block
 document.getElementById("bookingForm").style.display = "none";
-
-document.getElementById("successMessage").textContent =
-  "Your booking has been submitted successfully! The calendar has been updated.";
-
 document.getElementById("successBox").style.display = "block";
+document.getElementById("bookingOverlay").style.display = "flex";
+
 
 
     await renderMobileSlots();
