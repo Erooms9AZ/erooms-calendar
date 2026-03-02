@@ -322,14 +322,21 @@ body {
 
 /* Success box */
 #successBox {
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 9999;
-  width: 90% !important;
+  width: 90%;
   max-width: 400px;
   font-size: 18px;
   padding: 20px;
   text-align: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
+
 
 
 /* -------------------------------------------------------
