@@ -255,30 +255,68 @@ body {
    <!-- Booking Overlay -->
 <div id="bookingOverlay" class="overlay" style="display:none;">
   <div id="bookingForm" class="booking-box">
+   <!-- FORM 1: Booking Details -->
+<div id="form1">
+
     <h3>Booking Summary</h3>
 
-<div class="scroll-area">
-  <div id="bookingSummary"></div>
-  <br>
+    <div id="bookingSummary"></div>
 
-  <label>Name*</label>
-  <input id="bfName" type="text" style="width:100%">
+    <div id="priceDisplay" 
+         style="font-size: 1.35em; font-weight: bold; margin: 10px 0;">
+        Price: £0.00 (Includes VAT)
+    </div>
 
-  <label>Email*</label>
-  <input id="bfEmail" type="email" style="width:100%">
+    <label>Name*</label>
+    <input type="text" id="custName" style="width:100%">
 
-  <label>Phone*</label>
-  <input id="bfPhone" type="text" style="width:100%">
+    <label>Email*</label>
+    <input type="email" id="custEmail" style="width:100%">
 
-  <label>Comments</label>
-  <textarea id="bfComments" style="width:100%"></textarea>
+    <label>Phone*</label>
+    <input type="tel" id="custPhone" style="width:100%">
 
-  <div id="bookingStatus" style="color:red;"></div>
+    <div id="bookingStatus" style="color:red;"></div>
+
+    <button id="nextBtn">Next</button>
+    <button id="cancelBtn">Cancel</button>
 </div>
 
-    <button id="bfSubmit">Submit</button>
-    <button id="bfCancel">Cancel</button>
-  </div>
+<!-- FORM 2: Equipment Requirements -->
+<div id="form2" style="display:none;">
+
+    <h3>Equipment Requirements</h3>
+
+    <div style="margin-bottom: 10px; font-weight: bold;">
+        Standard Setup (Included):
+    </div>
+    <div>
+        2 Mics<br>
+        2 Guitar Amps<br>
+        1 Bass Amp<br>
+        1 Drum Kit
+    </div>
+
+    <hr style="margin: 12px 0;">
+
+    <label>Extra Mics (number)</label>
+    <input type="number" id="extraMics" min="0" value="0" style="width:100%">
+
+    <label>Extra Guitar Amps (number)</label>
+    <input type="number" id="extraGuitarAmps" min="0" value="0" style="width:100%">
+
+    <label>Bringing own drum kit?</label>
+    <div>
+        <label><input type="radio" name="ownDrums" value="Yes"> Yes</label>
+        <label><input type="radio" name="ownDrums" value="No" checked> No</label>
+    </div>
+
+    <div id="bookingStatus" style="color:red;"></div>
+
+    <button id="submitBtn">Submit</button>
+    <button id="backBtn">Back</button>
+</div>
+
 
   <div id="successBox" class="booking-box" style="display:none;">
     <div id="successMessage"></div>
