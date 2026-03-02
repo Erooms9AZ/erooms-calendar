@@ -391,6 +391,7 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
   document.getElementById("bookingOverlay").style.display = "none";
   resetBookingForm();
 });
+
 // ---------------------------------------------------------
 //  FORM NAVIGATION (NEXT / BACK)
 // ---------------------------------------------------------
@@ -420,12 +421,10 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
   document.getElementById("bookingStatus2").textContent = "Submitting...";
 
-
   const extraMics = document.getElementById("extraMics").value;
   const extraGuitarAmps = document.getElementById("extraGuitarAmps").value;
   const drumsOption = document.querySelector("input[name='ownDrums']:checked");
-const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
-
+  const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
 
   const payload = {
     name,
@@ -449,26 +448,33 @@ const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
       body: JSON.stringify(payload)
     });
 
-   // ❗ Corrected success‑screen block
-document.getElementById("form2").style.display = "none";
-document.getElementById("bookingForm").style.display = "none";
-document.getElementById("bookingOverlay").style.display = "none";
-document.getElementById("successBox").style.display = "block";
+    // Set success message HERE (correct place)
+    document.getElementById("successMessage").textContent =
+      "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
+
+    // Show success box
+    document.getElementById("form2").style.display = "none";
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("bookingOverlay").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
 
   } catch (err) {
-    document.getElementById("bookingStatus").textContent = "Submitting…";
+    document.getElementById("bookingStatus2").textContent = "Submitting…";
   }
 });
 
 //-------------------------------------------------------
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
-document.getElementById("successOk")?.addEventListener("click", () => {
+document.getElementById("successOk")?.addEventListener("click", async () => {
   document.getElementById("bookingOverlay").style.display = "none";
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingForm").style.display = "block";
+
   resetBookingForm();
+  await renderMobileSlots();   // Refresh calendar AFTER OK
 });
+
 //-------------------------------------------------------
 // SWIPE TO CHANGE WEEK + SLIDE ANIMATION
 //-------------------------------------------------------
