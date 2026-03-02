@@ -446,11 +446,14 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-   document.getElementById("bookingOverlay").style.display = "none";
+   // ❗ Corrected success‑screen block
 document.getElementById("bookingForm").style.display = "none";
-    document.getElementById("successMessage").textContent =
-      "Your booking has been submitted successfully! The calendar has been updated.";
-    document.getElementById("successBox").style.display = "block";
+
+document.getElementById("successMessage").textContent =
+  "Your booking has been submitted successfully! The calendar has been updated.";
+
+document.getElementById("successBox").style.display = "block";
+
 
     await renderMobileSlots();
 
