@@ -214,6 +214,19 @@ body {
 /* -------------------------------------------------------
    BOOKING FORM — CLEAN, SIMPLE, FIXED
 -------------------------------------------------------- */
+#bookingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+}
+
+#successBox {
+  position: relative;
+  z-index: 9999;
+}
 
 #bookingForm {
   max-height: 90vh;       /* fits all phones */
@@ -309,12 +322,15 @@ body {
 
 /* Success box */
 #successBox {
+  position: relative;
+  z-index: 9999;
   width: 90% !important;
   max-width: 400px;
   font-size: 18px;
   padding: 20px;
   text-align: center;
 }
+
 
 /* -------------------------------------------------------
    DISABLE PREVIOUS DAY
