@@ -229,8 +229,8 @@ body {
 }
 
 #bookingForm {
-  max-height: 90vh;       /* fits all phones */
-  overflow-y: auto;       /* scroll only if absolutely needed */
+  max-height: 90vh;
+  overflow-y: auto;
   box-sizing: border-box;
   padding: 20px;
 }
@@ -277,7 +277,7 @@ body {
   display: block;
 }
 
-/* Buttons */
+/* Buttons (old bfSubmit/bfCancel) */
 #bfSubmit,
 #bfCancel {
   font-size: 18px;
@@ -298,7 +298,8 @@ body {
   color: white;
   border: none;
 }
-/* Tighter vertical spacing for booking form fields */
+
+/* Tighter vertical spacing */
 #bookingForm label {
   margin-top: 2px;
   margin-bottom: 1px;
@@ -307,7 +308,7 @@ body {
 #bookingForm input,
 #bookingForm textarea {
   margin-bottom: 4px;
-  padding: 8px;   /* was 10px */
+  padding: 8px;
 }
 
 #bookingForm h3 {
@@ -318,7 +319,6 @@ body {
   margin-top: 2px;
   margin-bottom: 4px;
 }
-
 
 /* Success box */
 #successBox {
@@ -337,8 +337,6 @@ body {
   box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-
-
 /* -------------------------------------------------------
    DISABLE PREVIOUS DAY
 -------------------------------------------------------- */
@@ -347,11 +345,12 @@ body {
   pointer-events: none;
   filter: grayscale(100%);
 }
-/* -------------------------------------------------------
-   MOBILE BUTTONS — LARGE, TOUCH‑FRIENDLY
--------------------------------------------------------- */
 
-button {
+/* -------------------------------------------------------
+   LARGE MOBILE BUTTONS (BOOKING ONLY)
+-------------------------------------------------------- */
+#bookingOverlay button,
+#successBox button {
   width: 100%;
   padding: 16px;
   font-size: 18px;
@@ -362,7 +361,7 @@ button {
   box-sizing: border-box;
 }
 
-/* Primary action buttons */
+/* Button colours */
 #submitBtn,
 #nextBtn,
 #successOk {
@@ -370,7 +369,6 @@ button {
   color: white;
 }
 
-/* Secondary / neutral buttons */
 #backBtn {
   background: #777;
   color: white;
@@ -380,9 +378,4 @@ button {
 #bfCancel {
   background: #444;
   color: white;
-}
-
-/* Hover states (desktop only, harmless on mobile) */
-button:hover {
-  opacity: 0.85;
 }
