@@ -190,7 +190,49 @@ function showMobileRoomSelector(rooms, slotTime) {
   document.getElementById("mobileRoomCancel").onclick = () =>
     (selector.style.display = "none");
 }
+//----------------------------------------------------------
+// PRICE CALCULATION
+//----------------------------------------------------------
+function calculatePrice(startDate, endDate) {
+    const rateBefore6 = 7.50;
+    const rateAfter6 = 15.00;
+    const saturdayRate = 15.00;
 
+    const day = startDate.getDay(); // 0=Sun, 6=Sat
+    const sixPM = new Date(startDate);
+    sixPM.setHours(18, 0, 0, 0);
+
+    // Saturday pricing (12:00–22:00)
+    if (day === 6) {
+        const durationHours = (endDate - startDate) / (1000 * 60 * 60);
+        return durationHours * saturdayRate;
+    }
+
+    // Weekday pricing
+    let before6 = 0;
+    let after6 = 0;
+
+    if (endDate <= sixPM) {
+        before6 = (endDate - startDate) / (1000 * 60 * 60);
+    } else if (startDate >= sixPM) {
+        after6 = (endDate - startDate) / (1000 * 60 * 60);
+    } else {
+        before6 = (sixPM - startDate) / (1000 * 60 * 60);
+        after6 = (endDate - sixPM) / (1000 * 60 * 60);
+    }
+
+    return (before6 * rateBefore6) + (after6 * rateAfter6);
+}
+
+function updatePriceDisplay(startDate, endDate) {
+    const price = calculatePrice(startDate, endDate);
+    const priceElement = document.getElementById("priceDisplay");
+    priceElement.textContent = `Price: £${price.toFixed(2)} (Includes VAT)`;
+}
+
+// ---------------------------------------------------------
+//  BOOKING OVERLAY
+// ---------------------------------------------------------
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
 // ---------------------------------------------------------
@@ -209,17 +251,20 @@ function openMobileBooking(room, slotTime) {
     year: "numeric"
   });
 
- const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(
-  2,
-  "0"
-)}:00 to ${String(end.getHours()).padStart(2, "0")}:00
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(
+    2,
+    "0"
+  )}:00 to ${String(end.getHours()).padStart(2, "0")}:00
 (Room: ${room === "room1" ? "Room 1" : room === "room2" ? "Room 2" : "Both"})`;
 
   document.getElementById("bookingSummary").textContent = summary;
 
-  // SHOW OVERLAY
+  // ⭐ NEW LINE — updates the price under the summary
+  updatePriceDisplay(start, end);
+
   document.getElementById("bookingOverlay").style.display = "flex";
 }
+
 
 // ---------------------------------------------------------
 //  DURATION BUTTONS
