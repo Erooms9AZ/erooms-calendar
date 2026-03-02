@@ -453,11 +453,6 @@ document.getElementById("bookingForm").style.display = "none";
 document.getElementById("bookingOverlay").style.display = "none";
 document.getElementById("successBox").style.display = "block";
 
-
-
-
-    await renderMobileSlots();
-
   } catch (err) {
     document.getElementById("bookingStatus").textContent = "Submitting…";
   }
