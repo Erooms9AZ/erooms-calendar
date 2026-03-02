@@ -190,45 +190,60 @@ function showMobileRoomSelector(rooms, slotTime) {
   document.getElementById("mobileRoomCancel").onclick = () =>
     (selector.style.display = "none");
 }
-//----------------------------------------------------------
-// PRICE CALCULATION
-//----------------------------------------------------------
-function calculatePrice(startDate, endDate) {
-    const rateBefore6 = 7.50;
-    const rateAfter6 = 15.00;
-    const saturdayRate = 15.00;
+// -----------------------------
+// PRICE CALCULATION ENGINE
+// -----------------------------
+function updatePriceBox() {
+    const paSystem = document.getElementById("paSystem").value;
+    const guitarAmp = parseInt(document.getElementById("guitarAmp").value, 10);
+    const bassAmp = document.getElementById("bassAmp").value;
+    const drumKit = document.getElementById("drumKit").value;
 
-    const day = startDate.getDay(); // 0=Sun, 6=Sat
-    const sixPM = new Date(startDate);
-    sixPM.setHours(18, 0, 0, 0);
+    // Determine if ANY equipment is selected
+    const anyEquipment =
+        paSystem === "Yes" ||
+        bassAmp === "Yes" ||
+        drumKit === "Yes" ||
+        guitarAmp > 0;
 
-    // Saturday pricing (12:00–22:00)
-    if (day === 6) {
-        const durationHours = (endDate - startDate) / (1000 * 60 * 60);
-        return durationHours * saturdayRate;
-    }
+    // Determine BEFORE or AFTER 18:00
+    const startHour = window.selectedStart.getHours();
+    const after18 = startHour >= 18;
 
-    // Weekday pricing
-    let before6 = 0;
-    let after6 = 0;
+    // Duration in hours
+    const durationHours = (window.selectedEnd - window.selectedStart) / (1000 * 60 * 60);
 
-    if (endDate <= sixPM) {
-        before6 = (endDate - startDate) / (1000 * 60 * 60);
-    } else if (startDate >= sixPM) {
-        after6 = (endDate - startDate) / (1000 * 60 * 60);
-    } else {
-        before6 = (sixPM - startDate) / (1000 * 60 * 60);
-        after6 = (endDate - sixPM) / (1000 * 60 * 60);
-    }
+    // Room hire rate
+    const roomRate = after18 ? 12 : 6;
 
-    return (before6 * rateBefore6) + (after6 * rateAfter6);
+    // Equipment hire rate
+    const equipmentRate = anyEquipment
+        ? (after18 ? 3 : 1.5)
+        : 0;
+
+    // Calculations
+    const roomHire = roomRate * durationHours;
+    const equipmentHire = equipmentRate * durationHours;
+    const total = roomHire + equipmentHire;
+
+    // Update price box
+    document.querySelector("#priceBox div:nth-child(1)").textContent =
+        `Room Hire: £${roomHire.toFixed(2)}`;
+    document.querySelector("#priceBox div:nth-child(2)").textContent =
+        `Equipment Hire: £${equipmentHire.toFixed(2)}`;
+    document.querySelector("#priceBox div:nth-child(3)").innerHTML =
+        `<strong>Total: £${total.toFixed(2)}</strong>`;
+
+    // Store for email payload
+    window.calculatedRoomHire = roomHire;
+    window.calculatedEquipmentHire = equipmentHire;
+    window.calculatedTotal = total;
 }
 
-function updatePriceDisplay(startDate, endDate) {
-    const price = calculatePrice(startDate, endDate);
-    const priceElement = document.getElementById("priceDisplay");
-    priceElement.textContent = `Price: £${price.toFixed(2)} (Includes VAT)`;
-}
+// Attach listeners to update price live
+["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updatePriceBox);
+});
 
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
