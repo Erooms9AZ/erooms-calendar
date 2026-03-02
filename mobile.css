@@ -347,3 +347,42 @@ body {
   pointer-events: none;
   filter: grayscale(100%);
 }
+/* -------------------------------------------------------
+   MOBILE BUTTONS — LARGE, TOUCH‑FRIENDLY
+-------------------------------------------------------- */
+
+button {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+/* Primary action buttons */
+#submitBtn,
+#nextBtn,
+#successOk {
+  background: #673ab7;
+  color: white;
+}
+
+/* Secondary / neutral buttons */
+#backBtn {
+  background: #777;
+  color: white;
+}
+
+#cancelBtn,
+#bfCancel {
+  background: #444;
+  color: white;
+}
+
+/* Hover states (desktop only, harmless on mobile) */
+button:hover {
+  opacity: 0.85;
+}
