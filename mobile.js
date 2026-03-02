@@ -449,6 +449,7 @@ const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
     });
 
    // ❗ Corrected success‑screen block
+document.getElementById("form2").style.display = "none";
 document.getElementById("bookingForm").style.display = "none";
 document.getElementById("bookingOverlay").style.display = "none";
 document.getElementById("successBox").style.display = "block";
