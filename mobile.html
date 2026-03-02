@@ -283,41 +283,60 @@ body {
         <button id="cancelBtn">Cancel</button>
     </div>
 
-    <!-- FORM 2: Equipment Requirements -->
-    <div id="form2" style="display:none;">
+   <!-- FORM 2: Equipment Requirements -->
+<div id="form2" style="display:none;">
 
-        <h3>Equipment Requirements</h3>
+    <h3>Equipment Requirements</h3>
 
-        <div style="margin-bottom: 10px; font-weight: bold;">
-            Standard Setup (Included):
-        </div>
-        <div>
-            2 Mics<br>
-            2 Guitar Amps<br>
-            1 Bass Amp<br>
-            1 Drum Kit
-        </div>
+    <!-- NEW EQUIPMENT OPTIONS -->
 
-        <hr style="margin: 12px 0;">
+    <label>PA System (Includes 2 mics + stands)</label>
+    <select id="paSystem" style="width:100%; padding:10px; font-size:16px;">
+        <option value="Yes" selected>Yes</option>
+        <option value="No">No</option>
+    </select>
 
-        <label>Extra Mics (number)</label>
-        <input type="number" id="extraMics" min="0" value="0" style="width:100%">
+    <label style="margin-top:10px;">Guitar Amp (Max 2)</label>
+    <select id="guitarAmp" style="width:100%; padding:10px; font-size:16px;">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
 
-        <label>Extra Guitar Amps (number)</label>
-        <input type="number" id="extraGuitarAmps" min="0" value="0" style="width:100%">
+    <label style="margin-top:10px;">Bass Amp</label>
+    <select id="bassAmp" style="width:100%; padding:10px; font-size:16px;">
+        <option value="Yes" selected>Yes</option>
+        <option value="No">No</option>
+    </select>
 
-        <label>Bringing own drum kit?</label>
-        <div>
-            <label><input type="radio" name="ownDrums" value="Yes"> Yes</label>
-            <label><input type="radio" name="ownDrums" value="No" checked> No</label>
-        </div>
+    <label style="margin-top:10px;">Drum Kit</label>
+    <select id="drumKit" style="width:100%; padding:10px; font-size:16px;">
+        <option value="Yes" selected>Yes</option>
+        <option value="No">No</option>
+    </select>
 
-        <div id="bookingStatus2" style="color:red;"></div>
-
-
-        <button id="submitBtn">Submit</button>
-        <button id="backBtn">Back</button>
+    <!-- PRICE BOX (directly under equipment fields) -->
+    <div id="priceBox" style="
+        background:white;
+        padding:15px;
+        margin-top:15px;
+        margin-bottom:15px;
+        border-radius:8px;
+        box-shadow:0 0 10px rgba(0,0,0,0.15);
+        font-size:18px;
+        line-height:1.4;
+    ">
+        <div>Room Hire: £0.00</div>
+        <div>Equipment Hire: £0.00</div>
+        <div><strong>Total: £0.00</strong></div>
     </div>
+
+    <div id="bookingStatus2" style="color:red;"></div>
+
+    <button id="submitBtn">Submit</button>
+    <button id="backBtn">Back</button>
+</div>
+
 
   </div>
 </div><!-- end bookingOverlay -->
