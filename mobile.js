@@ -450,8 +450,9 @@ const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
 
    // ❗ Corrected success‑screen block
 document.getElementById("bookingForm").style.display = "none";
+document.getElementById("bookingOverlay").style.display = "none";
 document.getElementById("successBox").style.display = "block";
-document.getElementById("bookingOverlay").style.display = "flex";
+
 
 
 
