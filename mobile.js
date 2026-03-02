@@ -422,7 +422,9 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
   const extraMics = document.getElementById("extraMics").value;
   const extraGuitarAmps = document.getElementById("extraGuitarAmps").value;
-  const bringingOwnDrums = document.querySelector("input[name='ownDrums']:checked").value;
+  const drumsOption = document.querySelector("input[name='ownDrums']:checked");
+const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
+
 
   const payload = {
     name,
