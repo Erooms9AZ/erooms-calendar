@@ -233,9 +233,6 @@ function updatePriceDisplay(startDate, endDate) {
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
 // ---------------------------------------------------------
-// ---------------------------------------------------------
-//  BOOKING OVERLAY
-// ---------------------------------------------------------
 function openMobileBooking(room, slotTime) {
   const start = new Date(slotTime);
   const end = new Date(start.getTime() + selectedDuration * 60 * 60 * 1000);
@@ -264,6 +261,12 @@ function openMobileBooking(room, slotTime) {
 
   document.getElementById("bookingOverlay").style.display = "flex";
 }
+// ---------------------------------------------------------
+//  CANCEL BOOKING (FORM 1)
+// ---------------------------------------------------------
+document.getElementById("cancelBtn")?.addEventListener("click", () => {
+  document.getElementById("bookingOverlay").style.display = "none";
+});
 
 
 // ---------------------------------------------------------
