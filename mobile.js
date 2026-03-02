@@ -405,13 +405,12 @@ document.getElementById("backBtn")?.addEventListener("click", () => {
 });
 
 //-------------------------------------------------------
-// SUBMIT BOOKING
+// SUBMIT BOOKING (FORM 2)
 //-------------------------------------------------------
-document.getElementById("bfSubmit")?.addEventListener("click", async () => {
-  const name = document.getElementById("bfName").value.trim();
-  const email = document.getElementById("bfEmail").value.trim();
-  const phone = document.getElementById("bfPhone").value.trim();
-  const comments = document.getElementById("bfComments").value.trim();
+document.getElementById("submitBtn")?.addEventListener("click", async () => {
+  const name = document.getElementById("custName").value.trim();
+  const email = document.getElementById("custEmail").value.trim();
+  const phone = document.getElementById("custPhone").value.trim();
 
   if (!name || !email || !phone) {
     document.getElementById("bookingStatus").textContent =
@@ -421,14 +420,20 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
 
   document.getElementById("bookingStatus").textContent = "Submitting...";
 
+  const extraMics = document.getElementById("extraMics").value;
+  const extraGuitarAmps = document.getElementById("extraGuitarAmps").value;
+  const bringingOwnDrums = document.querySelector("input[name='ownDrums']:checked").value;
+
   const payload = {
     name,
     email,
     phone,
-    comments,
     room: window.selectedRoom,
     start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString()
+    end: window.selectedEnd.toISOString(),
+    extraMics,
+    extraGuitarAmps,
+    bringingOwnDrums
   };
 
   const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
@@ -441,16 +446,14 @@ document.getElementById("bfSubmit")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-    // Treat as success (Apps Script always returns opaque responses)
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("successMessage").textContent =
       "Your booking has been submitted successfully! The calendar has been updated.";
     document.getElementById("successBox").style.display = "block";
 
-    await renderMobileSlots(); // refresh calendar
+    await renderMobileSlots();
 
   } catch (err) {
-    // Silent fallback — do NOT show an error
     document.getElementById("bookingStatus").textContent = "Submitting…";
   }
 });
