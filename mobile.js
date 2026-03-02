@@ -421,22 +421,32 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
   document.getElementById("bookingStatus2").textContent = "Submitting...";
 
-  const extraMics = document.getElementById("extraMics").value;
-  const extraGuitarAmps = document.getElementById("extraGuitarAmps").value;
-  const drumsOption = document.querySelector("input[name='ownDrums']:checked");
-  const bringingOwnDrums = drumsOption ? drumsOption.value : "No";
+const paSystem = document.getElementById("paSystem").value;
+const guitarAmp = document.getElementById("guitarAmp").value;
+const bassAmp = document.getElementById("bassAmp").value;
+const drumKit = document.getElementById("drumKit").value;
+
 
   const payload = {
-    name,
-    email,
-    phone,
-    room: window.selectedRoom,
-    start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString(),
-    extraMics,
-    extraGuitarAmps,
-    bringingOwnDrums
-  };
+  name,
+  email,
+  phone,
+  room: window.selectedRoom,
+  start: window.selectedStart.toISOString(),
+  end: window.selectedEnd.toISOString(),
+
+  // NEW EQUIPMENT FIELDS
+  paSystem,
+  guitarAmp,
+  bassAmp,
+  drumKit,
+
+  // PRICING (we will add these in the next step)
+  // roomHire: ...,
+  // equipmentHire: ...,
+  // totalPrice: ...
+};
+
 
   const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
 
