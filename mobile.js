@@ -418,7 +418,8 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
     return;
   }
 
-  document.getElementById("bookingStatus").textContent = "Submitting...";
+  document.getElementById("bookingStatus2").textContent = "Submitting...";
+
 
   const extraMics = document.getElementById("extraMics").value;
   const extraGuitarAmps = document.getElementById("extraGuitarAmps").value;
