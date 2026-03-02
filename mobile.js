@@ -391,6 +391,18 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
   document.getElementById("bookingOverlay").style.display = "none";
   resetBookingForm();
 });
+// ---------------------------------------------------------
+//  FORM NAVIGATION (NEXT / BACK)
+// ---------------------------------------------------------
+document.getElementById("nextBtn")?.addEventListener("click", () => {
+  document.getElementById("form1").style.display = "none";
+  document.getElementById("form2").style.display = "block";
+});
+
+document.getElementById("backBtn")?.addEventListener("click", () => {
+  document.getElementById("form2").style.display = "none";
+  document.getElementById("form1").style.display = "block";
+});
 
 //-------------------------------------------------------
 // SUBMIT BOOKING
