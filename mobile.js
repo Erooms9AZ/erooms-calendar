@@ -446,7 +446,8 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
-    document.getElementById("bookingForm").style.display = "none";
+   document.getElementById("bookingOverlay").style.display = "none";
+document.getElementById("bookingForm").style.display = "none";
     document.getElementById("successMessage").textContent =
       "Your booking has been submitted successfully! The calendar has been updated.";
     document.getElementById("successBox").style.display = "block";
