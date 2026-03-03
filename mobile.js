@@ -504,11 +504,12 @@ document.getElementById("successOk")?.addEventListener("click", async () => {
 
   resetBookingForm();
 
-  // Wait for overlay to fully disappear and calendar to become visible
-  await new Promise(resolve => setTimeout(resolve, 50));
-
-  await renderMobileSlots();   // Now the refresh works
+  // Refresh calendar EXACTLY the same way Next/Prev does
+  await renderMobileSlots();
+  updateDayLabel();
+  updatePrevButtonState();
 });
+
 
 
 //-------------------------------------------------------
