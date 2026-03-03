@@ -227,19 +227,21 @@ function updatePriceBox() {
     const equipmentHire = equipmentRate * durationHours;
     const total = roomHire + equipmentHire;
 
-   // Update price box
+  // Update price box
 document.querySelector("#priceBox div:nth-child(1)").textContent =
     `Room Hire: £${roomHire.toFixed(2)}`;
 
 document.querySelector("#priceBox div:nth-child(2)").textContent =
     `Equipment Hire: £${equipmentHire.toFixed(2)}`;
 
-// FIX: keep calendar working — no innerHTML, no layout changes
-const totalLine = equipmentHire > 0
-  ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
-  : `Total: £${total.toFixed(2)} (Room Hire Only)`;
+// SAFE: keep innerHTML so calendar continues loading
+const totalLine =
+    equipmentHire > 0
+        ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
+        : `Total: £${total.toFixed(2)} (Room Hire Only)`;
 
-document.querySelector("#priceBox div:nth-child(3)").textContent = totalLine;
+document.querySelector("#priceBox div:nth-child(3)").innerHTML =
+    `<strong>${totalLine}</strong>`;
 
 // Store for email payload
 window.calculatedRoomHire = roomHire;
