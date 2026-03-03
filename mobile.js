@@ -505,15 +505,15 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  // Close overlay + success box
-  document.getElementById("bookingOverlay").style.display = "none";
+  // Close success + overlay
   document.getElementById("successBox").style.display = "none";
-  document.getElementById("bookingForm").style.display = "block";
+  document.getElementById("bookingOverlay").style.display = "none";
 
-  // Wait for DOM to update so elements exist again
-  await new Promise(resolve => setTimeout(resolve, 50));
+  // Make sure Form 1 is visible again
+  document.getElementById("form1").style.display = "block";
+  document.getElementById("form2").style.display = "none";
 
-  // Now safe to reset the form
+  // Now the fields exist — safe to reset
   resetBookingForm();
 
   // Refresh calendar
