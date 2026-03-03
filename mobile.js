@@ -244,8 +244,6 @@ function updatePriceBox() {
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
     document.getElementById(id).addEventListener("change", updatePriceBox);
 });
-// initialise price once with current defaults
-updatePriceBox();
 
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
