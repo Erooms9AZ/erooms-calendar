@@ -424,61 +424,51 @@ document.getElementById("backBtn")?.addEventListener("click", () => {
 // SUBMIT BOOKING (FORM 2)
 //-------------------------------------------------------
 document.getElementById("submitBtn")?.addEventListener("click", async () => {
-  const name = document.getElementById("custName").value.trim();
-  const email = document.getElementById("custEmail").value.trim();
-  const phone = document.getElementById("custPhone").value.trim();
-
-  if (!name || !email || !phone) {
-    document.getElementById("bookingStatus").textContent =
-      "Please fill in all required fields.";
-    return;
-  }
-
-  document.getElementById("bookingStatus2").textContent = "Submitting...";
-
-  const paSystem = document.getElementById("paSystem").value;
-  const guitarAmp = document.getElementById("guitarAmp").value;
-  const bassAmp = document.getElementById("bassAmp").value;
-  const drumKit = document.getElementById("drumKit").value;
-
-  // -----------------------------------------
-  // STEP 4A — Ensure price has been calculated
-  // -----------------------------------------
-  if (typeof window.calculatedTotal === "undefined") {
-    document.getElementById("bookingStatus2").textContent =
-      "Please confirm your equipment choices so the price can be calculated.";
-    return;
-  }
-
-  // -----------------------------------------
-  // STEP 4B — Add pricing into the payload
-  // -----------------------------------------
-  const payload = {
-    name,
-    email,
-    phone,
-    room: window.selectedRoom,
-    start: window.selectedStart.toISOString(),
-    end: window.selectedEnd.toISOString(),
-
-    // NEW EQUIPMENT FIELDS
-    paSystem,
-    guitarAmp,
-    bassAmp,
-    drumKit,
-
-    // PRICING FIELDS (email only)
-    roomHire: window.calculatedRoomHire,
-    equipmentHire: window.calculatedEquipmentHire,
-    totalPrice: window.calculatedTotal
-  };
-});
-
-
-  const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
-
-  async function sendBooking() {
   try {
+    const name = document.getElementById("custName").value.trim();
+    const email = document.getElementById("custEmail").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+
+    if (!name || !email || !phone) {
+      document.getElementById("bookingStatus").textContent =
+        "Please fill in all required fields.";
+      return;
+    }
+
+    document.getElementById("bookingStatus2").textContent = "Submitting...";
+
+    const paSystem = document.getElementById("paSystem").value;
+    const guitarAmp = document.getElementById("guitarAmp").value;
+    const bassAmp = document.getElementById("bassAmp").value;
+    const drumKit = document.getElementById("drumKit").value;
+
+    if (typeof window.calculatedTotal === "undefined") {
+      document.getElementById("bookingStatus2").textContent =
+        "Please confirm your equipment choices so the price can be calculated.";
+      return;
+    }
+
+    const payload = {
+      name,
+      email,
+      phone,
+      room: window.selectedRoom,
+      start: window.selectedStart.toISOString(),
+      end: window.selectedEnd.toISOString(),
+
+      paSystem,
+      guitarAmp,
+      bassAmp,
+      drumKit,
+
+      roomHire: window.calculatedRoomHire,
+      equipmentHire: window.calculatedEquipmentHire,
+      totalPrice: window.calculatedTotal
+    };
+
+    const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
+
+    // SEND BOOKING
     await fetch(BOOKING_URL, {
       method: "POST",
       mode: "no-cors",
@@ -486,32 +476,22 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
 
+    // SUCCESS MESSAGE
     document.getElementById("successMessage").textContent =
       "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
 
-  } catch (err) {
-    document.getElementById("successMessage").textContent =
-      "There was an error submitting your booking. Please try again.";
-  }
-}
-
-sendBooking();
-
-
-    // Set success message HERE (correct place)
-    document.getElementById("successMessage").textContent =
-      "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
-
-    // Show success box
+    // SHOW SUCCESS BOX
     document.getElementById("form2").style.display = "none";
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("bookingOverlay").style.display = "none";
     document.getElementById("successBox").style.display = "block";
 
   } catch (err) {
-    document.getElementById("bookingStatus2").textContent = "Submitting…";
+    document.getElementById("bookingStatus2").textContent =
+      "There was an error submitting your booking. Please try again.";
   }
 });
+
 
 //-------------------------------------------------------
 // SUCCESS OK (ONLY ONE HANDLER)
