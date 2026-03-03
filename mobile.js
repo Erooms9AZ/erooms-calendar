@@ -234,13 +234,18 @@ document.querySelector("#priceBox div:nth-child(1)").textContent =
 document.querySelector("#priceBox div:nth-child(2)").textContent =
     `Equipment Hire: £${equipmentHire.toFixed(2)}`;
 
-// Conditional label for total
-let totalLabel = equipmentHire > 0
+// FIX: keep calendar working — no innerHTML, no layout changes
+const totalLine = equipmentHire > 0
   ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
   : `Total: £${total.toFixed(2)} (Room Hire Only)`;
 
-document.querySelector("#priceBox div:nth-child(3)").innerHTML =
-    `<strong>${totalLabel}</strong>`;
+document.querySelector("#priceBox div:nth-child(3)").textContent = totalLine;
+
+// Store for email payload
+window.calculatedRoomHire = roomHire;
+window.calculatedEquipmentHire = equipmentHire;
+window.calculatedTotal = total;
+
 
 // Store for email payload
 window.calculatedRoomHire = roomHire;
