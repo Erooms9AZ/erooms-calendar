@@ -494,8 +494,6 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("bookingOverlay").style.display = "none";
     document.getElementById("successBox").style.display = "block";
-await fetchEventsForDay(mobileCurrentDay);
-await renderMobileSlots();
 
   } catch (err) {
     document.getElementById("bookingStatus2").textContent =
