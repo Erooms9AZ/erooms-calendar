@@ -506,13 +506,16 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 // SHOW SUCCESS BOX
-document.getElementById("form2").style.display = "none";
-document.getElementById("bookingForm").style.display = "none";
-document.getElementById("bookingOverlay").style.display = "none";
-document.getElementById("successBox").style.display = "block";
+document.getElementById("successOk")?.addEventListener("click", () => {
+  document.getElementById("successBox").style.display = "none";
+  document.getElementById("bookingOverlay").style.display = "none";
 
-await fetchEventsForDay(mobileCurrentDay);
-await renderMobileSlots();
+  document.getElementById("bookingForm").style.display = "block";
+  document.getElementById("form1").style.display = "block";
+  document.getElementById("form2").style.display = "none";
+
+  resetBookingForm();
+});
 
 
 
