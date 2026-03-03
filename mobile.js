@@ -436,31 +436,43 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
   document.getElementById("bookingStatus2").textContent = "Submitting...";
 
-const paSystem = document.getElementById("paSystem").value;
-const guitarAmp = document.getElementById("guitarAmp").value;
-const bassAmp = document.getElementById("bassAmp").value;
-const drumKit = document.getElementById("drumKit").value;
+  const paSystem = document.getElementById("paSystem").value;
+  const guitarAmp = document.getElementById("guitarAmp").value;
+  const bassAmp = document.getElementById("bassAmp").value;
+  const drumKit = document.getElementById("drumKit").value;
 
+  // -----------------------------------------
+  // STEP 4A — Ensure price has been calculated
+  // -----------------------------------------
+  if (typeof window.calculatedTotal === "undefined") {
+    document.getElementById("bookingStatus2").textContent =
+      "Please confirm your equipment choices so the price can be calculated.";
+    return;
+  }
 
+  // -----------------------------------------
+  // STEP 4B — Add pricing into the payload
+  // -----------------------------------------
   const payload = {
-  name,
-  email,
-  phone,
-  room: window.selectedRoom,
-  start: window.selectedStart.toISOString(),
-  end: window.selectedEnd.toISOString(),
+    name,
+    email,
+    phone,
+    room: window.selectedRoom,
+    start: window.selectedStart.toISOString(),
+    end: window.selectedEnd.toISOString(),
 
-  // NEW EQUIPMENT FIELDS
-  paSystem,
-  guitarAmp,
-  bassAmp,
-  drumKit,
+    // NEW EQUIPMENT FIELDS
+    paSystem,
+    guitarAmp,
+    bassAmp,
+    drumKit,
 
-  // PRICING (we will add these in the next step)
-  // roomHire: ...,
-  // equipmentHire: ...,
-  // totalPrice: ...
-};
+    // PRICING FIELDS (email only)
+    roomHire: window.calculatedRoomHire,
+    equipmentHire: window.calculatedEquipmentHire,
+    totalPrice: window.calculatedTotal
+  };
+});
 
 
   const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
