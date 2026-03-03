@@ -27,7 +27,6 @@ body {
   background: #673ab7;
   color: white;
 
-  /* full‑width look inside padded body */
   margin: 0 -10px 15px;
   border-radius: 0 0 8px 8px;
 }
@@ -179,7 +178,7 @@ body {
 .legendColor.room1 { background-color: #4caf50; }
 .legendColor.room2 { background-color: #2196f3; }
 
-  #mobileStickyHeader {
+#mobileStickyHeader {
   position: sticky;
   top: 0;
   z-index: 999;
@@ -188,75 +187,89 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
+/* NEW — Thumb‑friendly equipment toggles */
+.equip-toggle {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.equip-toggle button {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 2px solid #444;
+  background: #f2f2f2;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.equip-toggle button.active {
+  background: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
 </style>
 </head>
 
 <body>
 
-  
-  <!-- Desktop placeholders (prevent calendar-v3.js from crashing on mobile) -->
-
 <div id="mobileContainer">
 
-  <!-- Unified Sticky Header -->
   <div id="mobileStickyHeader">
 
-    <!-- Day / Date Bar -->
     <div id="mobileHeader">
       <button id="prevDayBtn">←</button>
       <div id="dayLabel">Loading…</div>
       <button id="nextDayBtn">→</button>
     </div>
 
-    <!-- Duration Buttons -->
     <div id="durationButtons">
       <button data-hours="1" class="active">1 Hour</button>
       <button data-hours="2">2 Hours</button>
       <button data-hours="3">3 Hours</button>
     </div>
 
-    <!-- Legend -->
-<div id="mobileLegend" style="
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  padding:6px 0;
-  background:#f5f5f5;
-  font-size:14px;
-  border-bottom:1px solid #ddd;
-">
-  <span class="legendItem">
-    <span class="legendColor both"></span> Both rooms
-  </span>
-  <span class="legendItem">
-    <span class="legendColor room1"></span> Room 1
-  </span>
-  <span class="legendItem">
-    <span class="legendColor room2"></span> Room 2
-  </span>
-  <span class="legendItem">
-    <span class="legendColor unavailable"></span> Unavailable
-  </span>
-</div>
+    <div id="mobileLegend" style="
+      display:flex;
+      justify-content:space-around;
+      align-items:center;
+      padding:6px 0;
+      background:#f5f5f5;
+      font-size:14px;
+      border-bottom:1px solid #ddd;
+    ">
+      <span class="legendItem">
+        <span class="legendColor both"></span> Both rooms
+      </span>
+      <span class="legendItem">
+        <span class="legendColor room1"></span> Room 1
+      </span>
+      <span class="legendItem">
+        <span class="legendColor room2"></span> Room 2
+      </span>
+      <span class="legendItem">
+        <span class="legendColor unavailable"></span> Unavailable
+      </span>
+    </div>
 
   </div>
 
-  <!-- Room Selector -->
   <div id="mobileRoomSelector" style="display:none;">
     <button class="room-btn" data-room="room1">Room 1</button>
     <button class="room-btn" data-room="room2">Room 2</button>
     <button id="mobileRoomCancel">Cancel</button>
   </div>
 
-  <!-- Slot List -->
   <div id="slotList"></div>
 </div>
 
-  <!-- Booking Overlay -->
 <div id="bookingOverlay" class="overlay" style="display:none;">
   <div id="bookingForm" class="booking-box">
 
-    <!-- FORM 1: Booking Details -->
+    <!-- FORM 1 -->
     <div id="form1">
 
         <h3>Booking Summary</h3>
@@ -278,35 +291,39 @@ body {
         <button id="cancelBtn">Cancel</button>
     </div>
 
-    <!-- FORM 2: Equipment Requirements -->
+    <!-- FORM 2 -->
 <div id="form2" style="display:none;">
 
     <h3>Equipment Requirements</h3>
 
     <label>PA System (Includes 2 mics + stands)</label>
-    <select id="paSystem" style="width:100%; padding:10px; font-size:16px;">
-        <option value="1" selected>Yes</option>
-        <option value="0">No</option>
-    </select>
+    <div class="equip-toggle" data-target="paSystem">
+      <button type="button" data-value="0">No</button>
+      <button type="button" data-value="1" class="active">Yes</button>
+      <input type="hidden" id="paSystem" value="1">
+    </div>
 
     <label style="margin-top:10px;">Guitar Amp (Max 2)</label>
-    <select id="guitarAmp" style="width:100%; padding:10px; font-size:16px;">
-        <option value="2" selected>2</option>
-        <option value="1">1</option>
-        <option value="0">0</option>
-    </select>
+    <div class="equip-toggle" data-target="guitarAmp">
+      <button type="button" data-value="0">0</button>
+      <button type="button" data-value="1">1</button>
+      <button type="button" data-value="2" class="active">2</button>
+      <input type="hidden" id="guitarAmp" value="2">
+    </div>
 
     <label style="margin-top:10px;">Bass Amp</label>
-    <select id="bassAmp" style="width:100%; padding:10px; font-size:16px;">
-        <option value="1" selected>Yes</option>
-        <option value="0">No</option>
-    </select>
+    <div class="equip-toggle" data-target="bassAmp">
+      <button type="button" data-value="0">No</button>
+      <button type="button" data-value="1" class="active">Yes</button>
+      <input type="hidden" id="bassAmp" value="1">
+    </div>
 
     <label style="margin-top:10px;">Drum Kit</label>
-    <select id="drumKit" style="width:100%; padding:10px; font-size:16px;">
-        <option value="1" selected>Yes</option>
-        <option value="0">No</option>
-    </select>
+    <div class="equip-toggle" data-target="drumKit">
+      <button type="button" data-value="0">No</button>
+      <button type="button" data-value="1" class="active">Yes</button>
+      <input type="hidden" id="drumKit" value="1">
+    </div>
 
     <div id="priceBox" style="
         background:white;
@@ -330,7 +347,7 @@ body {
 </div>
 
   </div>
-</div><!-- end bookingOverlay -->
+</div>
 
 <div id="loadingOverlay" style="
   display:none;
@@ -347,18 +364,31 @@ body {
   Submitting your booking…
 </div>
 
-
-  <!-- SUCCESS BOX MUST BE OUTSIDE THE OVERLAY -->
 <div id="successBox" class="booking-box" style="display:none;">
     <div id="successMessage"></div>
     <br>
     <button id="successOk">OK</button>
 </div>
 
- <!-- IMPORTANT: mobile.js FIRST, calendar-v3.js SECOND -->
-  <script src="mobile.js"></script>
-  <script src="calendar-v3.js"></script>
+<script src="mobile.js"></script>
+<script src="calendar-v3.js"></script>
+
+<!-- NEW: Toggle button logic -->
+<script>
+document.querySelectorAll(".equip-toggle button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const wrapper = btn.closest(".equip-toggle");
+    const hidden = wrapper.querySelector("input");
+
+    wrapper.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    hidden.value = btn.dataset.value;
+
+    updatePriceBox();
+  });
+});
+</script>
 
 </body>
 </html>
-  
