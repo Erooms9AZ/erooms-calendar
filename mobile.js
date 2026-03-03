@@ -246,7 +246,7 @@ document.querySelector("#priceBox div:nth-child(3)").innerHTML =
 window.calculatedRoomHire = roomHire;
 window.calculatedEquipmentHire = equipmentHire;
 window.calculatedTotal = total;
-
+}
 
 // Store for email payload
 window.calculatedRoomHire = roomHire;
