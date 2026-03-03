@@ -1,3 +1,4 @@
+
 // ---------------------------------------------------------
 //  SAFE API KEY
 // ---------------------------------------------------------
@@ -489,32 +490,40 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
 
     // SHOW SUCCESS BOX
-    document.getElementById("successOk")?.addEventListener("click", async () => {
-  // Close success box
-  document.getElementById("successBox").style.display = "none";
+    document.getElementById("form2").style.display = "none";
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("bookingOverlay").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
 
-  // Ensure overlay is closed
+  } catch (err) {
+    document.getElementById("bookingStatus2").textContent =
+      "There was an error submitting your booking. Please try again.";
+  }
+});
+
+
+//-------------------------------------------------------
+// SUCCESS OK (ONLY ONE HANDLER)
+//-------------------------------------------------------
+document.getElementById("successOk")?.addEventListener("click", async () => {
+  // Close success + overlay
+  document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingOverlay").style.display = "none";
 
-  // DO NOT reset the booking form
-  // DO NOT show form1 or form2
-  // DO NOT touch bookingForm
+  // Make sure Form 1 is visible again
+  document.getElementById("form1").style.display = "block";
+  document.getElementById("form2").style.display = "none";
 
-  // Refresh the calendar
+  // Now the fields exist — safe to reset
+  resetBookingForm();
+
+  // Refresh calendar
   await renderMobileSlots();
   updateDayLabel();
   updatePrevButtonState();
 });
 
 
-
-//-------------------------------------------------------
-// SUCCESS OK (ONLY ONE HANDLER)
-//-------------------------------------------------------
-document.getElementById("successOk")?.addEventListener("click", () => {
-  document.getElementById("successBox").style.display = "none";
-  document.getElementById("bookingOverlay").style.display = "none";
-});
 
 
 //-------------------------------------------------------
@@ -581,3 +590,4 @@ function animatePrev() {
   updatePrevButtonState();
 
 })();
+
