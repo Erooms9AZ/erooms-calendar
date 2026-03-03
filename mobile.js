@@ -272,7 +272,8 @@ function openMobileBooking(room, slotTime) {
   document.getElementById("bookingSummary").textContent = summary;
 
   // ⭐ NEW LINE — updates the price under the summary
-  updatePriceDisplay(start, end);
+updateTotalPrice();
+
 
   document.getElementById("bookingOverlay").style.display = "flex";
 }
