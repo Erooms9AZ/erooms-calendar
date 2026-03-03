@@ -489,17 +489,23 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
 
     // SHOW SUCCESS BOX
-    document.getElementById("form2").style.display = "none";
-    document.getElementById("form1").style.display = "none";
-    document.getElementById("form2").style.display = "none";
-    document.getElementById("bookingOverlay").style.display = "none";
-    document.getElementById("successBox").style.display = "block";
+    document.getElementById("successOk")?.addEventListener("click", async () => {
+  // Close success box
+  document.getElementById("successBox").style.display = "none";
 
-  } catch (err) {
-    document.getElementById("bookingStatus2").textContent =
-      "There was an error submitting your booking. Please try again.";
-  }
+  // Ensure overlay is closed
+  document.getElementById("bookingOverlay").style.display = "none";
+
+  // DO NOT reset the booking form
+  // DO NOT show form1 or form2
+  // DO NOT touch bookingForm
+
+  // Refresh the calendar
+  await renderMobileSlots();
+  updateDayLabel();
+  updatePrevButtonState();
 });
+
 
 
 //-------------------------------------------------------
