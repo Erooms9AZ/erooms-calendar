@@ -194,16 +194,16 @@ function showMobileRoomSelector(rooms, slotTime) {
 // PRICE CALCULATION ENGINE
 // -----------------------------
 function updatePriceBox() {
-    const paSystem = document.getElementById("paSystem").value;
-    const guitarAmp = parseInt(document.getElementById("guitarAmp").value, 10);
-    const bassAmp = document.getElementById("bassAmp").value;
-    const drumKit = document.getElementById("drumKit").value;
+    const paSystem = Number(document.getElementById("paSystem").value);
+    const guitarAmp = Number(document.getElementById("guitarAmp").value);
+    const bassAmp = Number(document.getElementById("bassAmp").value);
+    const drumKit = Number(document.getElementById("drumKit").value);
 
     // Determine if ANY equipment is selected
     const anyEquipment =
-        paSystem === "Yes" ||
-        bassAmp === "Yes" ||
-        drumKit === "Yes" ||
+        paSystem > 0 ||
+        bassAmp > 0 ||
+        drumKit > 0 ||
         guitarAmp > 0;
 
     // Determine BEFORE or AFTER 18:00
@@ -244,34 +244,6 @@ function updatePriceBox() {
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
     document.getElementById(id).addEventListener("change", updatePriceBox);
 });
-
-function updateTotalPrice() {
-  const paSystem = Number(document.getElementById("paSystem")?.value || 0);
-  const guitarAmp = Number(document.getElementById("guitarAmp")?.value || 0);
-  const bassAmp = Number(document.getElementById("bassAmp")?.value || 0);
-  const drumKit = Number(document.getElementById("drumKit")?.value || 0);
-
-  const roomRate = window.selectedRoom === "both" ? 20 : 12;
-  const roomHire = roomRate * selectedDuration;
-
-  const equipmentHire =
-    paSystem * 5 +
-    guitarAmp * 5 +
-    bassAmp * 5 +
-    drumKit * 5;
-
-  const total = roomHire + equipmentHire;
-
-  window.calculatedRoomHire = roomHire;
-  window.calculatedEquipmentHire = equipmentHire;
-  window.calculatedTotal = total;
-
-  const priceBox = document.getElementById("priceBox");
-  if (priceBox) {
-    priceBox.textContent =
-      `Room: £${roomHire.toFixed(2)} | Equipment: £${equipmentHire.toFixed(2)} | Total: £${total.toFixed(2)}`;
-  }
-}
 
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
