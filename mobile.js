@@ -234,7 +234,6 @@ document.querySelector("#priceBox div:nth-child(1)").textContent =
 document.querySelector("#priceBox div:nth-child(2)").textContent =
     `Equipment Hire: £${equipmentHire.toFixed(2)}`;
 
-// SAFE: keep innerHTML so calendar continues loading
 const totalLine =
     equipmentHire > 0
         ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
