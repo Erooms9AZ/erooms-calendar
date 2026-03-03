@@ -490,7 +490,8 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
     // SHOW SUCCESS BOX
     document.getElementById("form2").style.display = "none";
-    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("form1").style.display = "none";
+    document.getElementById("form2").style.display = "none";
     document.getElementById("bookingOverlay").style.display = "none";
     document.getElementById("successBox").style.display = "block";
 
