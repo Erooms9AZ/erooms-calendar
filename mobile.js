@@ -227,19 +227,25 @@ function updatePriceBox() {
     const equipmentHire = equipmentRate * durationHours;
     const total = roomHire + equipmentHire;
 
-    // Update price box
-    document.querySelector("#priceBox div:nth-child(1)").textContent =
-        `Room Hire: £${roomHire.toFixed(2)}`;
-    document.querySelector("#priceBox div:nth-child(2)").textContent =
-        `Equipment Hire: £${equipmentHire.toFixed(2)}`;
-    document.querySelector("#priceBox div:nth-child(3)").innerHTML =
-        `<strong>Total: £${total.toFixed(2)}</strong>`;
+   // Update price box
+document.querySelector("#priceBox div:nth-child(1)").textContent =
+    `Room Hire: £${roomHire.toFixed(2)}`;
 
-    // Store for email payload
-    window.calculatedRoomHire = roomHire;
-    window.calculatedEquipmentHire = equipmentHire;
-    window.calculatedTotal = total;
-}
+document.querySelector("#priceBox div:nth-child(2)").textContent =
+    `Equipment Hire: £${equipmentHire.toFixed(2)}`;
+
+// Conditional label for total
+let totalLabel = equipmentHire > 0
+  ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
+  : `Total: £${total.toFixed(2)} (Room Hire Only)`;
+
+document.querySelector("#priceBox div:nth-child(3)").innerHTML =
+    `<strong>${totalLabel}</strong>`;
+
+// Store for email payload
+window.calculatedRoomHire = roomHire;
+window.calculatedEquipmentHire = equipmentHire;
+window.calculatedTotal = total;
 
 // Attach listeners to update price live
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
