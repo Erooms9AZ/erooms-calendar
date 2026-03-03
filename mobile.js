@@ -244,6 +244,8 @@ function updatePriceBox() {
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
     document.getElementById(id).addEventListener("change", updatePriceBox);
 });
+// initialise price once with current defaults
+updatePriceBox();
 
 // ---------------------------------------------------------
 //  BOOKING OVERLAY
@@ -410,7 +412,11 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
 document.getElementById("nextBtn")?.addEventListener("click", () => {
   document.getElementById("form1").style.display = "none";
   document.getElementById("form2").style.display = "block";
+
+  // NOW selectedStart and selectedEnd exist
+  updatePriceBox();
 });
+
 
 document.getElementById("backBtn")?.addEventListener("click", () => {
   document.getElementById("form2").style.display = "none";
