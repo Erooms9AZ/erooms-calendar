@@ -379,3 +379,12 @@ body {
   background: #444;
   color: white;
 }
+html, body {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+* {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
