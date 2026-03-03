@@ -494,8 +494,6 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
     document.getElementById("bookingForm").style.display = "none";
     document.getElementById("bookingOverlay").style.display = "none";
     document.getElementById("successBox").style.display = "block";
-// Force the calendar to update using the same logic as a day change
-updateCalendarForSelectedDay();
 
   } catch (err) {
     document.getElementById("bookingStatus2").textContent =
