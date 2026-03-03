@@ -498,23 +498,21 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  document.getElementById("bookingOverlay").style.display = "none";
+  // Close success box + overlay
   document.getElementById("successBox").style.display = "none";
-  document.getElementById("bookingForm").style.display = "block";
+  document.getElementById("bookingOverlay").style.display = "none";
 
+  // Reset form
   resetBookingForm();
 
   // Jump back to the booked day
   mobileCurrentDay = new Date(window.selectedStart);
 
-  // Wait for Google Calendar to update (2 seconds is usually enough)
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  await renderMobileSlots();
+  // Now that the calendar is visible again, refresh it
   updateDayLabel();
   updatePrevButtonState();
+  await renderMobileSlots();
 });
-
 
 
 //-------------------------------------------------------
