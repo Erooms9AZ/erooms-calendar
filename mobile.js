@@ -512,18 +512,15 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  // Close success box + overlay
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingOverlay").style.display = "none";
+  document.getElementById("bookingForm").style.display = "block";
 
-  // Show the calendar again
-  document.getElementById("calendarContainer").style.display = "block";
-
-  // Refresh the calendar
   await renderMobileSlots();
   updateDayLabel();
   updatePrevButtonState();
 });
+
 
 
 
