@@ -504,13 +504,17 @@ document.getElementById("successOk")?.addEventListener("click", async () => {
 
   resetBookingForm();
 
-  // Jump back to the day that was just booked
+  // Jump back to the booked day
   mobileCurrentDay = new Date(window.selectedStart);
 
-  await renderMobileSlots();   // Refresh calendar AFTER OK
-  updateDayLabel();            // Update the day label to match
-  updatePrevButtonState();     // Keep navigation correct
+  // Wait for Google Calendar to update (2 seconds is usually enough)
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  await renderMobileSlots();
+  updateDayLabel();
+  updatePrevButtonState();
 });
+
 
 
 //-------------------------------------------------------
