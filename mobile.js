@@ -512,18 +512,14 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  // Close success + overlay
+  // Close success box + overlay
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingOverlay").style.display = "none";
 
-  // Make sure Form 1 is visible again
-  document.getElementById("form1").style.display = "block";
-  document.getElementById("form2").style.display = "none";
+  // Show the calendar again
+  document.getElementById("calendarContainer").style.display = "block";
 
-  // Now the fields exist — safe to reset
-  resetBookingForm();
-
-  // Refresh calendar
+  // Refresh the calendar
   await renderMobileSlots();
   updateDayLabel();
   updatePrevButtonState();
