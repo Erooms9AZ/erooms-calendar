@@ -235,9 +235,10 @@ function updatePriceBox() {
         `Equipment Hire: £${equipmentHire.toFixed(2)}`;
 
     const totalLine =
-        equipmentHire > 0
-            ? `Total: £${total.toFixed(2)} (Room Hire & Equipment)`
-            : `Total: £${total.toFixed(2)} (Room Hire Only)`;
+    equipmentHire > 0
+        ? `Total: £${total.toFixed(2)} (Room Hire & Equipment) Inc VAT.`
+        : `Total: £${total.toFixed(2)} (Room Hire Only)`;
+
 
     document.querySelector("#priceBox div:nth-child(3)").innerHTML =
         `<strong>${totalLine}</strong>`;
