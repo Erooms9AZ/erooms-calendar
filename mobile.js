@@ -511,19 +511,13 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 //-------------------------------------------------------
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
-document.getElementById("successOk")?.addEventListener("click", async () => {
-  document.getElementById("successBox").style.display = "none";
+document.getElementById("successOk")?.addEventListener("click", () => {
   document.getElementById("bookingOverlay").style.display = "none";
+  document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingForm").style.display = "block";
 
-  await renderMobileSlots();
-  updateDayLabel();
-  updatePrevButtonState();
+  resetBookingForm();
 });
-
-
-
-
 
 //-------------------------------------------------------
 // SWIPE TO CHANGE WEEK + SLIDE ANIMATION
