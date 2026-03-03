@@ -477,6 +477,7 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 
   const BOOKING_URL = "https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec";
 
+  async function sendBooking() {
   try {
     await fetch(BOOKING_URL, {
       method: "POST",
@@ -484,6 +485,18 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
+
+    document.getElementById("successMessage").textContent =
+      "Thank you for booking a room at E Rooms - Your booking is confirmed. You will receive a confirmation email soon.";
+
+  } catch (err) {
+    document.getElementById("successMessage").textContent =
+      "There was an error submitting your booking. Please try again.";
+  }
+}
+
+sendBooking();
+
 
     // Set success message HERE (correct place)
     document.getElementById("successMessage").textContent =
