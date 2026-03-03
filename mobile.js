@@ -246,10 +246,10 @@ function updatePriceBox() {
 });
 
 function updateTotalPrice() {
-  const paSystem = Number(document.getElementById("paSystem").value || 0);
-  const guitarAmp = Number(document.getElementById("guitarAmp").value || 0);
-  const bassAmp = Number(document.getElementById("bassAmp").value || 0);
-  const drumKit = Number(document.getElementById("drumKit").value || 0);
+  const paSystem = Number(document.getElementById("paSystem")?.value || 0);
+  const guitarAmp = Number(document.getElementById("guitarAmp")?.value || 0);
+  const bassAmp = Number(document.getElementById("bassAmp")?.value || 0);
+  const drumKit = Number(document.getElementById("drumKit")?.value || 0);
 
   const roomRate = window.selectedRoom === "both" ? 20 : 12;
   const roomHire = roomRate * selectedDuration;
@@ -268,7 +268,8 @@ function updateTotalPrice() {
 
   const priceBox = document.getElementById("priceBox");
   if (priceBox) {
-    priceBox.textContent = `Room: £${roomHire.toFixed(2)} | Equipment: £${equipmentHire.toFixed(2)} | Total: £${total.toFixed(2)}`;
+    priceBox.textContent =
+      `Room: £${roomHire.toFixed(2)} | Equipment: £${equipmentHire.toFixed(2)} | Total: £${total.toFixed(2)}`;
   }
 }
 
@@ -298,11 +299,7 @@ function openMobileBooking(room, slotTime) {
 
   document.getElementById("bookingSummary").textContent = summary;
 
-  // ⭐ NEW LINE — updates the price under the summary
-updateTotalPrice();
-
-
-  document.getElementById("bookingOverlay").style.display = "flex";
+ document.getElementById("bookingOverlay").style.display = "flex";
 }
 // ---------------------------------------------------------
 //  CANCEL BOOKING (FORM 1)
@@ -367,8 +364,6 @@ function updatePrevButtonState() {
     btn.classList.remove("disabled");
   }
 }
-
-
 
 // ---------------------------------------------------------
 //  NAVIGATION (SKIP SUNDAY)
