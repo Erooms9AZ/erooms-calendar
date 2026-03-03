@@ -498,20 +498,16 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  // Close success box + overlay
-  document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingOverlay").style.display = "none";
+  document.getElementById("successBox").style.display = "none";
+  document.getElementById("bookingForm").style.display = "block";
 
-  // Reset form
   resetBookingForm();
 
-  // Jump back to the booked day
-  mobileCurrentDay = new Date(window.selectedStart);
+  // Wait for overlay to fully disappear and calendar to become visible
+  await new Promise(resolve => setTimeout(resolve, 50));
 
-  // Now that the calendar is visible again, refresh it
-  updateDayLabel();
-  updatePrevButtonState();
-  await renderMobileSlots();
+  await renderMobileSlots();   // Now the refresh works
 });
 
 
