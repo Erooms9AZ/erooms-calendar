@@ -389,12 +389,19 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
 // RESET BOOKING FORM
 //-------------------------------------------------------
 function resetBookingForm() {
+  console.log("bfName:", document.getElementById("bfName"));
+  console.log("bfEmail:", document.getElementById("bfEmail"));
+  console.log("bfPhone:", document.getElementById("bfPhone"));
+  console.log("bfComments:", document.getElementById("bfComments"));
+  console.log("bookingStatus:", document.getElementById("bookingStatus"));
+
   document.getElementById("bfName").value = "";
   document.getElementById("bfEmail").value = "";
   document.getElementById("bfPhone").value = "";
   document.getElementById("bfComments").value = "";
   document.getElementById("bookingStatus").textContent = "";
 }
+
 
 //-------------------------------------------------------
 // CANCEL BOOKING
