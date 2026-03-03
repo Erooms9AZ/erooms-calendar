@@ -299,10 +299,7 @@ function openMobileBooking(room, slotTime) {
 
   document.getElementById("bookingSummary").textContent = summary;
 
-  // Hide price box on Form 1
-  const priceBox = document.getElementById("priceBox");
-  if (priceBox) priceBox.style.display = "none";
-
+  
   document.getElementById("bookingOverlay").style.display = "flex";
 }
 
