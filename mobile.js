@@ -252,7 +252,7 @@ window.calculatedTotal = total;
 window.calculatedRoomHire = roomHire;
 window.calculatedEquipmentHire = equipmentHire;
 window.calculatedTotal = total;
-
+}  
 // Attach listeners to update price live
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
     document.getElementById(id).addEventListener("change", updatePriceBox);
