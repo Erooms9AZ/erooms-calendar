@@ -498,14 +498,18 @@ document.getElementById("submitBtn")?.addEventListener("click", async () => {
 // SUCCESS OK (ONLY ONE HANDLER)
 //-------------------------------------------------------
 document.getElementById("successOk")?.addEventListener("click", async () => {
-  console.log("SUCCESS OK CLICKED");  // <--- add this line
-
+  // Close overlay + success box
   document.getElementById("bookingOverlay").style.display = "none";
   document.getElementById("successBox").style.display = "none";
   document.getElementById("bookingForm").style.display = "block";
 
+  // Wait for DOM to update so elements exist again
+  await new Promise(resolve => setTimeout(resolve, 50));
+
+  // Now safe to reset the form
   resetBookingForm();
 
+  // Refresh calendar
   await renderMobileSlots();
   updateDayLabel();
   updatePrevButtonState();
