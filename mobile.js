@@ -503,8 +503,15 @@ document.getElementById("successOk")?.addEventListener("click", async () => {
   document.getElementById("bookingForm").style.display = "block";
 
   resetBookingForm();
+
+  // Jump back to the day that was just booked
+  mobileCurrentDay = new Date(window.selectedStart);
+
   await renderMobileSlots();   // Refresh calendar AFTER OK
+  updateDayLabel();            // Update the day label to match
+  updatePrevButtonState();     // Keep navigation correct
 });
+
 
 //-------------------------------------------------------
 // SWIPE TO CHANGE WEEK + SLIDE ANIMATION
