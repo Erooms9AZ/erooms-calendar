@@ -207,24 +207,36 @@ function updatePriceBox() {
         drumKit > 0 ||
         guitarAmp > 0;
 
-    // Determine BEFORE or AFTER 18:00
-    const startHour = window.selectedStart.getHours();
-    const after18 = startHour >= 18;
+    // -----------------------------
+    // Banded pricing: step through
+    // each hour between start & end
+    // -----------------------------
+    let roomHire = 0;
+    let equipmentHire = 0;
 
-    // Duration in hours
-    const durationHours = (window.selectedEnd - window.selectedStart) / (1000 * 60 * 60);
+    let current = new Date(window.selectedStart);
+    const end = new Date(window.selectedEnd);
 
-    // Room hire rate
-    const roomRate = after18 ? 12 : 6;
+    while (current < end) {
+        // Next boundary (1 hour later, or end of booking)
+        let next = new Date(current.getTime() + 60 * 60 * 1000);
+        if (next > end) next = end;
 
-    // Equipment hire rate
-    const equipmentRate = anyEquipment
-        ? (after18 ? 3 : 1.5)
-        : 0;
+        const hourFraction = (next - current) / (1000 * 60 * 60); // handles partial hours if ever needed
+        const hour = current.getHours();
+        const after18 = hour >= 18;
 
-    // Calculations
-    const roomHire = roomRate * durationHours;
-    const equipmentHire = equipmentRate * durationHours;
+        const roomRate = after18 ? 12 : 6;
+        const equipmentRate = anyEquipment
+            ? (after18 ? 3 : 1.5)
+            : 0;
+
+        roomHire += roomRate * hourFraction;
+        equipmentHire += equipmentRate * hourFraction;
+
+        current = next;
+    }
+
     const total = roomHire + equipmentHire;
 
     // Update price box
@@ -235,10 +247,9 @@ function updatePriceBox() {
         `Equipment Hire: £${equipmentHire.toFixed(2)}`;
 
     const totalLine =
-    equipmentHire > 0
-        ? `Total: £${total.toFixed(2)} (Room Hire & Equipment) Inc VAT.`
-        : `Total: £${total.toFixed(2)} (Room Hire Only)`;
-
+        equipmentHire > 0
+            ? `Total: £${total.toFixed(2)} (Room Hire & Equipment) Inc VAT.`
+            : `Total: £${total.toFixed(2)} (Room Hire Only)`;
 
     document.querySelector("#priceBox div:nth-child(3)").innerHTML =
         `<strong>${totalLine}</strong>`;
@@ -247,12 +258,13 @@ function updatePriceBox() {
     window.calculatedRoomHire = roomHire;
     window.calculatedEquipmentHire = equipmentHire;
     window.calculatedTotal = total;
-}   // ← THIS IS THE ONLY CLOSING BRACE YOU NEED HERE
+}   // ← unchanged
 
 // Attach listeners to update price live
 ["paSystem", "guitarAmp", "bassAmp", "drumKit"].forEach(id => {
     document.getElementById(id).addEventListener("change", updatePriceBox);
 });
+
 
 
 // ---------------------------------------------------------
