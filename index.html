@@ -215,6 +215,114 @@ body {
 </style>
 
 </head>
+<!-- NEW DESKTOP BOOKING OVERLAY (MOBILE WORKFLOW) -->
+<div id="bookingOverlay" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
+  <div id="bookingForm" style="
+      background:white;
+      padding:20px;
+      width:350px;
+      max-width:90%;
+      border-radius:10px;
+  ">
+
+    <!-- FORM 1 -->
+    <div id="form1">
+      <h3>Booking Summary</h3>
+      <div id="bookingSummary"></div>
+
+      <label>Name*</label>
+      <input type="text" id="custName" style="width:100%" required>
+
+      <label>Email*</label>
+      <input type="email" id="custEmail" style="width:100%" required>
+
+      <label>Phone*</label>
+      <input type="tel" id="custPhone" style="width:100%" required>
+
+      <div id="bookingStatus" style="color:red;"></div>
+
+      <button id="nextBtn">Next</button>
+      <button id="cancelBtn">Cancel</button>
+    </div>
+
+    <!-- FORM 2 -->
+    <div id="form2" style="display:none;">
+      <h3>Equipment Requirements</h3>
+
+      <label>PA System</label>
+      <div class="equip-toggle" data-target="paSystem">
+        <button type="button" data-value="0">No</button>
+        <button type="button" data-value="1" class="active">Yes</button>
+        <input type="hidden" id="paSystem" value="1">
+      </div>
+
+      <label style="margin-top:10px;">Guitar Amp (Max 2)</label>
+      <div class="equip-toggle" data-target="guitarAmp">
+        <button type="button" data-value="0">0</button>
+        <button type="button" data-value="1">1</button>
+        <button type="button" data-value="2" class="active">2</button>
+        <input type="hidden" id="guitarAmp" value="2">
+      </div>
+
+      <label style="margin-top:10px;">Bass Amp</label>
+      <div class="equip-toggle" data-target="bassAmp">
+        <button type="button" data-value="0">No</button>
+        <button type="button" data-value="1" class="active">Yes</button>
+        <input type="hidden" id="bassAmp" value="1">
+      </div>
+
+      <label style="margin-top:10px;">Drum Kit</label>
+      <div class="equip-toggle" data-target="drumKit">
+        <button type="button" data-value="0">No</button>
+        <button type="button" data-value="1" class="active">Yes</button>
+        <input type="hidden" id="drumKit" value="1">
+      </div>
+
+      <div id="priceBox" style="
+          background:white;
+          padding:15px;
+          margin-top:15px;
+          margin-bottom:15px;
+          border-radius:8px;
+          box-shadow:0 0 10px rgba(0,0,0,0.15);
+          font-size:18px;
+          line-height:1.4;
+      ">
+        <div>Room Hire: £0.00</div>
+        <div>Equipment Hire: £0.00</div>
+        <div><strong>Total: £0.00</strong></div>
+      </div>
+
+      <div id="bookingStatus2" style="color:red;"></div>
+
+      <button id="submitBtn">Submit</button>
+      <button id="backBtn">Back</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS BOX -->
+  <div id="successBox" style="
+      display:none;
+      background:white;
+      padding:20px;
+      width:350px;
+      max-width:90%;
+      border-radius:10px;
+      text-align:center;
+  ">
+    <div id="successMessage"></div>
+    <button id="successOk">OK</button>
+  </div>
+</div>
 
 <body>
 
