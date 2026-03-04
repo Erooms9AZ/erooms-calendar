@@ -120,7 +120,7 @@ function openForm1FromDesktop(mergedBlock) {
   // Show Form 1, hide Form 2
   document.getElementById("form1").style.display = "block";
   document.getElementById("form2").style.display = "none";
-
+  if (bookingOverlay) bookingOverlay.style.display = "flex";
   window.scrollTo(0, 0);
 }
 
