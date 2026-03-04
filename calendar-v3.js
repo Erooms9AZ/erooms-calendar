@@ -154,13 +154,16 @@ async function handleBookingSubmit(){
   try{
     const ok = await fetch("https://green-bread-e7e9.dave-f5d.workers.dev",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).then(r=>r.ok);
     if(ok){
-      bookingForm.style.display="none";
-      successBox.style.display="block";
-      bookingStatus.textContent="";
-      bookingOverlay.style.display = "flex"; 
-    } else bookingStatus.textContent="Error submitting booking.";
-  } catch(e){bookingStatus.textContent="Error submitting booking.";console.error(e);}
+     bookingForm.style.display = "none";
+successBox.style.display = "block";
+bookingOverlay.style.display = "flex";
+} else {
+  console.error("Error submitting booking.");
 }
+} catch(e) {
+  console.error("Error submitting booking.", e);
+}
+
 
 if(bfSubmit) bfSubmit.onclick=handleBookingSubmit;
 if(bfCancel) bfCancel.onclick=closeBookingForm;
