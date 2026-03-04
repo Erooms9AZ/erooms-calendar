@@ -122,8 +122,7 @@ function openForm1FromDesktop(mergedBlock) {
 
 // Your existing function
 function openBookingForm(summary) {
-   ...
-}
+ }
 
 function closeBookingForm(){bookingOverlay.style.display="none";}
 
