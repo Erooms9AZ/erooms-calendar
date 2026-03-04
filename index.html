@@ -428,7 +428,197 @@ document.getElementById("helpClose").addEventListener("click", () => {
   document.getElementById("helpPopup").style.display = "none";
 });
 </script>
+<script>
+// ---------------------------------------------------------
+//  DESKTOP → MOBILE WORKFLOW ADAPTER
+// ---------------------------------------------------------
+function openForm1FromDesktop(mergedBlock) {
+  const start = new Date(mergedBlock.start);
+  const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
 
+  window.selectedRoom = mergedBlock.room;
+  window.selectedStart = start;
+  window.selectedEnd = end;
+
+  const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+  const dateStr = start.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+  const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00
+(Room: ${mergedBlock.room === "room1" ? "Room 1" : "Room 2"})`;
+
+  document.getElementById("bookingSummary").textContent = summary;
+
+  document.getElementById("form1").style.display = "block";
+  document.getElementById("form2").style.display = "none";
+  document.getElementById("successBox").style.display = "none";
+
+  document.getElementById("bookingOverlay").style.display = "flex";
+}
+
+// ---------------------------------------------------------
+//  REPLACE DESKTOP "YES" BUTTON WITH NEW WORKFLOW
+// ---------------------------------------------------------
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "mergedYes") {
+    openForm1FromDesktop(window.mergedBlock);
+  }
+});
+
+// ---------------------------------------------------------
+//  EQUIPMENT TOGGLE HANDLERS
+// ---------------------------------------------------------
+document.querySelectorAll(".equip-toggle").forEach(group => {
+  const target = group.dataset.target;
+  const hidden = document.getElementById(target);
+
+  group.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      hidden.value = btn.dataset.value;
+      updatePriceBox();
+    });
+  });
+});
+
+// ---------------------------------------------------------
+//  PRICE ENGINE (COPIED FROM MOBILE)
+// ---------------------------------------------------------
+function updatePriceBox() {
+  const paSystem = Number(document.getElementById("paSystem").value);
+  const guitarAmp = Number(document.getElementById("guitarAmp").value);
+  const bassAmp = Number(document.getElementById("bassAmp").value);
+  const drumKit = Number(document.getElementById("drumKit").value);
+
+  const anyEquipment = paSystem || guitarAmp || bassAmp || drumKit;
+
+  let roomHire = 0;
+  let equipmentHire = 0;
+
+  let current = new Date(window.selectedStart);
+  const end = new Date(window.selectedEnd);
+
+  while (current < end) {
+    let next = new Date(current.getTime() + 60 * 60 * 1000);
+    if (next > end) next = end;
+
+    const hourFraction = (next - current) / (1000 * 60 * 60);
+    const hour = current.getHours();
+    const after18 = hour >= 18;
+
+    const roomRate = after18 ? 12 : 6;
+    const equipmentRate = anyEquipment ? (after18 ? 3 : 1.5) : 0;
+
+    roomHire += roomRate * hourFraction;
+    equipmentHire += equipmentRate * hourFraction;
+
+    current = next;
+  }
+
+  const total = roomHire + equipmentHire;
+
+  document.querySelector("#priceBox div:nth-child(1)").textContent =
+    `Room Hire: £${roomHire.toFixed(2)}`;
+  document.querySelector("#priceBox div:nth-child(2)").textContent =
+    `Equipment Hire: £${equipmentHire.toFixed(2)}`;
+  document.querySelector("#priceBox div:nth-child(3)").innerHTML =
+    `<strong>Total: £${total.toFixed(2)}</strong>`;
+
+  window.calculatedRoomHire = roomHire;
+  window.calculatedEquipmentHire = equipmentHire;
+  window.calculatedTotal = total;
+}
+
+// ---------------------------------------------------------
+//  FORM NAVIGATION
+// ---------------------------------------------------------
+document.getElementById("nextBtn").onclick = () => {
+  const name = custName.value.trim();
+  const email = custEmail.value.trim();
+  const phone = custPhone.value.trim();
+
+  if (!name || !email || !phone) {
+    bookingStatus.textContent = "Please complete all required fields.";
+    return;
+  }
+
+  bookingStatus.textContent = "";
+  form1.style.display = "none";
+  form2.style.display = "block";
+  updatePriceBox();
+};
+
+document.getElementById("backBtn").onclick = () => {
+  form2.style.display = "none";
+  form1.style.display = "block";
+};
+
+document.getElementById("cancelBtn").onclick = () => {
+  bookingOverlay.style.display = "none";
+};
+
+// ---------------------------------------------------------
+//  SUBMIT BOOKING (COPIED FROM MOBILE)
+// ---------------------------------------------------------
+document.getElementById("submitBtn").onclick = async () => {
+  try {
+    bookingStatus2.textContent = "Submitting...";
+
+    const payload = {
+      name: custName.value.trim(),
+      email: custEmail.value.trim(),
+      phone: custPhone.value.trim(),
+      room: window.selectedRoom,
+      start: window.selectedStart.toISOString(),
+      end: window.selectedEnd.toISOString(),
+      paSystem: paSystem.value,
+      guitarAmp: guitarAmp.value,
+      bassAmp: bassAmp.value,
+      drumKit: drumKit.value,
+      roomHire: window.calculatedRoomHire,
+      equipmentHire: window.calculatedEquipmentHire,
+      totalPrice: window.calculatedTotal
+    };
+
+    await fetch("https://script.google.com/macros/s/AKfycbxzW6PrNFeoYLGKx4ugcUSpNa9n_QTCi7GAPknr4Bw0XOYrsebqhJ2uGbx4FSNV2-70Wg/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    successMessage.textContent =
+      "Thank you for booking a room at E Rooms - Your booking is confirmed.";
+
+    bookingForm.style.display = "none";
+    successBox.style.display = "block";
+
+  } catch (err) {
+    bookingStatus2.textContent =
+      "There was an error submitting your booking. Please try again.";
+  }
+};
+
+// ---------------------------------------------------------
+//  SUCCESS OK
+// ---------------------------------------------------------
+document.getElementById("successOk").onclick = () => {
+  successBox.style.display = "none";
+  bookingOverlay.style.display = "none";
+
+  form1.style.display = "block";
+  form2.style.display = "none";
+
+  custName.value = "";
+  custEmail.value = "";
+  custPhone.value = "";
+  bookingStatus.textContent = "";
+};
+</script>
 
 </body>
 </html>
