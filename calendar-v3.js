@@ -260,7 +260,7 @@ window.allEvents = events;
     if (!floatingSelector) return;
 
     floatingSelector.style.display = "flex";
-
+   if (rooms.includes("room1") && rooms.includes("room2")) {
     floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
       btn.onclick = () => {
         createMergedBlock(btn.dataset.room, slotTime);
@@ -269,7 +269,7 @@ window.allEvents = events;
         };
     });
      
-  } else if (rooms.includes("room1")) {
+  }else if (rooms.includes("room1")) {
         slotDiv.style.backgroundColor = "#4caf50";
         slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
         slotDiv.onclick = () => {
