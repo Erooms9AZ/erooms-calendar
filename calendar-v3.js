@@ -157,6 +157,7 @@ async function handleBookingSubmit(){
       bookingForm.style.display="none";
       successBox.style.display="block";
       bookingStatus.textContent="";
+      bookingOverlay.style.display = "flex"; 
     } else bookingStatus.textContent="Error submitting booking.";
   } catch(e){bookingStatus.textContent="Error submitting booking.";console.error(e);}
 }
