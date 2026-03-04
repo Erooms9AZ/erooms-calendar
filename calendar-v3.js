@@ -88,11 +88,15 @@ function availableRooms(slotTime,duration,events){
 /* -----------------------------
    MERGED BLOCK
 ------------------------------- */
-function createMergedBlock(room,slotTime){
-  mergedBlock={room,start:new Date(slotTime),duration:selectedDuration};
-  activeRoom=room;
-  renderCalendar();
+function createMergedBlock(room, slotTime) {
+  mergedBlock = {
+    room,
+    start: new Date(slotTime),
+    duration: selectedDuration
+  };
+  activeRoom = room;
 }
+
 function openForm1FromDesktop(mergedBlock) {
   if (!mergedBlock) return;
 
