@@ -558,7 +558,7 @@ swipeArea.addEventListener("touchend", (e) => {
 
 function handleSwipe() {
   const swipeDistance = touchEndX - touchStartX;
-  const threshold = 60; // minimum swipe distance
+  const threshold = 35; // minimum swipe distance
 
   if (swipeDistance < -threshold) {
     animateNext();
