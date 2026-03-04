@@ -125,21 +125,6 @@ function openBookingForm(summary) {
    ...
 }
 
-/* -----------------------------
-   BOOKING FORM
-------------------------------- */
-function openBookingForm(summaryText){
-  bookingSummary.textContent=summaryText;
-  bookingStatus.textContent="";
-  bfName.value="";
-  bfEmail.value="";
-  bfPhone.value="";
-  bfComments.value="";
-  bookingForm.style.display="block";
-  successBox.style.display="none";
-  bookingOverlay.style.display="flex";
-}
-
 function closeBookingForm(){bookingOverlay.style.display="none";}
 
 async function handleBookingSubmit(){
