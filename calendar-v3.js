@@ -212,12 +212,8 @@ async function renderCalendar() {
      calendarEl.appendChild(headerRow);
 
   }
-
-  
-  // ----------------------------
-  // FETCH EVENTS FOR BOTH ROOMS
-  // ----------------------------
-  // ----------------------------
+ 
+ // ----------------------------
 // FETCH EVENTS FOR BOTH ROOMS
 // ----------------------------
 const events1 = (await fetchEvents(calendars.room1, startOfWeek, endOfRange))
@@ -272,9 +268,6 @@ window.allEvents = events;
         openForm1FromDesktop(mergedBlock);
       };
     });
-  };
-}
-
       } else if (rooms.includes("room1")) {
         slotDiv.style.backgroundColor = "#4caf50";
         slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
