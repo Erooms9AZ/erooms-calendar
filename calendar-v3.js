@@ -266,8 +266,7 @@ window.allEvents = events;
         createMergedBlock(btn.dataset.room, slotTime);
         floatingSelector.style.display = "none";
         openForm1FromDesktop(mergedBlock);
-      };
-    });
+       });
       } else if (rooms.includes("room1")) {
         slotDiv.style.backgroundColor = "#4caf50";
         slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
