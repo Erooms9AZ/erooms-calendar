@@ -218,8 +218,8 @@ async function renderCalendar() {
   // FETCH EVENTS FOR BOTH ROOMS
   // ----------------------------
   const events = [
-    ...(await fetchEvents(calendars.room1, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room1" })),
-    ...(await fetchEvents(calendars.room2, startOfWeek, endOfRange)).map(e => ({ ...e, room: "room2" }))
+    const events1 = (await fetchEvents(calendars.room1, startOfWeek, endOfRange)) .map(e => ({ ...e, room: "room1" }));
+    const events2 = (await fetchEvents(calendars.room2, startOfWeek, endOfRange)) .map(e => ({ ...e, room: "room2" }));
   ];
   window.allEvents = events;
 
