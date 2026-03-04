@@ -209,24 +209,23 @@ async function renderCalendar() {
       <div class="day-date">${dayDate.getDate()}</div>
     `;
     headerRow.appendChild(cell);
-     calendarEl.appendChild(headerRow);
-
   }
- 
- // ----------------------------
-// FETCH EVENTS FOR BOTH ROOMS
-// ----------------------------
-const events1 = (await fetchEvents(calendars.room1, startOfWeek, endOfRange))
-  .map(e => ({ ...e, room: "room1" }));
 
-const events2 = (await fetchEvents(calendars.room2, startOfWeek, endOfRange))
-  .map(e => ({ ...e, room: "room2" }));
+  calendarEl.appendChild(headerRow);
 
-const events = [...events1, ...events2];
-window.allEvents = events;
+  // ----------------------------
+  // FETCH EVENTS FOR BOTH ROOMS
+  // ----------------------------
+  const events1 = (await fetchEvents(calendars.room1, startOfWeek, endOfRange))
+    .map(e => ({ ...e, room: "room1" }));
 
+  const events2 = (await fetchEvents(calendars.room2, startOfWeek, endOfRange))
+    .map(e => ({ ...e, room: "room2" }));
 
-    // ----------------------------
+  const events = [...events1, ...events2];
+  window.allEvents = events;
+
+  // ----------------------------
   // HOUR LABELS + SLOTS
   // ----------------------------
   for (let h = 10; h < 22; h++) {
@@ -239,6 +238,7 @@ window.allEvents = events;
     for (let d = 0; d < 6; d++) {
       const dayDate = new Date(startOfWeek);
       dayDate.setDate(startOfWeek.getDate() + d);
+
       const slotTime = new Date(dayDate);
       slotTime.setHours(h, 0, 0, 0);
 
@@ -247,52 +247,61 @@ window.allEvents = events;
       slotDiv.className = "slot";
 
       const isPast = slotTime < new Date();
+
       if (isPast || rooms.length === 0) {
         slotDiv.style.backgroundColor = "grey";
         slotDiv.style.pointerEvents = "none";
         slotDiv.innerHTML = "Not<br>Available";
-    } else if (rooms.length === 2) {
-  slotDiv.style.backgroundColor = "#9c27b0";
-  slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
 
-  slotDiv.onclick = e => {
-    e.stopPropagation();
-    if (!floatingSelector) return;
+      } else if (rooms.length === 2) {
+        // Both rooms available → floating selector
+        slotDiv.style.backgroundColor = "#9c27b0";
+        slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
 
-    floatingSelector.style.display = "flex";
-   if (rooms.includes("room1") && rooms.includes("room2")) {
-    floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
-      btn.onclick = () => {
-        createMergedBlock(btn.dataset.room, slotTime);
-        floatingSelector.style.display = "none";
-        openForm1FromDesktop(mergedBlock);
+        slotDiv.onclick = e => {
+          e.stopPropagation();
+          if (!floatingSelector) return;
+
+          floatingSelector.style.display = "flex";
+
+          floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
+            btn.onclick = () => {
+              createMergedBlock(btn.dataset.room, slotTime);
+              floatingSelector.style.display = "none";
+              openForm1FromDesktop(mergedBlock);
+            };
+          });
         };
-    });
-     
-  }else if (rooms.includes("room1")) {
+
+      } else if (rooms.includes("room1")) {
+        // Only Room 1
         slotDiv.style.backgroundColor = "#4caf50";
         slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
         slotDiv.onclick = () => {
-  createMergedBlock("room1", slotTime);
-  openForm1FromDesktop(mergedBlock);
-};
+          createMergedBlock("room1", slotTime);
+          openForm1FromDesktop(mergedBlock);
+        };
 
- } else if (rooms.includes("room2")) {
+      } else if (rooms.includes("room2")) {
+        // Only Room 2
         slotDiv.style.backgroundColor = "#2196f3";
         slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
         slotDiv.onclick = () => {
-  createMergedBlock("room2", slotTime);
-  openForm1FromDesktop(mergedBlock);
-};
+          createMergedBlock("room2", slotTime);
+          openForm1FromDesktop(mergedBlock);
+        };
+      }
 
-  }
       calendarEl.appendChild(slotDiv);
     }
   }
 
   // Month label
   if (monthLabel) {
-    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const monthNames = [
+      "January","February","March","April","May","June",
+      "July","August","September","October","November","December"
+    ];
     monthLabel.textContent = `E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
   }
 }
