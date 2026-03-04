@@ -95,6 +95,12 @@ function createMergedBlock(room, slotTime) {
     duration: selectedDuration
   };
   activeRoom = room;
+
+  // NEW: set values used by the price engine
+  window.selectedStart = mergedBlock.start;
+  window.selectedEnd = new Date(
+    mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
+  );
 }
 
 function openForm1FromDesktop(mergedBlock) {
@@ -277,21 +283,38 @@ async function renderCalendar() {
   };   // ← THIS closes the onclick properly
 
 } else if (rooms.includes("room1")) {
+  // Only Room 1
   slotDiv.style.backgroundColor = "#4caf50";
   slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
   slotDiv.onclick = () => {
     createMergedBlock("room1", slotTime);
+
+    // REQUIRED for price engine
+    window.selectedStart = mergedBlock.start;
+    window.selectedEnd = new Date(
+      mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
+    );
+
     openForm1FromDesktop(mergedBlock);
   };
+}
 
 } else if (rooms.includes("room2")) {
   slotDiv.style.backgroundColor = "#2196f3";
   slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
   slotDiv.onclick = () => {
     createMergedBlock("room2", slotTime);
+
+    // REQUIRED for price engine
+    window.selectedStart = mergedBlock.start;
+    window.selectedEnd = new Date(
+      mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
+    );
+
     openForm1FromDesktop(mergedBlock);
   };
 }
+
       calendarEl.appendChild(slotDiv);
     }
   }
