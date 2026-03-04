@@ -263,7 +263,7 @@ async function renderCalendar() {
         slotDiv.style.pointerEvents = "none";
         slotDiv.innerHTML = "Not<br>Available";
 
-      } else if (rooms.length === 2) {
+     } else if (rooms.length === 2) {
   slotDiv.style.backgroundColor = "#9c27b0";
   slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
 
@@ -276,6 +276,12 @@ async function renderCalendar() {
     floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
       btn.onclick = () => {
         createMergedBlock(btn.dataset.room, slotTime);
+
+        window.selectedStart = mergedBlock.start;
+        window.selectedEnd = new Date(
+          mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
+        );
+
         floatingSelector.style.display = "none";
         openForm1FromDesktop(mergedBlock);
       };
@@ -283,13 +289,12 @@ async function renderCalendar() {
   };   // ← THIS closes the onclick properly
 
 } else if (rooms.includes("room1")) {
-  // Only Room 1
   slotDiv.style.backgroundColor = "#4caf50";
   slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
+
   slotDiv.onclick = () => {
     createMergedBlock("room1", slotTime);
 
-    // REQUIRED for price engine
     window.selectedStart = mergedBlock.start;
     window.selectedEnd = new Date(
       mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
@@ -297,15 +302,14 @@ async function renderCalendar() {
 
     openForm1FromDesktop(mergedBlock);
   };
-}
 
 } else if (rooms.includes("room2")) {
   slotDiv.style.backgroundColor = "#2196f3";
   slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
+
   slotDiv.onclick = () => {
     createMergedBlock("room2", slotTime);
 
-    // REQUIRED for price engine
     window.selectedStart = mergedBlock.start;
     window.selectedEnd = new Date(
       mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
@@ -313,7 +317,9 @@ async function renderCalendar() {
 
     openForm1FromDesktop(mergedBlock);
   };
-}
+
+}   // ← THIS closes the entire if/else chain for room availability
+
 
       calendarEl.appendChild(slotDiv);
     }
