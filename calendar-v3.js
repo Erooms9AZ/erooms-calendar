@@ -300,7 +300,7 @@ async function renderCalendar() {
   openForm1FromDesktop(mergedBlock);
 };
 
-
+  }
       calendarEl.appendChild(slotDiv);
     }
   }
