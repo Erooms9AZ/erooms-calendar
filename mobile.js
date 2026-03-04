@@ -425,13 +425,19 @@ document.getElementById("bfCancel")?.addEventListener("click", () => {
 //  FORM NAVIGATION (NEXT / BACK)
 // ---------------------------------------------------------
 document.getElementById("nextBtn")?.addEventListener("click", () => {
+  const form = document.getElementById("form1");
+
+  // Stop if required fields are missing
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  // Your existing behaviour
   document.getElementById("form1").style.display = "none";
   document.getElementById("form2").style.display = "block";
-
-  // NOW selectedStart and selectedEnd exist
   updatePriceBox();
 });
-
 
 document.getElementById("backBtn")?.addEventListener("click", () => {
   document.getElementById("form2").style.display = "none";
