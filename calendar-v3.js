@@ -93,6 +93,37 @@ function createMergedBlock(room,slotTime){
   activeRoom=room;
   renderCalendar();
 }
+function openForm1FromDesktop(mergedBlock) {
+  if (!mergedBlock) return;
+
+  const start = mergedBlock.start;
+  const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
+
+  const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
+  const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+  const startTime = String(start.getHours()).padStart(2, "0") + ":00";
+  const endTime = String(end.getHours()).padStart(2, "0") + ":00";
+
+  const roomLabel = mergedBlock.room === "room1" ? "Room 1" : "Room 2";
+
+  const summary = `${dayName} ${dateStr}, ${startTime} to ${endTime}\n(Room: ${roomLabel})`;
+
+  // Insert summary into Form 1
+  const summaryEl = document.getElementById("bookingSummary");
+  if (summaryEl) summaryEl.textContent = summary;
+
+  // Show Form 1, hide Form 2
+  document.getElementById("form1").style.display = "block";
+  document.getElementById("form2").style.display = "none";
+
+  window.scrollTo(0, 0);
+}
+
+// Your existing function
+function openBookingForm(summary) {
+   ...
+}
 
 /* -----------------------------
    BOOKING FORM
@@ -208,41 +239,7 @@ async function renderCalendar() {
   ];
   window.allEvents = events;
 
-  // ----------------------------
-  // MERGED BLOCK CONFIRMATION PANEL
-  // ----------------------------
-  if (mergedBlock && mergedBlock.room === activeRoom) {
-    const start = mergedBlock.start;
-    const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
-    const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
-    const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-
-    const mergedRow = document.createElement("div");
-    mergedRow.className = "merged-row";
-    mergedRow.innerHTML = `
-      You have selected a ${mergedBlock.duration} hour session in 
-      ${mergedBlock.room === "room1" ? "Room 1" : "Room 2"} — 
-      ${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00
-      <br><br>
-      <button id="mergedYes" style="margin-right:10px;">Yes</button>
-      <button id="mergedNo">No</button>
-    `;
-    calendarEl.appendChild(mergedRow);
-
-    document.getElementById("mergedYes").onclick = () => {
-      const summary = `${dayName} ${dateStr}, ${String(start.getHours()).padStart(2,"0")}:00 to ${String(end.getHours()).padStart(2,"0")}:00`;
-      openBookingForm(summary);
-    };
-
-    document.getElementById("mergedNo").onclick = () => {
-      mergedBlock = null;
-      renderCalendar();
-    };
-
-    return; // Stop rendering hourly slots while mergedBlock is active
-  }
-
-  // ----------------------------
+    // ----------------------------
   // HOUR LABELS + SLOTS
   // ----------------------------
   for (let h = 10; h < 22; h++) {
@@ -267,29 +264,42 @@ async function renderCalendar() {
         slotDiv.style.backgroundColor = "grey";
         slotDiv.style.pointerEvents = "none";
         slotDiv.innerHTML = "Not<br>Available";
-      } else if (rooms.length === 2) {
-        slotDiv.style.backgroundColor = "#9c27b0";
-        slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
-        slotDiv.onclick = e => {
-          e.stopPropagation();
-          if (!floatingSelector) return;
-          floatingSelector.style.display = "flex";
-          floatingSelector.querySelectorAll("[data-room]").forEach(btn =>
-            btn.onclick = () => {
-              createMergedBlock(btn.dataset.room, slotTime);
-              floatingSelector.style.display = "none";
-            }
-          );
-        };
+    } else if (rooms.length === 2) {
+  slotDiv.style.backgroundColor = "#9c27b0";
+  slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
+
+  slotDiv.onclick = e => {
+    e.stopPropagation();
+    if (!floatingSelector) return;
+
+    floatingSelector.style.display = "flex";
+
+    floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
+      btn.onclick = () => {
+        createMergedBlock(btn.dataset.room, slotTime);
+        floatingSelector.style.display = "none";
+        openForm1FromDesktop(mergedBlock);
+      };
+    });
+  };
+}
+
       } else if (rooms.includes("room1")) {
         slotDiv.style.backgroundColor = "#4caf50";
         slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
-        slotDiv.onclick = () => createMergedBlock("room1", slotTime);
+        slotDiv.onclick = () => {
+  createMergedBlock("room1", slotTime);
+  openForm1FromDesktop(mergedBlock);
+};
+
       } else if (rooms.includes("room2")) {
         slotDiv.style.backgroundColor = "#2196f3";
         slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
-        slotDiv.onclick = () => createMergedBlock("room2", slotTime);
-      }
+        slotDiv.onclick = () => {
+  createMergedBlock("room2", slotTime);
+  openForm1FromDesktop(mergedBlock);
+};
+
 
       calendarEl.appendChild(slotDiv);
     }
