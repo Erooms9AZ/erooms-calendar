@@ -258,44 +258,40 @@ async function renderCalendar() {
         slotDiv.innerHTML = "Not<br>Available";
 
       } else if (rooms.length === 2) {
-        // Both rooms available → floating selector
-        slotDiv.style.backgroundColor = "#9c27b0";
-        slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
+  slotDiv.style.backgroundColor = "#9c27b0";
+  slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
 
-        slotDiv.onclick = e => {
-          e.stopPropagation();
-          if (!floatingSelector) return;
+  slotDiv.onclick = e => {
+    e.stopPropagation();
+    if (!floatingSelector) return;
 
-          floatingSelector.style.display = "flex";
+    floatingSelector.style.display = "flex";
 
-          floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
-            btn.onclick = () => {
-              createMergedBlock(btn.dataset.room, slotTime);
-              floatingSelector.style.display = "none";
-              openForm1FromDesktop(mergedBlock);
-            };
-          });
-        };
+    floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
+      btn.onclick = () => {
+        createMergedBlock(btn.dataset.room, slotTime);
+        floatingSelector.style.display = "none";
+        openForm1FromDesktop(mergedBlock);
+      };
+    });
+  };   // ← THIS closes the onclick properly
 
-      } else if (rooms.includes("room1")) {
-        // Only Room 1
-        slotDiv.style.backgroundColor = "#4caf50";
-        slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
-        slotDiv.onclick = () => {
-          createMergedBlock("room1", slotTime);
-          openForm1FromDesktop(mergedBlock);
-        };
+} else if (rooms.includes("room1")) {
+  slotDiv.style.backgroundColor = "#4caf50";
+  slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
+  slotDiv.onclick = () => {
+    createMergedBlock("room1", slotTime);
+    openForm1FromDesktop(mergedBlock);
+  };
 
-      } else if (rooms.includes("room2")) {
-        // Only Room 2
-        slotDiv.style.backgroundColor = "#2196f3";
-        slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
-        slotDiv.onclick = () => {
-          createMergedBlock("room2", slotTime);
-          openForm1FromDesktop(mergedBlock);
-        };
-      }
-
+} else if (rooms.includes("room2")) {
+  slotDiv.style.backgroundColor = "#2196f3";
+  slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
+  slotDiv.onclick = () => {
+    createMergedBlock("room2", slotTime);
+    openForm1FromDesktop(mergedBlock);
+  };
+}
       calendarEl.appendChild(slotDiv);
     }
   }
