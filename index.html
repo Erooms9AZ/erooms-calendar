@@ -355,36 +355,59 @@ body {
 
     <!-- FORM 2 -->
     <div id="form2" style="display:none;">
-      <h3>Equipment Requirements</h3>
 
-      <label>PA System</label>
-      <div class="equip-toggle" data-target="paSystem">
-        <button type="button" data-value="0">No</button>
-        <button type="button" data-value="1" class="active">Yes</button>
-        <input type="hidden" id="paSystem" value="1">
-      </div>
+  <h3>Equipment Requirements</h3>
 
-      <label style="margin-top:10px;">Guitar Amp (Max 2)</label>
-      <div class="equip-toggle" data-target="guitarAmp">
-        <button type="button" data-value="0">0</button>
-        <button type="button" data-value="1">1</button>
-        <button type="button" data-value="2" class="active">2</button>
-        <input type="hidden" id="guitarAmp" value="2">
-      </div>
+  <!-- PA System -->
+  <div class="equip-row">
+    <span>PA System</span>
+    <div class="equip-toggle">
+      <button class="equip-btn" data-type="pa" data-value="no">No</button>
+      <button class="equip-btn" data-type="pa" data-value="yes">Yes</button>
+    </div>
+  </div>
 
-      <label style="margin-top:10px;">Bass Amp</label>
-      <div class="equip-toggle" data-target="bassAmp">
-        <button type="button" data-value="0">No</button>
-        <button type="button" data-value="1" class="active">Yes</button>
-        <input type="hidden" id="bassAmp" value="1">
-      </div>
+  <!-- Guitar Amp -->
+  <div class="equip-row">
+    <span>Guitar Amp</span>
+    <div class="equip-qty">
+      <button data-type="guitar" data-value="0">0</button>
+      <button data-type="guitar" data-value="1">1</button>
+      <button data-type="guitar" data-value="2">2</button>
+    </div>
+  </div>
 
-      <label style="margin-top:10px;">Drum Kit</label>
-      <div class="equip-toggle" data-target="drumKit">
-        <button type="button" data-value="0">No</button>
-        <button type="button" data-value="1" class="active">Yes</button>
-        <input type="hidden" id="drumKit" value="1">
-      </div>
+  <!-- Bass Amp -->
+  <div class="equip-row">
+    <span>Bass Amp</span>
+    <div class="equip-toggle">
+      <button class="equip-btn" data-type="bass" data-value="no">No</button>
+      <button class="equip-btn" data-type="bass" data-value="yes">Yes</button>
+    </div>
+  </div>
+
+  <!-- Drum Kit -->
+  <div class="equip-row">
+    <span>Drum Kit</span>
+    <div class="equip-toggle">
+      <button class="equip-btn" data-type="drums" data-value="no">No</button>
+      <button class="equip-btn" data-type="drums" data-value="yes">Yes</button>
+    </div>
+  </div>
+
+  <!-- Cost Summary -->
+  <div id="priceBox">
+    <div class="line"><span>Room Hire:</span> <span id="roomCost">£0.00</span></div>
+    <div class="line"><span>Equipment Hire:</span> <span id="equipCost">£0.00</span></div>
+    <div class="total"><span>Total:</span> <span id="totalCost">£0.00</span></div>
+  </div>
+
+  <!-- Buttons -->
+  <button id="submitBtn" class="form-btn primary">Submit</button>
+  <button id="backBtn" class="form-btn secondary">Back</button>
+
+</div>
+
 
       <div id="priceBox" style="
           background:white;
