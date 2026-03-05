@@ -613,6 +613,16 @@ document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
     });
   });
 });
+// Apply default active buttons based on hidden input values
+document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
+  const target = group.dataset.target;
+  const hidden = document.getElementById(target);
+  const defaultBtn = group.querySelector(`button[data-value="${hidden.value}"]`);
+  if (defaultBtn) defaultBtn.classList.add("active");
+});
+
+// Recalculate price immediately with defaults
+updatePriceBox();
 
 /* PRICE ENGINE */
 function updatePriceBox() {
