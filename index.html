@@ -11,12 +11,28 @@ body {
   padding: 20px;
 }
 
-/* Top bar */
 #topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+#prevWeekBtn,
+#nextWeekBtn {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: #6a4df4; /* your purple */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#prevWeekBtn:hover,
+#nextWeekBtn:hover {
+background: #5538d1;
 }
 
 /* Duration buttons */
@@ -341,6 +357,20 @@ body {
 #form2 #priceBox {
   margin-top: 25px;
   margin-bottom: 20px;
+}
+.week-nav {
+  padding: 10px 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: #6a4df4; /* your purple */
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.week-nav:hover {
+  background: #5538d1;
 }
 
 </style>
