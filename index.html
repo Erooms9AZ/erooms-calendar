@@ -477,27 +477,40 @@ function updatePriceBox() {
   window.calculatedTotal = total;
 }
 
-// FORM NAVIGATION
-nextBtn.onclick = () => {
-  if (!custName.value.trim() || !custEmail.value.trim() || !custPhone.value.trim()) {
-    bookingStatus.textContent = "Please complete all required fields.";
+<!-- FORM NAVIGATION (explicit bindings) -->
+const form1El = document.getElementById("form1");
+const form2El = document.getElementById("form2");
+const bookingOverlayEl = document.getElementById("bookingOverlay");
+
+const nextBtnEl = document.getElementById("nextBtn");
+const backBtnEl = document.getElementById("backBtn");
+const cancelBtnEl = document.getElementById("cancelBtn");
+
+const custNameEl = document.getElementById("custName");
+const custEmailEl = document.getElementById("custEmail");
+const custPhoneEl = document.getElementById("custPhone");
+const bookingStatusEl = document.getElementById("bookingStatus");
+
+nextBtnEl.addEventListener("click", () => {
+  if (!custNameEl.value.trim() || !custEmailEl.value.trim() || !custPhoneEl.value.trim()) {
+    bookingStatusEl.textContent = "Please complete all required fields.";
     return;
   }
 
-  bookingStatus.textContent = "";
-  form1.style.display = "none";
-  form2.style.display = "block";
+  bookingStatusEl.textContent = "";
+  form1El.style.display = "none";
+  form2El.style.display = "block";
   updatePriceBox();
-};
+});
 
-backBtn.onclick = () => {
-  form2.style.display = "none";
-  form1.style.display = "block";
-};
+backBtnEl.addEventListener("click", () => {
+  form2El.style.display = "none";
+  form1El.style.display = "block";
+});
 
-cancelBtn.onclick = () => {
-  bookingOverlay.style.display = "none";
-};
+cancelBtnEl.addEventListener("click", () => {
+  bookingOverlayEl.style.display = "none";
+});
 
 // SUBMIT BOOKING
 submitBtn.onclick = async () => {
