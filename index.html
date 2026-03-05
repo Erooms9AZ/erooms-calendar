@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>E Rooms Calendar</title>
 
- <style>
+<style>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -57,14 +57,12 @@ body {
   line-height: 1.2;
 }
 
-/* Day name (Mon, Tue, etc.) */
 .day-header .day-name {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 2px;
 }
 
-/* Date number (24, 25, etc.) */
 .day-header .day-date {
   font-size: 16px;
   font-weight: 700;
@@ -137,11 +135,12 @@ body {
   z-index: 2000;
 }
 
-#bookingBox {
+#bookingForm {
   background: white;
   padding: 20px;
-  width: 300px;
-  border-radius: 6px;
+  width: 350px;
+  max-width: 90%;
+  border-radius: 10px;
 }
 
 #successBox {
@@ -206,33 +205,20 @@ body {
 .slot.unavailable { background-color: grey; color: white; }
 
 /* Booking form input spacing */
-#bookingBox input, #bookingBox textarea {
+#bookingForm input, #bookingForm textarea {
   margin-bottom: 10px;
   padding: 6px;
   width: 100%;
   box-sizing: border-box;
 }
 </style>
-
 </head>
-<!-- NEW DESKTOP BOOKING OVERLAY (MOBILE WORKFLOW) -->
-<div id="bookingOverlay" style="
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.6);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-">
-  <div id="bookingForm" style="
-      background:white;
-      padding:20px;
-      width:350px;
-      max-width:90%;
-      border-radius:10px;
-  ">
+
+<body>
+
+<!-- NEW MOBILE WORKFLOW BOOKING OVERLAY -->
+<div id="bookingOverlay">
+  <div id="bookingForm">
 
     <!-- FORM 1 -->
     <div id="form1">
@@ -240,13 +226,13 @@ body {
       <div id="bookingSummary"></div>
 
       <label>Name*</label>
-      <input type="text" id="custName" style="width:100%" required>
+      <input type="text" id="custName" required>
 
       <label>Email*</label>
-      <input type="email" id="custEmail" style="width:100%" required>
+      <input type="email" id="custEmail" required>
 
       <label>Phone*</label>
-      <input type="tel" id="custPhone" style="width:100%" required>
+      <input type="tel" id="custPhone" required>
 
       <div id="bookingStatus" style="color:red;"></div>
 
@@ -324,39 +310,38 @@ body {
   </div>
 </div>
 
-<body>
+<!-- TOP BAR -->
+<div id="topBar">
+  <button id="prevWeekBtn">← Previous Week</button>
+  <div id="monthLabel">Loading…</div>
+  <button id="nextWeekBtn">Next Week →</button>
+</div>
 
-  <div id="topBar">
-    <button id="prevWeekBtn">← Previous Week</button>
-    <div id="monthLabel">Loading…</div>
-    <button id="nextWeekBtn">Next Week →</button>
-  </div>
+<!-- HELP POPUP -->
+<div id="helpPopup">
+  <div id="helpClose">✖</div>
 
-  <!-- Help Popup -->
-  <div id="helpPopup">
-    <div id="helpClose">✖</div>
+  <h2>How E Rooms Booking Works</h2>
 
-    <h2>How E Rooms Booking Works</h2>
+  <p><strong>Colour Guide:</strong></p>
+  <ul>
+    <li><span style="color:#9c27b0;">Purple</span>: Both rooms available</li>
+    <li><span style="color:#4caf50;">Green</span>: Only Room 1 available</li>
+    <li><span style="color:#2196f3;">Blue</span>: Only Room 2 available</li>
+    <li><span style="color:grey;">Grey</span>: Unavailable</li>
+  </ul>
 
-    <p><strong>Colour Guide:</strong></p>
-    <ul>
-      <li><span style="color:#9c27b0;">Purple</span>: Both rooms available</li>
-      <li><span style="color:#4caf50;">Green</span>: Only Room 1 available</li>
-      <li><span style="color:#2196f3;">Blue</span>: Only Room 2 available</li>
-      <li><span style="color:grey;">Grey</span>: Unavailable</li>
-    </ul>
+  <p><strong>How to Book:</strong></p>
+  <ol>
+    <li>Choose your session length — 1 to 4 hours.</li>
+    <li>If both rooms are available, click the time slot then choose Room 1 or Room 2.</li>
+    <li>Click an available time slot.</li>
+    <li>Confirm the time when prompted.</li>
+    <li>Fill in your details and submit.</li>
+  </ol>
+</div>
 
-    <p><strong>How to Book:</strong></p>
-    <ol>
-      <li>Choose your session length — 1 to 4 hours.</li>
-      <li>If both rooms are available, click the time slot then choose Room 1 or Room 2.</li>
-      <li>Click an available time slot.</li>
-      <li>Confirm the time when prompted.</li>
-      <li>Fill in your details and submit.</li>
-    </ol>
-  </div>
-
- <!-- Duration Buttons + Help -->
+<!-- DURATION BUTTONS + HELP -->
 <div id="controlsRow">
   <div id="durationButtons">
     <button data-hours="1" class="active">1 Hour</button>
@@ -367,60 +352,23 @@ body {
   <button id="helpButton" class="help-inline">How to use this form</button>
 </div>
 
+<br>
 
-  <br>
+<!-- CALENDAR -->
+<div id="calendar"></div>
 
-  <div id="calendar"></div>
+<!-- FLOATING ROOM SELECTOR -->
+<div id="floatingSelector">
+  <button data-room="room1">Room 1</button>
+  <button data-room="room2">Room 2</button>
+</div>
 
-  <div id="floatingSelector">
-    <button data-room="room1">Room 1</button>
-    <button data-room="room2">Room 2</button>
-  </div>
+<!-- LOAD CALENDAR LOGIC -->
+<script src="calendar-v3.js"></script>
 
-  <div id="bookingOverlay">
-    <div id="bookingBox">
-      <div id="bookingForm">
-        <h3>Booking Summary</h3>
-        <div id="bookingSummary"></div>
-        <br>
-
-        <label>Name*</label><br>
-        <input id="bfName" type="text" style="width:100%"><br><br>
-
-        <label>Email*</label><br>
-        <input id="bfEmail" type="email" style="width:100%"><br><br>
-
-        <label>Phone*</label><br>
-        <input id="bfPhone" type="text" style="width:100%"><br><br>
-
-        <label>Comments</label><br>
-        <textarea id="bfComments" style="width:100%"></textarea><br><br>
-
-        <div id="bookingStatus" style="color:red;"></div><br>
-
-        <button id="bfSubmit">Submit</button>
-        <button id="bfCancel">Cancel</button>
-      </div>
-
-      <div id="successBox">
-        <div id="successMessage"></div>
-        <br>
-        <button id="successOk">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Load calendar logic -->
-  <script src="calendar-v3.js"></script>
-
-  <!-- Help popup logic -->
-  <script>
-window.currentWeekStart = window.currentWeekStart || null;
-</script>
-
- <script>
+<!-- HELP POPUP LOGIC -->
+<script>
 document.getElementById("helpButton").addEventListener("click", () => {
-  // Just show the popup — no DOM mutation that affects calendar
   document.getElementById("helpPopup").style.display = "block";
 });
 
@@ -428,10 +376,12 @@ document.getElementById("helpClose").addEventListener("click", () => {
   document.getElementById("helpPopup").style.display = "none";
 });
 </script>
+
+<!-- BOOKING WORKFLOW JS (MATCHES MOBILE + calendar-v3.js) -->
 <script>
-// ---------------------------------------------------------
-//  DESKTOP → MOBILE WORKFLOW ADAPTER
-// ---------------------------------------------------------
+window.currentWeekStart = window.currentWeekStart || null;
+
+// DESKTOP → MOBILE WORKFLOW ADAPTER
 function openForm1FromDesktop(mergedBlock) {
   const start = new Date(mergedBlock.start);
   const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
@@ -452,25 +402,21 @@ function openForm1FromDesktop(mergedBlock) {
 
   document.getElementById("bookingSummary").textContent = summary;
 
-  document.getElementById("form1").style.display = "block";
-  document.getElementById("form2").style.display = "none";
-  document.getElementById("successBox").style.display = "none";
+  form1.style.display = "block";
+  form2.style.display = "none";
+  successBox.style.display = "none";
 
-  document.getElementById("bookingOverlay").style.display = "flex";
+  bookingOverlay.style.display = "flex";
 }
 
-// ---------------------------------------------------------
-//  REPLACE DESKTOP "YES" BUTTON WITH NEW WORKFLOW
-// ---------------------------------------------------------
+// REPLACE DESKTOP "YES" BUTTON
 document.addEventListener("click", function(e) {
   if (e.target && e.target.id === "mergedYes") {
     openForm1FromDesktop(window.mergedBlock);
   }
 });
 
-// ---------------------------------------------------------
-//  EQUIPMENT TOGGLE HANDLERS
-// ---------------------------------------------------------
+// EQUIPMENT TOGGLES
 document.querySelectorAll(".equip-toggle").forEach(group => {
   const target = group.dataset.target;
   const hidden = document.getElementById(target);
@@ -485,9 +431,7 @@ document.querySelectorAll(".equip-toggle").forEach(group => {
   });
 });
 
-// ---------------------------------------------------------
-//  PRICE ENGINE (COPIED FROM MOBILE)
-// ---------------------------------------------------------
+// PRICE ENGINE
 function updatePriceBox() {
   const paSystem = Number(document.getElementById("paSystem").value);
   const guitarAmp = Number(document.getElementById("guitarAmp").value);
@@ -533,15 +477,9 @@ function updatePriceBox() {
   window.calculatedTotal = total;
 }
 
-// ---------------------------------------------------------
-//  FORM NAVIGATION
-// ---------------------------------------------------------
-document.getElementById("nextBtn").onclick = () => {
-  const name = custName.value.trim();
-  const email = custEmail.value.trim();
-  const phone = custPhone.value.trim();
-
-  if (!name || !email || !phone) {
+// FORM NAVIGATION
+nextBtn.onclick = () => {
+  if (!custName.value.trim() || !custEmail.value.trim() || !custPhone.value.trim()) {
     bookingStatus.textContent = "Please complete all required fields.";
     return;
   }
@@ -552,19 +490,17 @@ document.getElementById("nextBtn").onclick = () => {
   updatePriceBox();
 };
 
-document.getElementById("backBtn").onclick = () => {
+backBtn.onclick = () => {
   form2.style.display = "none";
-  bookingForm.style.display = "block";
+  form1.style.display = "block";
 };
 
-document.getElementById("cancelBtn").onclick = () => {
+cancelBtn.onclick = () => {
   bookingOverlay.style.display = "none";
 };
 
-// ---------------------------------------------------------
-//  SUBMIT BOOKING (COPIED FROM MOBILE)
-// ---------------------------------------------------------
-document.getElementById("submitBtn").onclick = async () => {
+// SUBMIT BOOKING
+submitBtn.onclick = async () => {
   try {
     bookingStatus2.textContent = "Submitting...";
 
@@ -603,10 +539,8 @@ document.getElementById("submitBtn").onclick = async () => {
   }
 };
 
-// ---------------------------------------------------------
-//  SUCCESS OK
-// ---------------------------------------------------------
-document.getElementById("successOk").onclick = () => {
+// SUCCESS OK
+successOk.onclick = () => {
   successBox.style.display = "none";
   bookingOverlay.style.display = "none";
 
@@ -618,7 +552,4 @@ document.getElementById("successOk").onclick = () => {
   custPhone.value = "";
   bookingStatus.textContent = "";
 };
-</script>
-
-</body>
-</html>
+</script
