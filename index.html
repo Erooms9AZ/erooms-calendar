@@ -93,6 +93,7 @@ body {
   opacity: 0.8;
 }
 
+/* Floating room selector */
 #floatingSelector {
   position: fixed;
   top: 50%;
@@ -138,7 +139,6 @@ body {
   background: #bbb;
 }
 
-
 /* Merged slot panel */
 .merged-row {
   grid-column: 1 / span 7;
@@ -164,14 +164,18 @@ body {
   z-index: 2000;
 }
 
+/* MOBILE‑STYLE BOOKING CARD */
 #bookingForm {
   background: white;
-  padding: 20px;
-  width: 350px;
-  max-width: 90%;
-  border-radius: 10px;
+  padding: 25px;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+  box-sizing: border-box;
 }
 
+/* Success box */
 #successBox {
   display: none;
 }
@@ -233,12 +237,45 @@ body {
 .slot.room2 { background-color: #2196f3; color: white; }
 .slot.unavailable { background-color: grey; color: white; }
 
-/* Booking form input spacing */
-#bookingForm input, #bookingForm textarea {
-  margin-bottom: 10px;
-  padding: 6px;
+/* MOBILE‑STYLE FORM FIELDS */
+#bookingForm label {
+  display: block;
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+#bookingForm input,
+#bookingForm textarea {
   width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 6px;
+  margin-bottom: 12px;
   box-sizing: border-box;
+}
+
+/* MOBILE‑STYLE BUTTONS */
+.form-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.form-btn.primary {
+  background: #673ab7;
+  color: white;
+}
+
+.form-btn.secondary {
+  background: #ccc;
+  color: #333;
 }
 </style>
 </head>
@@ -265,8 +302,9 @@ body {
 
       <div id="bookingStatus" style="color:red;"></div>
 
-      <button id="nextBtn">Next</button>
-      <button id="cancelBtn">Cancel</button>
+      <button id="nextBtn" class="form-btn primary">Next</button>
+      <button id="cancelBtn" class="form-btn secondary">Cancel</button>
+
     </div>
 
     <!-- FORM 2 -->
@@ -319,8 +357,9 @@ body {
 
       <div id="bookingStatus2" style="color:red;"></div>
 
-      <button id="submitBtn">Submit</button>
-      <button id="backBtn">Back</button>
+      <button id="backBtn" class="form-btn secondary">Back</button>
+       <button id="submitBtn" class="form-btn primary">Submit</button>
+
     </div>
   </div>
 
