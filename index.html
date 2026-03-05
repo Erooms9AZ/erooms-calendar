@@ -93,21 +93,34 @@ body {
   opacity: 0.8;
 }
 
-/* Floating room selector */
 #floatingSelector {
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 20px;
   display: none;
   flex-direction: column;
-  gap: 10px;
-  z-index: 1000;
-  min-width: 100px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  top: 0;
-  left: 0;
-  transform: translate(0, 0);
+  gap: 15px;
+  z-index: 3000;
+  min-width: 200px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+#floatingSelector button {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  cursor: pointer;
+  background: #eee;
+}
+
+#floatingSelector button:hover {
+  background: #ddd;
 }
 
 /* Merged slot panel */
