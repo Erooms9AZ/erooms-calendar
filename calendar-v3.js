@@ -163,7 +163,7 @@ bookingOverlay.style.display = "flex";
 } catch(e) {
   console.error("Error submitting booking.", e);
 }
-
+}
 
 if(bfSubmit) bfSubmit.onclick=handleBookingSubmit;
 if(bfCancel) bfCancel.onclick=closeBookingForm;
