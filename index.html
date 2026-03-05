@@ -626,17 +626,22 @@ function updatePriceBox() {
 
   const total = roomHire + equipmentHire;
 
-  document.getElementById("roomCost").textContent =
-    `£${roomHire.toFixed(2)}`;
-  document.getElementById("equipCost").textContent =
-    `£${equipmentHire.toFixed(2)}`;
-  document.getElementById("totalCost").textContent =
-    `£${total.toFixed(2)}`;
+  document.getElementById("roomCost").textContent = `£${roomHire.toFixed(2)}`;
+  document.getElementById("equipCost").textContent = `£${equipmentHire.toFixed(2)}`;
+
+  if (anyEquipment) {
+    document.getElementById("totalCost").textContent =
+      `£${total.toFixed(2)} (includes VAT)`;
+  } else {
+    document.getElementById("totalCost").textContent =
+      `£${total.toFixed(2)}`;
+  }
 
   window.calculatedRoomHire = roomHire;
   window.calculatedEquipmentHire = equipmentHire;
   window.calculatedTotal = total;
 }
+
 
 /* FORM NAVIGATION */
 const form1El = document.getElementById("form1");
