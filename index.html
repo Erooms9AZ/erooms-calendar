@@ -99,29 +99,45 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  border: 1px solid #ccc;
-  padding: 20px;
+  padding: 25px;
   display: none;
   flex-direction: column;
   gap: 15px;
   z-index: 3000;
-  min-width: 200px;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  min-width: 240px;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.25);
+  text-align: center;
 }
 
-#floatingSelector button {
+#floatingSelector .room-btn {
+  padding: 14px;
+  font-size: 17px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #673ab7;
+  color: white;
+}
+
+#floatingSelector .room-btn:hover {
+  opacity: 0.9;
+}
+
+#floatingSelector .cancel-btn {
   padding: 12px;
   font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #444;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  background: #eee;
+  background: #ccc;
+  color: #333;
 }
 
-#floatingSelector button:hover {
-  background: #ddd;
+#floatingSelector .cancel-btn:hover {
+  background: #bbb;
 }
+
 
 /* Merged slot panel */
 .merged-row {
@@ -372,8 +388,9 @@ body {
 
 <!-- FLOATING ROOM SELECTOR -->
 <div id="floatingSelector">
-  <button data-room="room1">Room 1</button>
-  <button data-room="room2">Room 2</button>
+  <button data-room="room1" class="room-btn">Room 1</button>
+  <button data-room="room2" class="room-btn">Room 2</button>
+  <button id="selectorCancel" class="cancel-btn">Cancel</button>
 </div>
 
 <!-- LOAD CALENDAR LOGIC -->
@@ -428,6 +445,38 @@ document.addEventListener("click", function(e) {
     openForm1FromDesktop(window.mergedBlock);
   }
 });
+// REPLACE DESKTOP "YES" BUTTON
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "mergedYes") {
+    openForm1FromDesktop(window.mergedBlock);
+  }
+});
+
+// ---------------------------------------------------------
+//  ROOM SELECTOR HANDLERS
+// ---------------------------------------------------------
+
+// Room 1
+document.querySelector('#floatingSelector button[data-room="room1"]')
+  .addEventListener("click", () => {
+    window.selectedRoom = "room1";
+    document.getElementById("floatingSelector").style.display = "none";
+    window.handleRoomSelection("room1");
+  });
+
+// Room 2
+document.querySelector('#floatingSelector button[data-room="room2"]')
+  .addEventListener("click", () => {
+    window.selectedRoom = "room2";
+    document.getElementById("floatingSelector").style.display = "none";
+    window.handleRoomSelection("room2");
+  });
+
+// Cancel
+document.getElementById("selectorCancel")
+  .addEventListener("click", () => {
+    document.getElementById("floatingSelector").style.display = "none";
+  });
 
 // EQUIPMENT TOGGLES
 document.querySelectorAll(".equip-toggle").forEach(group => {
