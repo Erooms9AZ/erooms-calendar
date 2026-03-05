@@ -374,7 +374,6 @@ body {
 
     <!-- FORM 2 -->
     <div id="form2" style="display:none;">
-
       <h3>Equipment Requirements</h3>
 
       <!-- Hidden inputs for price engine -->
@@ -382,28 +381,6 @@ body {
       <input type="hidden" id="guitarAmp" value="2">
       <input type="hidden" id="bassAmp" value="1">
       <input type="hidden" id="drumKit" value="1">
-
-// Default all equipment to YES on load
-document.querySelectorAll(".equip-toggle").forEach(group => {
-  const yesBtn = group.querySelector('button[data-value="1"]');
-  if (yesBtn) yesBtn.classList.add("active");
-});
-
-document.querySelectorAll(".equip-qty").forEach(group => {
-  const twoBtn = group.querySelector('button[data-value="2"]');
-  if (twoBtn) twoBtn.classList.add("active");
-});
-
-// Recalculate price immediately
-updatePriceBox();
-
-document.querySelectorAll(".equip-qty").forEach(group => {
-  const oneBtn = group.querySelector('button[data-value="1"]');
-  if (oneBtn) oneBtn.classList.add("active");
-});
-
-// Recalculate price immediately
-updatePriceBox();
 
       <!-- PA System -->
       <div class="equip-row">
@@ -454,7 +431,6 @@ updatePriceBox();
       <button id="submitBtn" class="form-btn primary">Submit</button>
       <button id="backBtn" class="form-btn secondary">Back</button>
     </div>
-
   </div>
 
   <!-- SUCCESS BOX -->
@@ -613,7 +589,7 @@ document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
     });
   });
 });
-// Apply default active buttons based on hidden input values
+  // Apply default active buttons based on hidden input values
 document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
   const target = group.dataset.target;
   const hidden = document.getElementById(target);
@@ -621,7 +597,7 @@ document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
   if (defaultBtn) defaultBtn.classList.add("active");
 });
 
-// Recalculate price immediately with defaults
+// Recalculate price immediately
 updatePriceBox();
 
 /* PRICE ENGINE */
