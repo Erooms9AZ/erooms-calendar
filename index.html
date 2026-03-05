@@ -121,10 +121,6 @@ body {
   color: white;
 }
 
-#floatingSelector .room-btn:hover {
-  opacity: 0.9;
-}
-
 #floatingSelector .cancel-btn {
   padding: 12px;
   font-size: 16px;
@@ -133,10 +129,6 @@ body {
   cursor: pointer;
   background: #ccc;
   color: #333;
-}
-
-#floatingSelector .cancel-btn:hover {
-  background: #bbb;
 }
 
 /* Merged slot panel */
@@ -197,10 +189,6 @@ body {
   font-size: 14px;
 }
 
-#helpButton.help-inline:hover {
-  opacity: 0.85;
-}
-
 /* Help popup */
 #helpPopup {
   position: fixed;
@@ -225,12 +213,6 @@ body {
   font-size: 18px;
 }
 
-#controlsRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 /* Slot availability colours */
 .slot.available { background-color: #9c27b0; color: white; }
 .slot.room1 { background-color: #4caf50; color: white; }
@@ -245,8 +227,7 @@ body {
   font-weight: 600;
 }
 
-#bookingForm input,
-#bookingForm textarea {
+#bookingForm input {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -277,37 +258,26 @@ body {
   background: #ccc;
   color: #333;
 }
-/* Equipment toggle container */
-.equip-toggle {
+
+/* Equipment rows */
+.equip-row {
   display: flex;
-  gap: 10px;
-}
-
-/* Base toggle button */
-.equip-btn {
-  flex: 1;
-  padding: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px 0;
   font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: #ccc;
-  color: #333;
-  text-align: center;
+  font-weight: 600;
 }
 
-/* Active (selected) state */
-.equip-btn.active {
-  background: #673ab7;
-  color: white;
-}
-
-/* Quantity selector (e.g., guitar amp 0/1/2) */
+/* Toggle groups */
+.equip-toggle,
 .equip-qty {
   display: flex;
   gap: 10px;
 }
 
+/* Toggle buttons */
+.equip-btn,
 .equip-qty button {
   flex: 1;
   padding: 12px;
@@ -319,16 +289,42 @@ body {
   color: #333;
 }
 
+.equip-btn.active,
 .equip-qty button.active {
   background: #673ab7;
   color: white;
+}
+
+/* Price box */
+#priceBox {
+  background: #f7f7f7;
+  padding: 18px;
+  border-radius: 10px;
+  margin-top: 25px;
+  font-size: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+
+#priceBox .line {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+#priceBox .total {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #ccc;
+  font-size: 18px;
+  font-weight: 700;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NEW MOBILE WORKFLOW BOOKING OVERLAY -->
+<!-- BOOKING OVERLAY -->
 <div id="bookingOverlay">
   <div id="bookingForm">
 
@@ -350,87 +346,69 @@ body {
 
       <button id="nextBtn" class="form-btn primary">Next</button>
       <button id="cancelBtn" class="form-btn secondary">Cancel</button>
-
     </div>
 
     <!-- FORM 2 -->
     <div id="form2" style="display:none;">
 
-  <h3>Equipment Requirements</h3>
+      <h3>Equipment Requirements</h3>
 
-  <!-- PA System -->
-  <div class="equip-row">
-    <span>PA System</span>
-    <div class="equip-toggle">
-      <button class="equip-btn" data-type="pa" data-value="no">No</button>
-      <button class="equip-btn" data-type="pa" data-value="yes">Yes</button>
-    </div>
-  </div>
+      <!-- Hidden inputs for price engine -->
+      <input type="hidden" id="paSystem" value="0">
+      <input type="hidden" id="guitarAmp" value="0">
+      <input type="hidden" id="bassAmp" value="0">
+      <input type="hidden" id="drumKit" value="0">
 
-  <!-- Guitar Amp -->
-  <div class="equip-row">
-    <span>Guitar Amp</span>
-    <div class="equip-qty">
-      <button data-type="guitar" data-value="0">0</button>
-      <button data-type="guitar" data-value="1">1</button>
-      <button data-type="guitar" data-value="2">2</button>
-    </div>
-  </div>
+      <!-- PA System -->
+      <div class="equip-row">
+        <span>PA System</span>
+        <div class="equip-toggle" data-target="paSystem">
+          <button class="equip-btn" data-type="pa" data-value="0">No</button>
+          <button class="equip-btn" data-type="pa" data-value="1">Yes</button>
+        </div>
+      </div>
 
-  <!-- Bass Amp -->
-  <div class="equip-row">
-    <span>Bass Amp</span>
-    <div class="equip-toggle">
-      <button class="equip-btn" data-type="bass" data-value="no">No</button>
-      <button class="equip-btn" data-type="bass" data-value="yes">Yes</button>
-    </div>
-  </div>
+      <!-- Guitar Amp -->
+      <div class="equip-row">
+        <span>Guitar Amp</span>
+        <div class="equip-qty" data-target="guitarAmp">
+          <button data-type="guitar" data-value="0">0</button>
+          <button data-type="guitar" data-value="1">1</button>
+          <button data-type="guitar" data-value="2">2</button>
+        </div>
+      </div>
 
-  <!-- Drum Kit -->
-  <div class="equip-row">
-    <span>Drum Kit</span>
-    <div class="equip-toggle">
-      <button class="equip-btn" data-type="drums" data-value="no">No</button>
-      <button class="equip-btn" data-type="drums" data-value="yes">Yes</button>
-    </div>
-  </div>
+      <!-- Bass Amp -->
+      <div class="equip-row">
+        <span>Bass Amp</span>
+        <div class="equip-toggle" data-target="bassAmp">
+          <button class="equip-btn" data-type="bass" data-value="0">No</button>
+          <button class="equip-btn" data-type="bass" data-value="1">Yes</button>
+        </div>
+      </div>
 
-  <!-- PRICE BOX (now correctly inside Form 2) -->
-  <div id="priceBox">
-    <div class="line"><span>Room Hire:</span> <span id="roomCost">£0.00</span></div>
-    <div class="line"><span>Equipment Hire:</span> <span id="equipCost">£0.00</span></div>
-    <div class="total"><span>Total:</span> <span id="totalCost">£0.00</span></div>
-  </div>
+      <!-- Drum Kit -->
+      <div class="equip-row">
+        <span>Drum Kit</span>
+        <div class="equip-toggle" data-target="drumKit">
+          <button class="equip-btn" data-type="drums" data-value="0">No</button>
+          <button class="equip-btn" data-type="drums" data-value="1">Yes</button>
+        </div>
+      </div>
 
-  <!-- Buttons -->
-  <button id="submitBtn" class="form-btn primary">Submit</button>
-  <button id="backBtn" class="form-btn secondary">Back</button>
-
-</div>
-
-
-
-      <div id="priceBox" style="
-          background:white;
-          padding:15px;
-          margin-top:15px;
-          margin-bottom:15px;
-          border-radius:8px;
-          box-shadow:0 0 10px rgba(0,0,0,0.15);
-          font-size:18px;
-          line-height:1.4;
-      ">
-        <div>Room Hire: £0.00</div>
-        <div>Equipment Hire: £0.00</div>
-        <div><strong>Total: £0.00</strong></div>
+      <!-- PRICE BOX -->
+      <div id="priceBox">
+        <div class="line"><span>Room Hire:</span> <span id="roomCost">£0.00</span></div>
+        <div class="line"><span>Equipment Hire:</span> <span id="equipCost">£0.00</span></div>
+        <div class="total"><span>Total:</span> <span id="totalCost">£0.00</span></div>
       </div>
 
       <div id="bookingStatus2" style="color:red;"></div>
 
+      <button id="submitBtn" class="form-btn primary">Submit</button>
       <button id="backBtn" class="form-btn secondary">Back</button>
-       <button id="submitBtn" class="form-btn primary">Submit</button>
-
     </div>
+
   </div>
 
   <!-- SUCCESS BOX -->
@@ -516,11 +494,11 @@ document.getElementById("helpClose").addEventListener("click", () => {
 });
 </script>
 
-<!-- BOOKING WORKFLOW JS (MATCHES MOBILE + calendar-v3.js) -->
+<!-- BOOKING WORKFLOW JS -->
 <script>
 window.currentWeekStart = window.currentWeekStart || null;
 
-// DESKTOP → MOBILE WORKFLOW ADAPTER
+/* DESKTOP → MOBILE WORKFLOW ADAPTER */
 function openForm1FromDesktop(mergedBlock) {
   const start = new Date(mergedBlock.start);
   const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
@@ -548,24 +526,14 @@ function openForm1FromDesktop(mergedBlock) {
   bookingOverlay.style.display = "flex";
 }
 
-// REPLACE DESKTOP "YES" BUTTON
-document.addEventListener("click", function(e) {
-  if (e.target && e.target.id === "mergedYes") {
-    openForm1FromDesktop(window.mergedBlock);
-  }
-});
-// REPLACE DESKTOP "YES" BUTTON
+/* REPLACE DESKTOP "YES" BUTTON */
 document.addEventListener("click", function(e) {
   if (e.target && e.target.id === "mergedYes") {
     openForm1FromDesktop(window.mergedBlock);
   }
 });
 
-// ---------------------------------------------------------
-//  ROOM SELECTOR HANDLERS
-// ---------------------------------------------------------
-
-// Room 1
+/* ROOM SELECTOR HANDLERS */
 document.querySelector('#floatingSelector button[data-room="room1"]')
   .addEventListener("click", () => {
     window.selectedRoom = "room1";
@@ -573,7 +541,6 @@ document.querySelector('#floatingSelector button[data-room="room1"]')
     window.handleRoomSelection("room1");
   });
 
-// Room 2
 document.querySelector('#floatingSelector button[data-room="room2"]')
   .addEventListener("click", () => {
     window.selectedRoom = "room2";
@@ -581,14 +548,13 @@ document.querySelector('#floatingSelector button[data-room="room2"]')
     window.handleRoomSelection("room2");
   });
 
-// Cancel
 document.getElementById("selectorCancel")
   .addEventListener("click", () => {
     document.getElementById("floatingSelector").style.display = "none";
   });
 
-// EQUIPMENT TOGGLES
-document.querySelectorAll(".equip-toggle").forEach(group => {
+/* EQUIPMENT TOGGLES */
+document.querySelectorAll(".equip-toggle, .equip-qty").forEach(group => {
   const target = group.dataset.target;
   const hidden = document.getElementById(target);
 
@@ -602,7 +568,7 @@ document.querySelectorAll(".equip-toggle").forEach(group => {
   });
 });
 
-// PRICE ENGINE
+/* PRICE ENGINE */
 function updatePriceBox() {
   const paSystem = Number(document.getElementById("paSystem").value);
   const guitarAmp = Number(document.getElementById("guitarAmp").value);
@@ -636,19 +602,19 @@ function updatePriceBox() {
 
   const total = roomHire + equipmentHire;
 
-  document.querySelector("#priceBox div:nth-child(1)").textContent =
-    `Room Hire: £${roomHire.toFixed(2)}`;
-  document.querySelector("#priceBox div:nth-child(2)").textContent =
-    `Equipment Hire: £${equipmentHire.toFixed(2)}`;
-  document.querySelector("#priceBox div:nth-child(3)").innerHTML =
-    `<strong>Total: £${total.toFixed(2)}</strong>`;
+  document.getElementById("roomCost").textContent =
+    `£${roomHire.toFixed(2)}`;
+  document.getElementById("equipCost").textContent =
+    `£${equipmentHire.toFixed(2)}`;
+  document.getElementById("totalCost").textContent =
+    `£${total.toFixed(2)}`;
 
   window.calculatedRoomHire = roomHire;
   window.calculatedEquipmentHire = equipmentHire;
   window.calculatedTotal = total;
 }
 
-<!-- FORM NAVIGATION (explicit bindings) -->
+/* FORM NAVIGATION */
 const form1El = document.getElementById("form1");
 const form2El = document.getElementById("form2");
 const bookingOverlayEl = document.getElementById("bookingOverlay");
@@ -656,11 +622,13 @@ const bookingOverlayEl = document.getElementById("bookingOverlay");
 const nextBtnEl = document.getElementById("nextBtn");
 const backBtnEl = document.getElementById("backBtn");
 const cancelBtnEl = document.getElementById("cancelBtn");
+const submitBtnEl = document.getElementById("submitBtn");
 
 const custNameEl = document.getElementById("custName");
 const custEmailEl = document.getElementById("custEmail");
 const custPhoneEl = document.getElementById("custPhone");
 const bookingStatusEl = document.getElementById("bookingStatus");
+const bookingStatus2El = document.getElementById("bookingStatus2");
 
 nextBtnEl.addEventListener("click", () => {
   if (!custNameEl.value.trim() || !custEmailEl.value.trim() || !custPhoneEl.value.trim()) {
@@ -683,22 +651,22 @@ cancelBtnEl.addEventListener("click", () => {
   bookingOverlayEl.style.display = "none";
 });
 
-// SUBMIT BOOKING
-submitBtn.onclick = async () => {
+/* SUBMIT BOOKING */
+submitBtnEl.addEventListener("click", async () => {
   try {
-    bookingStatus2.textContent = "Submitting...";
+    bookingStatus2El.textContent = "Submitting...";
 
     const payload = {
-      name: custName.value.trim(),
-      email: custEmail.value.trim(),
-      phone: custPhone.value.trim(),
+      name: custNameEl.value.trim(),
+      email: custEmailEl.value.trim(),
+      phone: custPhoneEl.value.trim(),
       room: window.selectedRoom,
       start: window.selectedStart.toISOString(),
       end: window.selectedEnd.toISOString(),
-      paSystem: paSystem.value,
-      guitarAmp: guitarAmp.value,
-      bassAmp: bassAmp.value,
-      drumKit: drumKit.value,
+      paSystem: document.getElementById("paSystem").value,
+      guitarAmp: document.getElementById("guitarAmp").value,
+      bassAmp: document.getElementById("bassAmp").value,
+      drumKit: document.getElementById("drumKit").value,
       roomHire: window.calculatedRoomHire,
       equipmentHire: window.calculatedEquipmentHire,
       totalPrice: window.calculatedTotal
@@ -711,31 +679,34 @@ submitBtn.onclick = async () => {
       body: JSON.stringify(payload)
     });
 
-    successMessage.textContent =
+    document.getElementById("successMessage").textContent =
       "Thank you for booking a room at E Rooms - Your booking is confirmed.";
 
-    bookingForm.style.display = "none";
-    successBox.style.display = "block";
+    document.getElementById("bookingForm").style.display = "none";
+    document.getElementById("successBox").style.display = "block";
 
   } catch (err) {
-    bookingStatus2.textContent =
+    bookingStatus2El.textContent =
       "There was an error submitting your booking. Please try again.";
   }
-};
+});
 
-// SUCCESS OK
-successOk.onclick = () => {
-  successBox.style.display = "none";
-  bookingOverlay.style.display = "none";
+/* SUCCESS OK */
+document.getElementById("successOk").addEventListener("click", () => {
+  document.getElementById("successBox").style.display = "none";
+  document.getElementById("bookingOverlay").style.display = "none";
 
-  form1.style.display = "block";
-  form2.style.display = "none";
+  form1El.style.display = "block";
+  form2El.style.display = "none";
 
-  custName.value = "";
-  custEmail.value = "";
-  custPhone.value = "";
-  bookingStatus.textContent = "";
-};
-</script
+  custNameEl.value = "";
+  custEmailEl.value = "";
+  custPhoneEl.value = "";
+  bookingStatusEl.textContent = "";
+});
+</script>
+
 </body>
 </html>
+
+
