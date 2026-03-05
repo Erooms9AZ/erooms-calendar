@@ -277,6 +277,52 @@ body {
   background: #ccc;
   color: #333;
 }
+/* Equipment toggle container */
+.equip-toggle {
+  display: flex;
+  gap: 10px;
+}
+
+/* Base toggle button */
+.equip-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #ccc;
+  color: #333;
+  text-align: center;
+}
+
+/* Active (selected) state */
+.equip-btn.active {
+  background: #673ab7;
+  color: white;
+}
+
+/* Quantity selector (e.g., guitar amp 0/1/2) */
+.equip-qty {
+  display: flex;
+  gap: 10px;
+}
+
+.equip-qty button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #ccc;
+  color: #333;
+}
+
+.equip-qty button.active {
+  background: #673ab7;
+  color: white;
+}
 </style>
 </head>
 
