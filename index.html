@@ -378,10 +378,32 @@ body {
       <h3>Equipment Requirements</h3>
 
       <!-- Hidden inputs for price engine -->
-      <input type="hidden" id="paSystem" value="0">
-      <input type="hidden" id="guitarAmp" value="0">
-      <input type="hidden" id="bassAmp" value="0">
-      <input type="hidden" id="drumKit" value="0">
+      <input type="hidden" id="paSystem" value="1">
+      <input type="hidden" id="guitarAmp" value="2">
+      <input type="hidden" id="bassAmp" value="1">
+      <input type="hidden" id="drumKit" value="1">
+
+// Default all equipment to YES on load
+document.querySelectorAll(".equip-toggle").forEach(group => {
+  const yesBtn = group.querySelector('button[data-value="1"]');
+  if (yesBtn) yesBtn.classList.add("active");
+});
+
+document.querySelectorAll(".equip-qty").forEach(group => {
+  const twoBtn = group.querySelector('button[data-value="2"]');
+  if (twoBtn) twoBtn.classList.add("active");
+});
+
+// Recalculate price immediately
+updatePriceBox();
+
+document.querySelectorAll(".equip-qty").forEach(group => {
+  const oneBtn = group.querySelector('button[data-value="1"]');
+  if (oneBtn) oneBtn.classList.add("active");
+});
+
+// Recalculate price immediately
+updatePriceBox();
 
       <!-- PA System -->
       <div class="equip-row">
@@ -473,7 +495,7 @@ body {
 
   <p><strong>How to Book:</strong></p>
   <ol>
-    <li>Choose your session length — 1 to 4 hours.</li>
+    <li>Choose your session length — 1 to 3 hours.</li>
     <li>If both rooms are available, click the time slot then choose Room 1 or Room 2.</li>
     <li>Click an available time slot.</li>
     <li>Confirm the time when prompted.</li>
