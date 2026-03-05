@@ -166,7 +166,8 @@ bookingOverlay.style.display = "flex";
 }
 
 if(bfSubmit) bfSubmit.onclick=handleBookingSubmit;
-if(bfCancel) bfCancel.onclick=closeBookingForm;
+const bfCancel = document.getElementById("cancelBtn");
+if (bfCancel) bfCancel.onclick = closeBookingForm;
 if(successOk) successOk.onclick=()=>{
   closeBookingForm();
   mergedBlock=null;
