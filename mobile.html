@@ -92,7 +92,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-top: 200px; /* add this */
+  padding-top: 160px; /* add this */
 }
 
 .slotItem {
@@ -208,11 +208,14 @@ main, .calendar-wrapper, .outer-container, .page-container {
 
 /* WHOLE MOBILE MENU STICKY */
 #mobileStickyHeader {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 999;
   background: #fff;
-  padding-bottom: 10px;
+  padding: 10px 10px 0;
+  box-sizing: border-box;
   border-bottom: 1px solid #ddd;
 }
 
