@@ -19,33 +19,54 @@
 
 
 <style>
+/* Base page styling */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 10px;
   background: #fafafa;
+  overflow-x: hidden;
 }
 
-/* MOBILE HEADER – VISUAL STYLING ONLY */
+/* Ensure no parent blocks sticky */
+main, .calendar-wrapper, .outer-container, .page-container, #mobileContainer {
+  overflow: visible !important;
+}
+
+/* -------------------------------------------------------
+   STICKY MENU WRAPPER (THIS is the sticky element)
+-------------------------------------------------------- */
+#mobileStickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* -------------------------------------------------------
+   INNER HEADER (visual only — NOT sticky)
+-------------------------------------------------------- */
 #mobileHeader {
+  position: static !important;   /* override mobile.css */
+  top: auto !important;
+  z-index: auto !important;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 12px;
   background: #673ab7;
   color: white;
 
-  margin: 0 -10px 15px;
+  /* FIX: remove negative margin (breaks sticky on iOS) */
+  margin: 0 0 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+
   border-radius: 0 0 8px 8px;
-}
-
-/* FIX FOR STICKY BREAKING ON MOBILE */
-body, html {
-  overflow-x: hidden;
-}
-
-main, .calendar-wrapper, .outer-container, .page-container {
-  overflow: visible !important;
 }
 
 #mobileHeader button {
@@ -57,12 +78,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   font-size: 16px;
 }
 
-.testSlot {
-  background: #e8ddff;
-  border-color: #c7b3ff;
-}
-
-/* DURATION BUTTONS */
+/* Duration buttons */
 #durationButtons {
   display: flex;
   gap: 10px;
@@ -83,7 +99,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   color: white;
 }
 
-/* SLOT LIST */
+/* Slot list */
 #slotList {
   display: flex;
   flex-direction: column;
@@ -111,7 +127,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   color: #777;
 }
 
-/* BOOKING OVERLAY */
+/* Booking overlay */
 .overlay {
   position: fixed;
   top: 0;
@@ -131,14 +147,12 @@ main, .calendar-wrapper, .outer-container, .page-container {
   width: 90%;
   max-width: 400px;
   border-radius: 12px;
-
-  /* Auto-fit to screen height */
   max-height: 85vh;
   overflow-y: auto;
   box-sizing: border-box;
 }
 
-/* ROOM SELECTOR */
+/* Room selector */
 #mobileRoomSelector {
   position: fixed;
   top: 0;
@@ -174,7 +188,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   width: 200px;
 }
 
-/* LEGEND */
+/* Legend */
 #slotLegend {
   display: flex;
   gap: 12px;
@@ -201,17 +215,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
 .legendColor.room1 { background-color: #4caf50; }
 .legendColor.room2 { background-color: #2196f3; }
 
-/* WHOLE MOBILE MENU STICKY */
-#mobileStickyHeader {
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  background: #fff;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Ultra‑compact equipment toggles (purple theme) */
+/* Equipment toggles */
 .equip-toggle {
   display: flex;
   gap: 6px;
@@ -220,8 +224,8 @@ main, .calendar-wrapper, .outer-container, .page-container {
 
 .equip-toggle button {
   flex: 1;
-  padding: 4px 0;          /* much smaller height */
-  font-size: 14px;         /* smaller text */
+  padding: 4px 0;
+  font-size: 14px;
   border-radius: 6px;
   border: 2px solid #673ab7;
   background: #f3eaff;
@@ -230,28 +234,25 @@ main, .calendar-wrapper, .outer-container, .page-container {
   transition: 0.2s;
 }
 
-/* YES (active) */
 .equip-toggle button.active {
   background: #673ab7;
   color: white;
   border-color: #673ab7;
 }
 
-/* NO (active) */
 .equip-toggle button[data-value="0"].active {
   background: #555;
   border-color: #555;
   color: white;
 }
 
-/* Reduce vertical spacing inside Form 2 */
+/* Form spacing */
 #form2 label {
   margin-top: 4px;
   margin-bottom: 2px;
   font-size: 14px;
 }
 
-/* Make equipment rows tighter */
 .equip-toggle {
   margin: 2px 0;
   gap: 4px;
@@ -263,7 +264,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   border-radius: 5px;
 }
 
-/* Compact price box */
+/* Price box */
 #priceBox {
   padding: 8px !important;
   font-size: 15px !important;
@@ -279,6 +280,7 @@ main, .calendar-wrapper, .outer-container, .page-container {
   color: #000;
 }
 </style>
+
 
 </head>
 
