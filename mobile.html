@@ -42,6 +42,14 @@ body {
   margin: 0 -10px 15px;
   border-radius: 0 0 8px 8px;
 }
+/* FIX FOR STICKY BREAKING ON MOBILE */
+body, html {
+  overflow-x: hidden;
+}
+
+main, .calendar-wrapper, .outer-container, .page-container {
+  overflow: visible !important;
+}
 
 #mobileHeader button {
   background: white;
