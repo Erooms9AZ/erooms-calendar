@@ -19,22 +19,16 @@
 
 
 <style>
-
-/* Everything inside .mobile-page applies ONLY to mobile.html */
-.mobile-page {
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 200px 10px 10px; /* space for fixed header */
   background: #fafafa;
   overflow-x: hidden;
 }
 
-/* Body styling for mobile page only */
-.mobile-page body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 200px 10px 10px; /* space for fixed header */
-}
-
 /* Container */
-.mobile-page #mobileContainer {
+#mobileContainer {
   max-width: 480px;
   margin: 0 auto;
   padding: 0;
@@ -43,7 +37,7 @@
 /* -------------------------------------------------------
    FIXED TOP MENU (HEADER + DURATION + LEGEND)
 -------------------------------------------------------- */
-.mobile-page #mobileStickyHeader {
+#mobileStickyHeader {
   position: fixed;
   top: 0;
   left: 50%;
@@ -58,7 +52,7 @@
 }
 
 /* Header bar */
-.mobile-page #mobileHeader {
+#mobileHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,7 +64,7 @@
   border-radius: 0 0 8px 8px;
 }
 
-.mobile-page #mobileHeader button {
+#mobileHeader button {
   background: white;
   color: #673ab7;
   border: none;
@@ -80,13 +74,13 @@
 }
 
 /* Duration buttons */
-.mobile-page #durationButtons {
+#durationButtons {
   display: flex;
   gap: 10px;
   margin: 10px 0 15px;
 }
 
-.mobile-page #durationButtons button {
+#durationButtons button {
   flex: 1;
   padding: 14px;
   font-size: 16px;
@@ -95,13 +89,13 @@
   border-radius: 6px;
 }
 
-.mobile-page #durationButtons button.active {
+#durationButtons button.active {
   background: #444;
   color: white;
 }
 
 /* Legend */
-.mobile-page #mobileLegend {
+#mobileLegend {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -111,32 +105,32 @@
   border-bottom: 1px solid #ddd;
 }
 
-.mobile-page .legendItem {
+.legendItem {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.mobile-page .legendColor {
+.legendColor {
   width: 14px;
   height: 14px;
   border-radius: 3px;
   display: inline-block;
 }
 
-.mobile-page .legendColor.both  { background-color: #9c27b0; }
-.mobile-page .legendColor.room1 { background-color: #4caf50; }
-.mobile-page .legendColor.room2 { background-color: #2196f3; }
-.mobile-page .legendColor.unavailable { background-color: #999; }
+.legendColor.both  { background-color: #9c27b0; }
+.legendColor.room1 { background-color: #4caf50; }
+.legendColor.room2 { background-color: #2196f3; }
+.legendColor.unavailable { background-color: #999; }
 
 /* Slot list */
-.mobile-page #slotList {
+#slotList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.mobile-page .slotItem {
+.slotItem {
   padding: 16px;
   background: #fff;
   border-radius: 8px;
@@ -147,18 +141,18 @@
   align-items: center;
 }
 
-.mobile-page .slotItem.available {
+.slotItem.available {
   background: #e8ddff;
   border-color: #c7b3ff;
 }
 
-.mobile-page .slotItem.unavailable {
+.slotItem.unavailable {
   background: #eee;
   color: #777;
 }
 
 /* Booking overlay */
-.mobile-page .overlay {
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -171,7 +165,7 @@
   z-index: 2000;
 }
 
-.mobile-page .booking-box {
+.booking-box {
   background: white;
   padding: 20px;
   width: 90%;
@@ -183,7 +177,7 @@
 }
 
 /* Room selector */
-.mobile-page #mobileRoomSelector {
+#mobileRoomSelector {
   position: fixed;
   top: 0;
   left: 0;
@@ -197,7 +191,7 @@
   z-index: 3000;
 }
 
-.mobile-page #mobileRoomSelector .room-btn {
+#mobileRoomSelector .room-btn {
   background: #673ab7;
   color: white;
   padding: 14px 20px;
@@ -208,7 +202,7 @@
   text-align: center;
 }
 
-.mobile-page #mobileRoomCancel {
+#mobileRoomCancel {
   background: #444;
   color: white;
   padding: 12px 20px;
@@ -217,7 +211,6 @@
   font-size: 16px;
   width: 200px;
 }
-
 </style>
 
 
