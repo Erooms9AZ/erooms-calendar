@@ -15,12 +15,12 @@ body {
 }
 
 /* -------------------------------------------------------
-   HEADER BAR  (VISUAL ONLY – NO STICKY HERE)
+   HEADER BAR  (VISUAL ONLY – NOT STICKY)
 -------------------------------------------------------- */
 #mobileHeader {
-  position: static;      /* was sticky */
-  top: auto;
-  z-index: auto;
+  position: static !important;   /* ensure NOT sticky */
+  top: auto !important;
+  z-index: auto !important;
 
   background: #9c27b0;
   color: white;
@@ -32,7 +32,11 @@ body {
   justify-content: space-between;
   align-items: center;
 
-  margin: 0 -10px 10px;
+  /* FIX: remove negative margin (breaks sticky on iOS) */
+  margin: 0 0 10px !important;
+  padding-left: 10px;
+  padding-right: 10px;
+
   border-radius: 0 0 10px 10px;
 }
 
