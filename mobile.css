@@ -15,12 +15,12 @@ body {
 }
 
 /* -------------------------------------------------------
-   HEADER BAR  (STICKY + MATCHES YOUR HTML)
+   HEADER BAR  (VISUAL ONLY – NO STICKY HERE)
 -------------------------------------------------------- */
 #mobileHeader {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  position: static;      /* was sticky */
+  top: auto;
+  z-index: auto;
 
   background: #9c27b0;
   color: white;
@@ -35,6 +35,15 @@ body {
   margin: 0 -10px 10px;
   border-radius: 0 0 10px 10px;
 }
+
+#mobileHeader button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  padding: 5px 10px;
+}
+
 
 #mobileHeader button {
   background: transparent;
