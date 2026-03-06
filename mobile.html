@@ -20,50 +20,33 @@
 
 
 <style>
-/* Base page styling */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 200px 10px 10px; /* space for fixed header */
+  padding: 10px;
   background: #fafafa;
-  overflow-x: hidden;
 }
 
-/* Container */
-#mobileContainer {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0;
-}
-
-/* -------------------------------------------------------
-   FIXED TOP MENU (HEADER + DURATION + LEGEND)
--------------------------------------------------------- */
-#mobileStickyHeader {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-
-  z-index: 9999;
-  background: #fff;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Header bar */
+/* MOBILE HEADER – VISUAL STYLING ONLY */
 #mobileHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 12px;
   background: #673ab7;
   color: white;
 
+  margin: 0 -10px 15px;
   border-radius: 0 0 8px 8px;
+}
+
+/* FIX FOR STICKY BREAKING ON MOBILE */
+body, html {
+  overflow-x: hidden;
+}
+
+main, .calendar-wrapper, .outer-container, .page-container {
+  overflow: visible !important;
 }
 
 #mobileHeader button {
@@ -75,11 +58,16 @@ body {
   font-size: 16px;
 }
 
-/* Duration buttons */
+.testSlot {
+  background: #e8ddff;
+  border-color: #c7b3ff;
+}
+
+/* DURATION BUTTONS */
 #durationButtons {
   display: flex;
   gap: 10px;
-  margin: 10px 0 15px;
+  margin-bottom: 15px;
 }
 
 #durationButtons button {
@@ -96,36 +84,7 @@ body {
   color: white;
 }
 
-/* Legend */
-#mobileLegend {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 6px 0;
-  background: #f5f5f5;
-  font-size: 14px;
-  border-bottom: 1px solid #ddd;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legendColor {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  display: inline-block;
-}
-
-.legendColor.both  { background-color: #9c27b0; }
-.legendColor.room1 { background-color: #4caf50; }
-.legendColor.room2 { background-color: #2196f3; }
-.legendColor.unavailable { background-color: #999; }
-
-/* Slot list */
+/* SLOT LIST */
 #slotList {
   display: flex;
   flex-direction: column;
@@ -153,7 +112,7 @@ body {
   color: #777;
 }
 
-/* Booking overlay */
+/* BOOKING OVERLAY */
 .overlay {
   position: fixed;
   top: 0;
@@ -173,12 +132,14 @@ body {
   width: 90%;
   max-width: 400px;
   border-radius: 12px;
+
+  /* Auto-fit to screen height */
   max-height: 85vh;
   overflow-y: auto;
   box-sizing: border-box;
 }
 
-/* Room selector */
+/* ROOM SELECTOR */
 #mobileRoomSelector {
   position: fixed;
   top: 0;
@@ -213,8 +174,112 @@ body {
   font-size: 16px;
   width: 200px;
 }
-</style>
 
+/* LEGEND */
+#slotLegend {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0 15px;
+  font-size: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legendColor.both  { background-color: #9c27b0; }
+.legendColor.room1 { background-color: #4caf50; }
+.legendColor.room2 { background-color: #2196f3; }
+
+/* WHOLE MOBILE MENU STICKY */
+#mobileStickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Ultra‑compact equipment toggles (purple theme) */
+.equip-toggle {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.equip-toggle button {
+  flex: 1;
+  padding: 4px 0;          /* much smaller height */
+  font-size: 14px;         /* smaller text */
+  border-radius: 6px;
+  border: 2px solid #673ab7;
+  background: #f3eaff;
+  color: #673ab7;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* YES (active) */
+.equip-toggle button.active {
+  background: #673ab7;
+  color: white;
+  border-color: #673ab7;
+}
+
+/* NO (active) */
+.equip-toggle button[data-value="0"].active {
+  background: #555;
+  border-color: #555;
+  color: white;
+}
+
+/* Reduce vertical spacing inside Form 2 */
+#form2 label {
+  margin-top: 4px;
+  margin-bottom: 2px;
+  font-size: 14px;
+}
+
+/* Make equipment rows tighter */
+.equip-toggle {
+  margin: 2px 0;
+  gap: 4px;
+}
+
+.equip-toggle button {
+  padding: 4px 0;
+  font-size: 13px;
+  border-radius: 5px;
+}
+
+/* Compact price box */
+#priceBox {
+  padding: 8px !important;
+  font-size: 15px !important;
+  line-height: 1.25 !important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+#form1 label {
+  display: block;
+  margin: 6px 0 2px;
+  font-size: 16px;
+  color: #000;
+}
+</style>
 
 </head>
 
