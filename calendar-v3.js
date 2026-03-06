@@ -365,7 +365,7 @@ if (monthLabel) {
   monthLabel.textContent =
     `E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
 }
-
+}
 
 /* -----------------------------
    WEEK NAVIGATION
