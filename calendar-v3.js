@@ -240,103 +240,130 @@ async function renderCalendar() {
   window.allEvents = events;
 
   // ----------------------------
-  // HOUR LABELS + SLOTS
-  // ----------------------------
-  for (let h = 10; h < 22; h++) {
-    // Hour label
-    const hourDiv = document.createElement("div");
-    hourDiv.className = "hour-label";
-    hourDiv.textContent = `${h}:00`;
-    calendarEl.appendChild(hourDiv);
+// HOUR LABELS + SLOTS
+// ----------------------------
+for (let h = 10; h < 22; h++) {
 
-    for (let d = 0; d < 6; d++) {
-      const dayDate = new Date(startOfWeek);
-      dayDate.setDate(startOfWeek.getDate() + d);
+  // Hour label
+  const hourDiv = document.createElement("div");
+  hourDiv.className = "hour-label";
+  hourDiv.textContent = `${h}:00`;
+  calendarEl.appendChild(hourDiv);
 
-      const slotTime = new Date(dayDate);
-      slotTime.setHours(h, 0, 0, 0);
+  // Loop through 6 days
+  for (let d = 0; d < 6; d++) {
 
-      const rooms = availableRooms(slotTime, selectedDuration, events);
-      const slotDiv = document.createElement("div");
-      slotDiv.className = "slot";
+    const dayDate = new Date(startOfWeek);
+    dayDate.setDate(startOfWeek.getDate() + d);
 
-      const isPast = slotTime < new Date();
+    const slotTime = new Date(dayDate);
+    slotTime.setHours(h, 0, 0, 0);
 
-      if (isPast || rooms.length === 0) {
-        slotDiv.style.backgroundColor = "grey";
-        slotDiv.style.pointerEvents = "none";
-        slotDiv.innerHTML = "Not<br>Available";
+    const rooms = availableRooms(slotTime, selectedDuration, events);
+    const slotDiv = document.createElement("div");
+    slotDiv.className = "slot";
 
-     } else if (rooms.length === 2) {
-  slotDiv.style.backgroundColor = "#9c27b0";
-  slotDiv.innerHTML = `R1 or R2<br>${h}:00-${h + selectedDuration}:00`;
+    const isPast = slotTime < new Date();
 
-  slotDiv.onclick = e => {
-    e.stopPropagation();
-    if (!floatingSelector) return;
+    // SAFETY: ensure duration is always a valid number
+    const duration = Number(selectedDuration) || 1;
+    const endHour = h + duration;
 
-    floatingSelector.style.display = "flex";
+    // ----------------------------
+    // UNAVAILABLE
+    // ----------------------------
+    if (isPast || rooms.length === 0) {
+      slotDiv.style.backgroundColor = "grey";
+      slotDiv.style.pointerEvents = "none";
+      slotDiv.innerHTML = "Not<br>Available";
+    }
 
-    floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
-      btn.onclick = () => {
-        createMergedBlock(btn.dataset.room, slotTime);
+    // ----------------------------
+    // BOTH ROOMS AVAILABLE
+    // ----------------------------
+    else if (rooms.length === 2) {
+      slotDiv.style.backgroundColor = "#9c27b0";
+      slotDiv.innerHTML = `R1 or R2<br>${h}:00-${endHour}:00`;
+
+      slotDiv.onclick = e => {
+        e.stopPropagation();
+        if (!floatingSelector) return;
+
+        floatingSelector.style.display = "flex";
+
+        floatingSelector.querySelectorAll("[data-room]").forEach(btn => {
+          btn.onclick = () => {
+            createMergedBlock(btn.dataset.room, slotTime);
+
+            window.selectedStart = mergedBlock.start;
+            window.selectedEnd = new Date(
+              mergedBlock.start.getTime() +
+              mergedBlock.duration * 60 * 60 * 1000
+            );
+
+            floatingSelector.style.display = "none";
+            openForm1FromDesktop(mergedBlock);
+          };
+        });
+      };
+    }
+
+    // ----------------------------
+    // ROOM 1 ONLY
+    // ----------------------------
+    else if (rooms.includes("room1")) {
+      slotDiv.style.backgroundColor = "#4caf50";
+      slotDiv.innerHTML = `R1<br>${h}:00-${endHour}:00`;
+
+      slotDiv.onclick = () => {
+        createMergedBlock("room1", slotTime);
 
         window.selectedStart = mergedBlock.start;
         window.selectedEnd = new Date(
-          mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
+          mergedBlock.start.getTime() +
+          mergedBlock.duration * 60 * 60 * 1000
         );
 
-        floatingSelector.style.display = "none";
         openForm1FromDesktop(mergedBlock);
       };
-    });
-  };   // ← THIS closes the onclick properly
-
-} else if (rooms.includes("room1")) {
-  slotDiv.style.backgroundColor = "#4caf50";
-  slotDiv.innerHTML = `R1<br>${h}:00-${h + selectedDuration}:00`;
-
-  slotDiv.onclick = () => {
-    createMergedBlock("room1", slotTime);
-
-    window.selectedStart = mergedBlock.start;
-    window.selectedEnd = new Date(
-      mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
-    );
-
-    openForm1FromDesktop(mergedBlock);
-  };
-
-} else if (rooms.includes("room2")) {
-  slotDiv.style.backgroundColor = "#2196f3";
-  slotDiv.innerHTML = `R2<br>${h}:00-${h + selectedDuration}:00`;
-
-  slotDiv.onclick = () => {
-    createMergedBlock("room2", slotTime);
-
-    window.selectedStart = mergedBlock.start;
-    window.selectedEnd = new Date(
-      mergedBlock.start.getTime() + mergedBlock.duration * 60 * 60 * 1000
-    );
-
-    openForm1FromDesktop(mergedBlock);
-  };
-
-}   // ← THIS closes the entire if/else chain for room availability
-
-
-      calendarEl.appendChild(slotDiv);
     }
-  }
 
-  // Month label
-  if (monthLabel) {
-    const monthNames = [
-      "January","February","March","April","May","June",
-      "July","August","September","October","November","December"
-    ];
-    monthLabel.textContent = `E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
+    // ----------------------------
+    // ROOM 2 ONLY
+    // ----------------------------
+    else if (rooms.includes("room2")) {
+      slotDiv.style.backgroundColor = "#2196f3";
+      slotDiv.innerHTML = `R2<br>${h}:00-${endHour}:00`;
+
+      slotDiv.onclick = () => {
+        createMergedBlock("room2", slotTime);
+
+        window.selectedStart = mergedBlock.start;
+        window.selectedEnd = new Date(
+          mergedBlock.start.getTime() +
+          mergedBlock.duration * 60 * 60 * 1000
+        );
+
+        openForm1FromDesktop(mergedBlock);
+      };
+    }
+
+    // Append slot
+    calendarEl.appendChild(slotDiv);
   }
+}
+
+// ----------------------------
+// MONTH LABEL
+// ----------------------------
+if (monthLabel) {
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  monthLabel.textContent =
+    `E Rooms — ${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getFullYear()}`;
 }
 
 
