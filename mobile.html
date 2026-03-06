@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,7 @@
 
 
 <style>
+/* Base page styling */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -152,7 +154,7 @@ body {
 }
 
 /* Booking overlay */
-.mobile-overlay {
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -165,7 +167,7 @@ body {
   z-index: 2000;
 }
 
-.mobile-booking-box {
+.booking-box {
   background: white;
   padding: 20px;
   width: 90%;
@@ -214,11 +216,9 @@ body {
 </style>
 
 
-
 </head>
 
 <body>
-<body class="mobile-page">
 
 <div id="mobileContainer">
 
@@ -270,9 +270,8 @@ body {
   <div id="slotList"></div>
 </div>
 
-<div id="bookingOverlay" class="mobile-overlay" style="display:none;">
-  <div id="bookingForm" class="mobile-booking-box">
-
+<div id="bookingOverlay" class="overlay" style="display:none;">
+  <div id="bookingForm" class="booking-box">
 
     <!-- FORM 1 -->
     <div id="form1">
