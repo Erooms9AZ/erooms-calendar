@@ -19,18 +19,22 @@
 
 
 <style>
-/* Only apply this padding on the mobile booking page */
-body.mobile-page {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 200px 10px 10px; /* space for fixed header */
+
+/* Everything inside .mobile-page applies ONLY to mobile.html */
+.mobile-page {
   background: #fafafa;
   overflow-x: hidden;
 }
 
+/* Body styling for mobile page only */
+.mobile-page body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 200px 10px 10px; /* space for fixed header */
+}
 
 /* Container */
-#mobileContainer {
+.mobile-page #mobileContainer {
   max-width: 480px;
   margin: 0 auto;
   padding: 0;
@@ -39,7 +43,7 @@ body.mobile-page {
 /* -------------------------------------------------------
    FIXED TOP MENU (HEADER + DURATION + LEGEND)
 -------------------------------------------------------- */
-#mobileStickyHeader {
+.mobile-page #mobileStickyHeader {
   position: fixed;
   top: 0;
   left: 50%;
@@ -54,7 +58,7 @@ body.mobile-page {
 }
 
 /* Header bar */
-#mobileHeader {
+.mobile-page #mobileHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,7 +70,7 @@ body.mobile-page {
   border-radius: 0 0 8px 8px;
 }
 
-#mobileHeader button {
+.mobile-page #mobileHeader button {
   background: white;
   color: #673ab7;
   border: none;
@@ -76,13 +80,13 @@ body.mobile-page {
 }
 
 /* Duration buttons */
-#durationButtons {
+.mobile-page #durationButtons {
   display: flex;
   gap: 10px;
   margin: 10px 0 15px;
 }
 
-#durationButtons button {
+.mobile-page #durationButtons button {
   flex: 1;
   padding: 14px;
   font-size: 16px;
@@ -91,13 +95,13 @@ body.mobile-page {
   border-radius: 6px;
 }
 
-#durationButtons button.active {
+.mobile-page #durationButtons button.active {
   background: #444;
   color: white;
 }
 
 /* Legend */
-#mobileLegend {
+.mobile-page #mobileLegend {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -107,32 +111,32 @@ body.mobile-page {
   border-bottom: 1px solid #ddd;
 }
 
-.legendItem {
+.mobile-page .legendItem {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.legendColor {
+.mobile-page .legendColor {
   width: 14px;
   height: 14px;
   border-radius: 3px;
   display: inline-block;
 }
 
-.legendColor.both  { background-color: #9c27b0; }
-.legendColor.room1 { background-color: #4caf50; }
-.legendColor.room2 { background-color: #2196f3; }
-.legendColor.unavailable { background-color: #999; }
+.mobile-page .legendColor.both  { background-color: #9c27b0; }
+.mobile-page .legendColor.room1 { background-color: #4caf50; }
+.mobile-page .legendColor.room2 { background-color: #2196f3; }
+.mobile-page .legendColor.unavailable { background-color: #999; }
 
 /* Slot list */
-#slotList {
+.mobile-page #slotList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.slotItem {
+.mobile-page .slotItem {
   padding: 16px;
   background: #fff;
   border-radius: 8px;
@@ -143,18 +147,18 @@ body.mobile-page {
   align-items: center;
 }
 
-.slotItem.available {
+.mobile-page .slotItem.available {
   background: #e8ddff;
   border-color: #c7b3ff;
 }
 
-.slotItem.unavailable {
+.mobile-page .slotItem.unavailable {
   background: #eee;
   color: #777;
 }
 
 /* Booking overlay */
-.overlay {
+.mobile-page .overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -167,7 +171,7 @@ body.mobile-page {
   z-index: 2000;
 }
 
-.booking-box {
+.mobile-page .booking-box {
   background: white;
   padding: 20px;
   width: 90%;
@@ -179,7 +183,7 @@ body.mobile-page {
 }
 
 /* Room selector */
-#mobileRoomSelector {
+.mobile-page #mobileRoomSelector {
   position: fixed;
   top: 0;
   left: 0;
@@ -193,7 +197,7 @@ body.mobile-page {
   z-index: 3000;
 }
 
-#mobileRoomSelector .room-btn {
+.mobile-page #mobileRoomSelector .room-btn {
   background: #673ab7;
   color: white;
   padding: 14px 20px;
@@ -204,7 +208,7 @@ body.mobile-page {
   text-align: center;
 }
 
-#mobileRoomCancel {
+.mobile-page #mobileRoomCancel {
   background: #444;
   color: white;
   padding: 12px 20px;
@@ -213,7 +217,9 @@ body.mobile-page {
   font-size: 16px;
   width: 200px;
 }
+
 </style>
+
 
 
 </head>
