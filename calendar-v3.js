@@ -241,7 +241,10 @@ async function renderCalendar() {
 
   // ----------------------------
 // HOUR LABELS + SLOTS
-// ----------------------------
+// ------------------------------
+   // Prevent Help popup from breaking duration state
+if (!selectedDuration) selectedDuration = 1;
+
 for (let h = 10; h < 22; h++) {
 
   // Hour label
