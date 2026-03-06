@@ -109,6 +109,11 @@ function openForm1FromDesktop(mergedBlock) {
   const start = mergedBlock.start;
   const end = new Date(start.getTime() + mergedBlock.duration * 60 * 60 * 1000);
 
+  // ⭐ FIX — these three lines were missing
+  window.selectedRoom = mergedBlock.room;
+  window.selectedStart = start;
+  window.selectedEnd = end;
+
   const dayName = start.toLocaleDateString("en-GB", { weekday: "long" });
   const dateStr = start.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
@@ -119,11 +124,9 @@ function openForm1FromDesktop(mergedBlock) {
 
   const summary = `${dayName} ${dateStr}, ${startTime} to ${endTime}\n(Room: ${roomLabel})`;
 
-  // Insert summary into Form 1
   const summaryEl = document.getElementById("bookingSummary");
   if (summaryEl) summaryEl.textContent = summary;
 
-  // Show Form 1, hide Form 2
   document.getElementById("form1").style.display = "block";
   document.getElementById("form2").style.display = "none";
   if (bookingOverlay) bookingOverlay.style.display = "flex";
