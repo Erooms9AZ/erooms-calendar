@@ -728,6 +728,7 @@ cancelBtnEl.addEventListener("click", () => {
 submitBtnEl.addEventListener("click", async () => {
   try {
     bookingStatus2El.textContent = "Submitting...";
+console.log("selectedRoom BEFORE payload:", window.selectedRoom);
 
     const payload = {
       name: custNameEl.value.trim(),
