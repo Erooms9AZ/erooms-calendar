@@ -19,14 +19,15 @@
 
 
 <style>
-/* Base page styling */
-body {
+/* Only apply this padding on the mobile booking page */
+body.mobile-page {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 200px 10px 10px; /* space for fixed header */
   background: #fafafa;
   overflow-x: hidden;
 }
+
 
 /* Container */
 #mobileContainer {
@@ -218,6 +219,7 @@ body {
 </head>
 
 <body>
+<body class="mobile-page">
 
 <div id="mobileContainer">
 
