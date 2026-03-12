@@ -217,25 +217,32 @@ function updatePriceBox() {
     let current = new Date(window.selectedStart);
     const end = new Date(window.selectedEnd);
 
-    while (current < end) {
-        // Next boundary (1 hour later, or end of booking)
-        let next = new Date(current.getTime() + 60 * 60 * 1000);
-        if (next > end) next = end;
+   while (current < end) {
+    let next = new Date(current.getTime() + 60 * 60 * 1000);
+    if (next > end) next = end;
 
-        const hourFraction = (next - current) / (1000 * 60 * 60); // handles partial hours if ever needed
-        const hour = current.getHours();
-        const after18 = hour >= 18;
+    const hourFraction = (next - current) / (1000 * 60 * 60);
+    const hour = current.getHours();
+    const day = current.getDay(); // 0 = Sun, 1 = Mon ... 6 = Sat
 
-        const roomRate = after18 ? 12 : 6;
-        const equipmentRate = anyEquipment
-            ? (after18 ? 3 : 1.5)
-            : 0;
+    // Determine pricing rule
+    const isSaturday = day === 6;
+    const weekdayAfter18 = hour >= 18;
 
-        roomHire += roomRate * hourFraction;
-        equipmentHire += equipmentRate * hourFraction;
+    // Saturday = always after 18 price
+    const after18 = isSaturday ? true : weekdayAfter18;
 
-        current = next;
-    }
+    const roomRate = after18 ? 12 : 6;
+    const equipmentRate = anyEquipment
+        ? (after18 ? 3 : 1.5)
+        : 0;
+
+    roomHire += roomRate * hourFraction;
+    equipmentHire += equipmentRate * hourFraction;
+
+    current = next;
+}
+
 
     const total = roomHire + equipmentHire;
 
