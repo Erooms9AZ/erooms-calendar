@@ -651,13 +651,20 @@ function updatePriceBox() {
   let current = new Date(window.selectedStart);
   const end = new Date(window.selectedEnd);
 
+  /* Calculate Room Price */
   while (current < end) {
     let next = new Date(current.getTime() + 60 * 60 * 1000);
     if (next > end) next = end;
 
     const hourFraction = (next - current) / (1000 * 60 * 60);
     const hour = current.getHours();
-    const after18 = hour >= 18;
+    const day = current.getDay(); // 0 = Sun, 1 = Mon ... 6 = Sat
+
+    const isSaturday = day === 6;
+    const weekdayAfter18 = hour >= 18;
+
+    // Saturday = always after 18 price
+    const after18 = isSaturday ? true : weekdayAfter18;
 
     const roomRate = after18 ? 12 : 6;
     const equipmentRate = anyEquipment ? (after18 ? 3 : 1.5) : 0;
@@ -666,7 +673,8 @@ function updatePriceBox() {
     equipmentHire += equipmentRate * hourFraction;
 
     current = next;
-  }
+}
+
 
   const total = roomHire + equipmentHire;
 
